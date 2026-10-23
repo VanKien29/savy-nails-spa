@@ -4,7 +4,7 @@
     <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="{{ $settings['primary_color'] }}">
     <x-seo :seo="$seo" />
-    <link rel="icon" type="image/svg+xml" href="/assets/the-k/favicon.svg">
+    <x-favicon :settings="$settings" :media="$media" fallback="the-k"/>
     <link rel="preload" href="{{ Vite::asset('node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="{{ Vite::asset('node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-italic.woff2') }}" as="font" type="font/woff2" crossorigin>
     @vite(['resources/css/salon.css','resources/js/salon.js'])

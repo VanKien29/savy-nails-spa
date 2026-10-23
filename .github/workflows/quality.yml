@@ -31,7 +31,9 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-      - run: php -r 'exit(PHP_VERSION_ID >= 80512 && PHP_VERSION_ID < 80600 ? 0 : 1);'
+      - name: Verify patched PHP runtime
+        run: |
+          php -r 'exit(PHP_VERSION_ID >= 80512 && PHP_VERSION_ID < 80600 ? 0 : 1);'
       - run: composer install --no-interaction --prefer-dist
       - run: cp .env.example .env && php artisan key:generate
       - name: Configure isolated MySQL test database

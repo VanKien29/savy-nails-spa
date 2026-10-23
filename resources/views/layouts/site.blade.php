@@ -7,7 +7,7 @@
         <link rel="preload" href="{{ Vite::asset('node_modules/@fontsource/be-vietnam-pro/files/be-vietnam-pro-vietnamese-500-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
         <link rel="preload" href="{{ Vite::asset('node_modules/@fontsource/be-vietnam-pro/files/be-vietnam-pro-latin-500-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
     @endif
-    @if($favicon = $media->get($settings['favicon_id']))<link rel="icon" href="{{ $favicon->url() }}">@endif
+    <x-favicon :settings="$settings" :media="$media"/>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @php($fonts = ['sans' => '"Be Vietnam Pro", sans-serif', 'serif' => 'Georgia, serif', 'system' => 'system-ui, sans-serif'])
     <style>:root{--brand:{{ $settings['primary_color'] }};--ink:{{ $settings['secondary_color'] }};--font-heading:{!! $fonts[$settings['heading_font']] !!};--font-body:{!! $fonts[$settings['body_font']] !!}}</style>

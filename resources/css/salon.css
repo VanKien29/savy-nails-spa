@@ -265,6 +265,11 @@ html{scroll-padding-top:96px}
 .ks-desktop-nav a{white-space:nowrap}
 @media(min-width:731px) and (max-width:1100px){.ks-header-book{display:none}}
 @media(prefers-reduced-motion:reduce) { .ks-motion .ks-reveal-pending { opacity: 1; transform: none; }.ks-motion .ks-hero-content>* { animation: none; }.ks-motion .ks-hero-image img { transform: none; } }
+.ks-icon{display:inline-block;vertical-align:middle;width:20px;height:20px;flex-shrink:0}
+.ks-text-link>span,.ks-treatment-includes summary>span,.ks-price-group>summary>span,.kl-faqs summary>span{display:inline-flex;align-items:center;justify-content:center;line-height:1}
+.ks-address .ks-icon,.ks-footer-inline .ks-icon{width:16px;height:16px;margin-left:5px}
+.ks-footer-bottom .ks-icon{width:12px;height:12px}
+.ks-story-quote>span .ks-icon{width:48px;height:48px}
 .ks-price-groups { display: block; columns: 2; column-gap: 55px; }
 .ks-price-group { break-inside: avoid; margin-bottom: 20px; }
 @media(max-width:730px) { .ks-price-groups { columns: 1; }.ks-price-group { margin-bottom: 12px; } }

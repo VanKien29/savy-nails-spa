@@ -110,6 +110,23 @@ class NailSalonTest extends TestCase
         $this->get('/')->assertSee('data-hero-slide="0"', false)->assertDontSee('data-hero-slide="1"', false);
     }
 
+    public function test_public_icons_are_svg_and_uploaded_favicon_overrides_brand_fallback(): void
+    {
+        foreach (['/', '/about-us', '/services', '/gallery', '/contact-us'] as $path) {
+            $this->get($path)->assertOk()
+                ->assertSee('href="/favicon.ico?v=2"', false)
+                ->assertSee('rel="apple-touch-icon"', false)
+                ->assertSee('data-icon="arrow"', false)
+                ->assertDontSee('↗')->assertDontSee('✧');
+        }
+
+        $settings = app(SiteSettingsService::class);
+        $favicon = Media::findOrFail($settings->get('logo_id'));
+        $settings->update(array_replace($settings->all(), ['favicon_id' => $favicon->id]));
+        $this->get('/')->assertOk()->assertSee('rel="icon" href="'.$favicon->url().'"', false)
+            ->assertDontSee('href="/favicon.ico?v=2"', false);
+    }
+
     public function test_salon_seo_graph_uses_verified_address_hours_and_keeps_retired_booking_out(): void
     {
         $sitemap = $this->get('/sitemap.xml')->assertOk()->assertDontSee('/booking')->getContent();

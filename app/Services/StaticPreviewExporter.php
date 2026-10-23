@@ -67,6 +67,11 @@ class StaticPreviewExporter
             }
             $this->copyAssets(public_path('build'), $destination.'/build', ['js', 'css', 'woff', 'woff2', 'ttf', 'png', 'jpg', 'jpeg', 'webp', 'avif', 'svg', 'json']);
             $this->copyAssets(public_path('assets'), $destination.'/assets', ['svg', 'png', 'jpg', 'jpeg', 'webp', 'avif', 'gif', 'woff2']);
+            foreach (['favicon.ico', 'favicon.svg', 'site.webmanifest'] as $publicIcon) {
+                if (File::isFile(public_path($publicIcon))) {
+                    File::copy(public_path($publicIcon), $destination.'/'.$publicIcon);
+                }
+            }
             // Only media referenced by exported pages or shared public branding is copied.
             $ids = collect(app(SiteSettingsService::class)->all())->only(['logo_id', 'mobile_logo_id', 'favicon_id', 'og_media_id'])->values();
             foreach ($pages as $page) {

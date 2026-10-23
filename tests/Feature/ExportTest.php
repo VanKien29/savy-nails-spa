@@ -46,6 +46,9 @@ class ExportTest extends TestCase
             $this->assertFileDoesNotExist($directory.'/.env');
             $this->assertFileExists($directory.'/assets/studio-space.svg');
             $this->assertFileExists($directory.'/build/manifest.json');
+            $this->assertFileExists($directory.'/favicon.svg');
+            $this->assertGreaterThan(0, filesize($directory.'/favicon.ico'));
+            $this->assertFileExists($directory.'/site.webmanifest');
             $this->assertSame("User-agent: *\nDisallow: /\n", File::get($directory.'/robots.txt'));
             app(StaticPreviewExporter::class)->export($name); // owned output can be safely regenerated
         } finally {

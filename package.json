@@ -5,6 +5,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
+    "icons:build": "node scripts/build-site-icons.mjs",
     "media:optimize": "node scripts/optimize-media.mjs",
     "test:browser": "playwright test",
     "test:media": "node --test tests/Frontend/*.test.mjs",
