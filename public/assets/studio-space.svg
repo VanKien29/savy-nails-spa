@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="850" viewBox="0 0 800 850" fill="none">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="800" y2="850" gradientUnits="userSpaceOnUse"><stop stop-color="#dce4d9"/><stop offset="1" stop-color="#b6c9b9"/></linearGradient><linearGradient id="arch" x1="340" y1="240" x2="660" y2="700" gradientUnits="userSpaceOnUse"><stop stop-color="#f1f6db"/><stop offset="1" stop-color="#96af84"/></linearGradient><linearGradient id="sphere" x1="180" y1="260" x2="390" y2="510" gradientUnits="userSpaceOnUse"><stop stop-color="#ebff93"/><stop offset=".55" stop-color="#bad34e"/><stop offset="1" stop-color="#718f2c"/></linearGradient><linearGradient id="block" x1="260" y1="470" x2="500" y2="770" gradientUnits="userSpaceOnUse"><stop stop-color="#406454"/><stop offset="1" stop-color="#11392f"/></linearGradient><filter id="shadow"><feGaussianBlur stdDeviation="21"/></filter><pattern id="grid" width="70" height="70" patternUnits="userSpaceOnUse"><path d="M70 0H0V70" stroke="#f8fff1" stroke-opacity=".18"/></pattern></defs>
+<path fill="url(#bg)" d="M0 0h800v850H0z"/><path fill="url(#grid)" d="M0 0h800v850H0z"/>
+<circle cx="650" cy="130" r="220" stroke="#f4f9e9" stroke-opacity=".38"/><circle cx="650" cy="130" r="155" stroke="#f4f9e9" stroke-opacity=".38"/>
+<path d="M0 650 800 470v380H0Z" fill="#c5d3bf"/>
+<ellipse cx="419" cy="719" rx="242" ry="52" fill="#254b37" opacity=".2" filter="url(#shadow)"/>
+<path d="M418 639V357c0-100 52-157 132-157s132 57 132 157v282h-92V357c0-46-12-68-40-68s-40 22-40 68v282Z" fill="#729578"/>
+<path d="M388 620V338c0-100 52-157 132-157s132 57 132 157v282h-92V338c0-46-12-68-40-68s-40 22-40 68v282Z" fill="url(#arch)"/>
+<path d="m190 544 214-83 164 94-215 84Z" fill="#7d9a73"/><path d="m190 544 163 95v138l-163-94Z" fill="#315a48"/><path d="m353 639 215-84v138l-215 84Z" fill="url(#block)"/>
+<circle cx="287" cy="403" r="113" fill="url(#sphere)"/>
+<path d="M190 402c22 58 78 99 140 106" stroke="#edffab" stroke-opacity=".18" stroke-width="3"/>
+<path d="m578 650 89-34 68 40-89 34Z" fill="#e8eddd"/><path d="m578 650 68 40v47l-68-40Z" fill="#bdcbb2"/><path d="m646 690 89-34v47l-89 34Z" fill="#9cb091"/>
+<g transform="translate(70 75)"><path d="M0 0h46v8H9v32H0ZM18 18h28v8H27v14h-9Z" fill="#193f33"/><text x="61" y="28" font-family="Arial,sans-serif" font-size="16" font-weight="bold" letter-spacing="4" fill="#193f33">FORMA / IDEAS TO IMPACT</text></g>
+<g transform="translate(63 596)"><rect width="239" height="105" rx="4" fill="#fcfcf3"/><path d="M24 26h38v38H24z" fill="#d9f36a"/><path d="M33 55 53 35M35 35h18v18" stroke="#183c31" stroke-width="2"/><text x="79" y="41" fill="#153c35" font-family="Arial,sans-serif" font-size="15" font-weight="bold">A NEW PERSPECTIVE.</text><text x="79" y="65" fill="#64796b" font-family="Arial,sans-serif" font-size="10" letter-spacing="1">STRATEGY / DESIGN / DIGITAL</text></g>
+<g fill="#234f3d" font-family="Arial,sans-serif" font-size="11" letter-spacing="3"><text x="63" y="798">CREATIVE STUDIO</text><text x="660" y="798">EST. 2026</text></g></svg>

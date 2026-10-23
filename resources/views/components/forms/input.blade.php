@@ -1,0 +1,2 @@
+@props(['name','label','type'=>'text','disabled'=>false,'staticPreview'=>false])
+<label class="field"><span>{{ $label }} @if($attributes->has('required') && $attributes->get('required') !== false)<span aria-hidden="true">*</span>@endif</span><input type="{{ $type }}" name="{{ $name }}" value="{{ $disabled || $staticPreview ? '' : old($name) }}" @disabled($disabled) {{ $attributes }}>@if(!$disabled && !$staticPreview)@error($name)<small class="field-error">{{ $message }}</small>@enderror@endif</label>

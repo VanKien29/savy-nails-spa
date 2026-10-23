@@ -1,0 +1,1 @@
+<section class="ks-cta"><div class="ks-container"><div data-animate="fade-up"><h2>Good nails.<br><em>Even better moments.</em></h2><p>Make a little room in your day for something beautiful.</p></div><a class="ks-button ks-button-light" href="/contact-us">Contact Us <x-salon.icon name="arrow" /></a></div></section>

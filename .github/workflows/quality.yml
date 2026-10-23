@@ -1,0 +1,53 @@
+name: Quality gates
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_DATABASE: the_k_luxury_nail_bar
+          MYSQL_USER: starter_ci
+          MYSQL_PASSWORD: ci-only-password
+          MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --host=127.0.0.1 --user=starter_ci --password=ci-only-password"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: gd, intl, exif, pdo_sqlite, pdo_mysql, zip
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: php -r 'exit(PHP_VERSION_ID >= 80512 && PHP_VERSION_ID < 80600 ? 0 : 1);'
+      - run: composer install --no-interaction --prefer-dist
+      - run: cp .env.example .env && php artisan key:generate
+      - name: Configure isolated MySQL test database
+        run: sed -i 's/^DB_USERNAME=.*/DB_USERNAME=starter_ci/; s/^DB_PASSWORD=.*/DB_PASSWORD=ci-only-password/' .env
+      - run: npm ci && npm audit --audit-level=high && npm run media:optimize && npm run build
+      - run: composer quality
+      - run: php artisan migrate --force && php artisan db:seed --class=NailSalonSeeder --force && php artisan storage:link
+      - run: php artisan starter:check && php artisan starter:seo-audit && php artisan starter:export-demo
+      - run: npx playwright install --with-deps chromium && npm run test:browser
+        env:
+          STARTER_SHOWCASE: 'true'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verification-artifacts
+          path: |
+            test-results/
+            dist/preview/
+
