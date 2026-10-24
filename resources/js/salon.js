@@ -21,7 +21,7 @@ import('./salon-motion').then(({initSalonMotion}) => initSalonMotion()).catch(()
 if (homeHero?.matches('[data-hero-slideshow]')) import('./salon-hero').then(({initSalonHero}) => initSalonHero()).catch(() => {});
 
 // Touch stays native; mouse/pen dragging also works in narrow desktop previews.
-for (const rail of document.querySelectorAll('.ks-menu-tabs, .ks-gallery-filters')) {
+for (const rail of document.querySelectorAll('.ks-gallery-filters')) {
     let drag;
     let suppressClick = false;
     rail.tabIndex = 0;
@@ -61,41 +61,6 @@ for (const rail of document.querySelectorAll('.ks-menu-tabs, .ks-gallery-filters
         event.preventDefault();
         rail.scrollBy({left: (event.key === 'ArrowRight' ? 1 : -1) * 160, behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'instant' : 'smooth'});
     });
-}
-
-const menu = document.querySelector('[data-service-menu]');
-if (menu) {
-    const links = [...menu.querySelectorAll('[data-service-category]')];
-    const groups = [...menu.querySelectorAll('[data-menu-category]')];
-    let category = menu.dataset.activeCategory || 'nails';
-    function filter(animate = false) {
-        let visible = 0;
-        groups.forEach(group => {
-            group.hidden = category !== group.dataset.menuCategory;
-            if (!group.hidden) visible += group.querySelectorAll('[data-service-row]').length;
-            if(animate && !group.hidden && !matchMedia('(prefers-reduced-motion:reduce)').matches) group.animate([{opacity:0,transform:'translateY(16px)'},{opacity:1,transform:'translateY(0)'}],{duration:420,easing:'cubic-bezier(.2,.7,.2,1)'});
-        });
-        menu.querySelector('[data-menu-empty]').hidden = visible > 0;
-        links.forEach(link => {
-            if (link.dataset.serviceCategory === category) link.setAttribute('aria-current', 'true');
-            else link.removeAttribute('aria-current');
-        });
-    }
-    links.forEach(link => link.addEventListener('click', event => {
-        event.preventDefault(); category = link.dataset.serviceCategory; filter(true);
-        link.scrollIntoView({block:'nearest',inline:'nearest',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});
-        history.replaceState(null, '', link.href);
-    }));
-    addEventListener('popstate',()=>{const value=new URLSearchParams(location.search).get('category');category=links.some(link=>link.dataset.serviceCategory===value)?value:'nails';filter(true);});
-    filter();
-    const selectedLink = links.find(link => link.dataset.serviceCategory === category);
-    if (selectedLink) {
-        const rail = selectedLink.parentElement;
-        const selected = selectedLink.getBoundingClientRect();
-        const bounds = rail.getBoundingClientRect();
-        if (selected.left < bounds.left) rail.scrollLeft -= bounds.left - selected.left;
-        else if (selected.right > bounds.right) rail.scrollLeft += selected.right - bounds.right;
-    }
 }
 
 const gallery = document.querySelector('[data-gallery]');

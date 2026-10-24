@@ -27,7 +27,7 @@
 @php($collection=$sections->firstWhere('id','collection'))
 <section class="ks-section kl-collection"><div class="ks-container"><div class="ks-heading-row"><x-salon.section-heading :eyebrow="$collection['eyebrow']" :heading="$collection['heading']" :body="$collection['body']"/><a href="/services" class="ks-text-link">Our Full Menu <span aria-hidden="true"><x-salon.icon name="arrow"/></span></a></div><div class="kl-collection-grid">
 @foreach($salon['categories']->sortBy(fn($c)=>array_search($c->slug,['nails','pedicures','brows-lashes','waxing','kids'])) as $category)
-<a href="/services?category={{ $category->slug }}#treatment-menu" class="kl-collection-card" data-animate="fade-up"><span class="kl-card-number">0{{ $loop->iteration }}</span><div><h3>{{ $category->name }}</h3><p>{{ $category->description }}</p></div><footer><span>From ${{ number_format((float)$category->services->whereNotNull('price')->min('price'),0) }}</span><x-salon.icon name="arrow"/></footer></a>
+<a href="/services#menu-{{ $category->slug }}" class="kl-collection-card" data-animate="fade-up"><span class="kl-card-number">0{{ $loop->iteration }}</span><div><h3>{{ $category->name }}</h3><p>{{ $category->description }}</p></div><footer><span>From ${{ number_format((float)$category->services->whereNotNull('price')->min('price'),0) }}</span><x-salon.icon name="arrow"/></footer></a>
 @endforeach
 </div></div></section>
 @php($ritual=$sections->firstWhere('id','ritual'))

@@ -301,8 +301,8 @@ html{scroll-padding-top:96px}
 @media(max-width:730px){.ks-gallery-page .ks-gallery-even{grid-template-columns:repeat(2,minmax(0,1fr));gap:25px 14px}.ks-gallery-even .ks-gallery-item figcaption>span{font-size:21px}.ks-gallery-even .ks-gallery-item figcaption small{letter-spacing:.3px}}
 
 /* Framed service menu: shared catalog data, readable descriptions and no row actions. */
-.ks-classic-menu .ks-menu-content{padding-block:40px 56px}
-.ks-menu-panel{border:4px double var(--ks-gold-text);padding:30px 26px 12px;background:#fff}
+.ks-classic-menu .ks-menu-content{display:flex;flex-direction:column;gap:32px;padding-block:40px 56px}
+.ks-menu-panel{scroll-margin-top:calc(var(--ks-header) + 24px);border:4px double var(--ks-gold-text);padding:30px 26px 12px;background:#fff}
 .ks-menu-panel>h2{font:600 clamp(28px,3vw,36px)/1.2 var(--ks-serif);text-align:center;text-transform:uppercase;color:var(--ks-gold-text);margin:0 0 28px}
 .ks-menu-group+ .ks-menu-group{margin-top:30px;padding-top:26px;border-top:1px solid var(--ks-line)}
 .ks-menu-group>h3{font:600 20px/1.5 var(--ks-sans);text-transform:uppercase;color:var(--ks-gold-text);margin:0 0 18px}
@@ -316,11 +316,11 @@ html{scroll-padding-top:96px}
 .ks-menu-item-includes>span{font-weight:500}
 .ks-menu-item .ks-menu-item-note{font-style:italic}
 /* Compact overlay controls do not reserve a column in the page content. */
-.ks-floating-actions{position:fixed;right:14px;bottom:25px;z-index:40;display:grid;gap:7px}
-.ks-floating-actions>a{position:static;display:grid;place-items:center;width:36px;height:36px;border:1px solid #c8ac84;background:#fff;color:var(--ks-gold-text);transition:background-color .2s,color .2s}
+.ks-floating-actions{position:fixed;right:10px;bottom:25px;z-index:40;display:grid;gap:7px}
+.ks-floating-actions>a{position:static;display:grid;place-items:center;width:48px;height:48px;border:1px solid #c8ac84;background:#fff;color:var(--ks-gold-text);transition:background-color .2s,color .2s}
 .ks-floating-actions>a:hover{background:var(--ks-gold-text);color:#fff}
 .ks-floating-actions>a:focus-visible{outline:2px solid var(--ks-gold-text);outline-offset:3px}
-.ks-floating-actions svg{width:16px;height:16px}
+.ks-floating-actions svg{width:22px;height:22px}
 @media(max-width:730px){
     .ks-classic-menu .ks-menu-content{padding-block:24px 35px}
     .ks-menu-panel{padding:24px 16px 8px}
@@ -336,11 +336,11 @@ html{scroll-padding-top:96px}
 @media(prefers-reduced-motion:reduce){.ks-floating-actions>a{transition:none}}
 
 /* Native touch rails with progressive mouse/keyboard dragging. */
-.ks-menu-tabs,.ks-gallery-filters{touch-action:pan-x pan-y;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
-.ks-menu-tabs.is-dragging,.ks-gallery-filters.is-dragging{cursor:grabbing;user-select:none}
-.ks-menu-tabs.is-dragging a,.ks-gallery-filters.is-dragging button{cursor:grabbing}
-.ks-menu-tabs:focus-visible,.ks-gallery-filters:focus-visible{outline:2px solid var(--ks-gold-text);outline-offset:-3px}
-@media(hover:hover){.ks-menu-tabs,.ks-gallery-filters{cursor:grab}}
+.ks-gallery-filters{touch-action:pan-x pan-y;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.ks-gallery-filters.is-dragging{cursor:grabbing;user-select:none}
+.ks-gallery-filters.is-dragging button{cursor:grabbing}
+.ks-gallery-filters:focus-visible{outline:2px solid var(--ks-gold-text);outline-offset:-3px}
+@media(hover:hover){.ks-gallery-filters{cursor:grab}}
 .ks-location-map{width:100%;height:360px;border:1px solid var(--ks-line);background:var(--ks-cream);overflow:hidden}
 .ks-location-map iframe{display:block;width:100%;height:100%;border:0}
 @media(max-width:730px){.ks-location-map{height:300px;min-width:0}}
