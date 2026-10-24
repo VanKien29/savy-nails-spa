@@ -30,6 +30,12 @@ test('native touchscreen swipe reveals the last service category',async({browser
         await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:335,y}]});
         for(let step=1;step<=10;step++){await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:335-step*24,y}]});await new Promise(resolve=>setTimeout(resolve,16));}
         await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+        // A tap during native momentum only stops scrolling; wait for the rail to settle.
+        await rail.evaluate(el=>new Promise(resolve=>{
+            let previous=el.scrollLeft,stableFrames=0;
+            const settle=()=>{const current=el.scrollLeft;stableFrames=Math.abs(current-previous)<.5?stableFrames+1:0;previous=current;if(stableFrames>=8)resolve();else requestAnimationFrame(settle);};
+            requestAnimationFrame(settle);
+        }));
         const last=page.locator('[data-service-category="kids"]');await expect.poll(async()=>{const item=await last.boundingBox();return item.x+item.width<=391;}).toBeTruthy();await last.tap();await expect(page.locator('[data-menu-category="kids"]')).toBeVisible();
     }finally{await context.close();}
 });
