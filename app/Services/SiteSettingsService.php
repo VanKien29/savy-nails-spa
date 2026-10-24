@@ -16,7 +16,7 @@ class SiteSettingsService
         return [
             'site_name' => 'Forma Studio', 'company_name' => 'Forma Studio', 'slogan' => 'Thiết kế có chiều sâu. Tăng trưởng có định hướng.',
             'primary_color' => '#d9f36a', 'secondary_color' => '#153c35', 'heading_font' => 'sans', 'body_font' => 'sans',
-            'email' => '', 'hotline' => '', 'address' => '', 'maps_url' => '', 'copyright' => 'Mọi quyền được bảo lưu.', 'legal' => '',
+            'email' => '', 'hotline' => '', 'address' => '', 'maps_url' => '', 'maps_embed_url' => '', 'copyright' => 'Mọi quyền được bảo lưu.', 'legal' => '',
             'logo_id' => null, 'mobile_logo_id' => null, 'favicon_id' => null, 'og_media_id' => null,
             'default_title' => 'Forma — Đồng hành cùng thương hiệu của bạn', 'default_description' => 'Giải pháp chiến lược, thiết kế và trải nghiệm số cho doanh nghiệp đang hướng tới bước phát triển tiếp theo.',
             'ga4_id' => '', 'gtm_id' => '', 'meta_pixel_id' => '', 'social_links' => [],
@@ -43,6 +43,7 @@ class SiteSettingsService
             'heading_font' => ['required', Rule::in(['sans', 'serif', 'system'])], 'body_font' => ['required', Rule::in(['sans', 'serif', 'system'])],
             'email' => 'nullable|email|max:160', 'hotline' => ['nullable', 'regex:/^\+?[0-9 ()-]{6,24}$/'],
             'address' => 'nullable|string|max:500', 'maps_url' => ['nullable', 'url:https', 'regex:~^https://(?:www\.)?(?:google\.com/maps|maps\.google\.com|maps\.app\.goo\.gl)/~'],
+            'maps_embed_url' => ['nullable', 'url:https', 'max:4000', 'regex:~^https://www\.google\.com/maps/embed\?pb=[^\s<>]+$~'],
             'copyright' => 'nullable|string|max:200', 'legal' => 'nullable|string|max:2000',
             'default_title' => 'required|string|max:160', 'default_description' => 'required|string|max:320',
             'ga4_id' => ['nullable', 'regex:/^G-[A-Z0-9]+$/'], 'gtm_id' => ['nullable', 'regex:/^GTM-[A-Z0-9]+$/'], 'meta_pixel_id' => ['nullable', 'regex:/^[0-9]{5,30}$/'],

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\SiteSettingsService;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -27,8 +28,10 @@ class SecurityHeaders
                 $devSocket = ' '.($url['scheme'] === 'https' ? 'wss' : 'ws').'://'.$host;
             }
         }
+        $mapFrameSource = $request->is('contact-us') && app(SiteSettingsService::class)->get('maps_embed_url')
+            ? ' https://www.google.com/maps/embed' : '';
         // Alpine/Livewire need evaluated expressions. No arbitrary rich HTML or user script is accepted.
-        $response->headers->set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'{$devSource} https://www.googletagmanager.com https://connect.facebook.net https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'{$devSource}; img-src 'self' data: https:{$devSource}; font-src 'self' data:{$devSource}; connect-src 'self'{$devSource}{$devSocket} https://*.google-analytics.com https://www.googletagmanager.com https://www.facebook.com; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'");
+        $response->headers->set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'{$devSource} https://www.googletagmanager.com https://connect.facebook.net https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'{$devSource}; img-src 'self' data: https:{$devSource}; font-src 'self' data:{$devSource}; connect-src 'self'{$devSource}{$devSocket} https://*.google-analytics.com https://www.googletagmanager.com https://www.facebook.com; frame-src https://challenges.cloudflare.com{$mapFrameSource}; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'");
         if ($request->isSecure()) {
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000');
         }

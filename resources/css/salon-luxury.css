@@ -231,7 +231,7 @@
 @media(min-width:731px){
  .page-home .kl-hero .ks-hero-image img{position:absolute;right:0;top:0;width:auto;height:100%;max-width:none;mask-image:linear-gradient(90deg,transparent,#000 23%);-webkit-mask-image:linear-gradient(90deg,transparent,#000 23%)}
 }
-.page-home .ks-back-top{display:none}
+.ks-js .page-home .ks-back-top{display:none}
 .page-home .ks-back-top[data-past-hero]{display:grid}
 @media(max-width:730px){
  .page-home .kl-hero{height:calc(100svh - 76px)}

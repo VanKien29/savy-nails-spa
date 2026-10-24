@@ -39,6 +39,7 @@ class SiteSettings extends Page
             F\Select::make('body_font')->options(['sans' => 'Be Vietnam Pro', 'serif' => 'Georgia', 'system' => 'System'])->required(),
             F\TextInput::make('email')->email(), F\TextInput::make('hotline'), F\Textarea::make('address'),
             F\TextInput::make('maps_url')->label('Liên kết Google Maps')->url()->helperText('Dùng URL maps an toàn; không nhận HTML embed.'),
+            F\TextInput::make('maps_embed_url')->label('URL bản đồ Google Maps nhúng')->url()->maxLength(4000)->helperText('Dán URL src https://www.google.com/maps/embed?pb=... từ mục Share > Embed a map; không dán HTML iframe.'),
             F\TextInput::make('copyright')->maxLength(200), F\Textarea::make('legal')->maxLength(2000),
             F\TextInput::make('default_title')->required()->maxLength(160), F\Textarea::make('default_description')->required()->maxLength(320),
             F\TextInput::make('ga4_id')->helperText('G-... Chỉ tải sau consent.'), F\TextInput::make('gtm_id')->helperText('GTM-... Tránh cài trùng GA qua GTM.'), F\TextInput::make('meta_pixel_id'),

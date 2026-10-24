@@ -1,4 +1,4 @@
-<header id="top" class="ks-header">
+<header class="ks-header">
     <div class="ks-container ks-header-inner">
         <x-salon.brand :settings="$settings" :media="$media" eager/>
         <nav class="ks-desktop-nav" aria-label="Main navigation">@foreach($navigation->where('location','header') as $item)<a href="{{ $item->url }}" @if($item->url === $page->path()) aria-current="page" @endif>{{ $item->label }}</a>@endforeach</nav>

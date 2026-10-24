@@ -20,42 +20,82 @@ if(homeHero && backTop) new IntersectionObserver(([entry])=>backTop.toggleAttrib
 import('./salon-motion').then(({initSalonMotion}) => initSalonMotion()).catch(() => {});
 if (homeHero?.matches('[data-hero-slideshow]')) import('./salon-hero').then(({initSalonHero}) => initSalonHero()).catch(() => {});
 
+// Touch stays native; mouse/pen dragging also works in narrow desktop previews.
+for (const rail of document.querySelectorAll('.ks-menu-tabs, .ks-gallery-filters')) {
+    let drag;
+    let suppressClick = false;
+    rail.tabIndex = 0;
+    rail.setAttribute('data-lenis-prevent', '');
+    rail.addEventListener('dragstart', event => event.preventDefault());
+    rail.addEventListener('pointerdown', event => {
+        suppressClick = false;
+        if (event.pointerType === 'touch' || event.button !== 0 || rail.scrollWidth <= rail.clientWidth) return;
+        drag = {id: event.pointerId, x: event.clientX, y: event.clientY, left: rail.scrollLeft, active: false};
+    });
+    rail.addEventListener('pointermove', event => {
+        if (!drag || event.pointerId !== drag.id) return;
+        const dx = event.clientX - drag.x;
+        const dy = event.clientY - drag.y;
+        if (!drag.active) {
+            if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 6) {drag = undefined; return;}
+            if (Math.abs(dx) < 6) return;
+            drag.active = true;
+            suppressClick = true;
+            rail.setPointerCapture(event.pointerId);
+            rail.classList.add('is-dragging');
+        }
+        event.preventDefault();
+        rail.scrollLeft = drag.left - dx;
+    });
+    const finishDrag = () => {drag = undefined; rail.classList.remove('is-dragging');};
+    rail.addEventListener('pointerup', finishDrag);
+    rail.addEventListener('pointercancel', finishDrag);
+    rail.addEventListener('lostpointercapture', finishDrag);
+    rail.addEventListener('click', event => {
+        if (!suppressClick) return;
+        event.preventDefault(); event.stopImmediatePropagation(); suppressClick = false;
+    }, true);
+    rail.addEventListener('keydown', event => {
+        suppressClick = false;
+        if (event.target !== rail || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+        event.preventDefault();
+        rail.scrollBy({left: (event.key === 'ArrowRight' ? 1 : -1) * 160, behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'instant' : 'smooth'});
+    });
+}
+
 const menu = document.querySelector('[data-service-menu]');
 if (menu) {
     const links = [...menu.querySelectorAll('[data-service-category]')];
     const groups = [...menu.querySelectorAll('[data-menu-category]')];
     let category = menu.dataset.activeCategory || 'nails';
-    let expanded = false;
-    const more = menu.querySelector('[data-menu-more]');
-    const mobile = matchMedia('(max-width:730px)');
-    const adjustGroups=()=>groups.forEach(group => group.querySelectorAll('.ks-price-group').forEach((part,index)=>{part.open=!mobile.matches || index===0;}));
-    adjustGroups();mobile.addEventListener('change',adjustGroups);
     function filter(animate = false) {
         let visible = 0;
         groups.forEach(group => {
-            const rows = [...group.querySelectorAll('[data-service-row]')];
-            rows.forEach((row,index) => {
-                row.hidden = group.dataset.menuCategory==='pedicures' && !expanded && index>=6;
-            });
             group.hidden = category !== group.dataset.menuCategory;
-            if (!group.hidden) visible += rows.length;
+            if (!group.hidden) visible += group.querySelectorAll('[data-service-row]').length;
             if(animate && !group.hidden && !matchMedia('(prefers-reduced-motion:reduce)').matches) group.animate([{opacity:0,transform:'translateY(16px)'},{opacity:1,transform:'translateY(0)'}],{duration:420,easing:'cubic-bezier(.2,.7,.2,1)'});
         });
         menu.querySelector('[data-menu-empty]').hidden = visible > 0;
-        more.hidden = category!=='pedicures' || expanded;
         links.forEach(link => {
             if (link.dataset.serviceCategory === category) link.setAttribute('aria-current', 'true');
             else link.removeAttribute('aria-current');
         });
     }
     links.forEach(link => link.addEventListener('click', event => {
-        event.preventDefault(); category = link.dataset.serviceCategory; expanded=false; filter(true);
+        event.preventDefault(); category = link.dataset.serviceCategory; filter(true);
         link.scrollIntoView({block:'nearest',inline:'nearest',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});
         history.replaceState(null, '', link.href);
     }));
-    more.addEventListener('click',()=>{expanded=true;filter(true);});
-    addEventListener('popstate',()=>{const value=new URLSearchParams(location.search).get('category');category=links.some(link=>link.dataset.serviceCategory===value)?value:'nails';expanded=false;filter(true);});
+    addEventListener('popstate',()=>{const value=new URLSearchParams(location.search).get('category');category=links.some(link=>link.dataset.serviceCategory===value)?value:'nails';filter(true);});
     filter();
+    const selectedLink = links.find(link => link.dataset.serviceCategory === category);
+    if (selectedLink) {
+        const rail = selectedLink.parentElement;
+        const selected = selectedLink.getBoundingClientRect();
+        const bounds = rail.getBoundingClientRect();
+        if (selected.left < bounds.left) rail.scrollLeft -= bounds.left - selected.left;
+        else if (selected.right > bounds.right) rail.scrollLeft += selected.right - bounds.right;
+    }
 }
 
 const gallery = document.querySelector('[data-gallery]');

@@ -17,6 +17,13 @@ export function initSalonMotion() {
     let frame;
     let headerScrolled = false;
 
+    document.querySelector('.ks-back-top')?.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (lenis) lenis.scrollTo(0);
+        else window.scrollTo({top: 0, behavior: reduced.matches ? 'instant' : 'smooth'});
+    });
+
     function reset() {
         lenis?.destroy();
         lenis = undefined;

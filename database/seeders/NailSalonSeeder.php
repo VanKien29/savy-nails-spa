@@ -125,5 +125,6 @@ class NailSalonSeeder extends Seeder
         $this->call(SalonBrandSeeder::class);
         $this->call(SalonHeroSlideshowSeeder::class);
         $this->call(SalonClientMediaSeeder::class);
+        $this->call(SalonMapSeeder::class);
     }
 }

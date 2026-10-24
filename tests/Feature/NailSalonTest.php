@@ -17,6 +17,7 @@ use App\Services\StaticPreviewExporter;
 use Database\Seeders\NailSalonSeeder;
 use Database\Seeders\SalonBrandSeeder;
 use Database\Seeders\SalonHeroSlideshowSeeder;
+use Database\Seeders\SalonMapSeeder;
 use Database\Seeders\SalonSeoSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -96,6 +98,31 @@ class NailSalonTest extends TestCase
         $this->seed(SalonBrandSeeder::class);
         $this->assertSame($desktop->id, $settings->get('logo_id'));
         $this->assertSame($mobile->id, $settings->get('mobile_logo_id'));
+    }
+
+    public function test_contact_map_uses_validated_settings_and_preserves_editor_changes(): void
+    {
+        $settings = app(SiteSettingsService::class);
+        $embed = $settings->get('maps_embed_url');
+        $this->assertStringStartsWith('https://www.google.com/maps/embed?pb=', $embed);
+        $response = $this->get('/contact-us')->assertOk()->assertSee('src="'.e($embed).'"', false)->assertDontSee('LOCATION ILLUSTRATION');
+        $this->assertStringContainsString('https://www.google.com/maps/embed', $response->headers->get('Content-Security-Policy'));
+        $this->assertStringNotContainsString('https://www.google.com/maps/embed', $this->get('/')->headers->get('Content-Security-Policy'));
+        foreach (['https://example.invalid/maps/embed?pb=x', 'https://www.google.com.evil.invalid/maps/embed?pb=x', 'https://www.google.com/search?q=x', '<iframe src="https://www.google.com/maps/embed?pb=x"></iframe>'] as $invalid) {
+            try {
+                $settings->update(array_replace($settings->all(), ['maps_embed_url' => $invalid]));
+                $this->fail('Untrusted embed input was accepted.');
+            } catch (ValidationException $error) {
+                $this->assertArrayHasKey('maps_embed_url', $error->errors());
+            }
+        }
+        $custom = 'https://www.google.com/maps/embed?pb=editor-test-map';
+        $settings->update(array_replace($settings->all(), ['maps_embed_url' => $custom]));
+        $this->seed(SalonMapSeeder::class);
+        $this->assertSame($custom, $settings->get('maps_embed_url'));
+        $settings->update(array_replace($settings->all(), ['maps_embed_url' => null]));
+        $response = $this->get('/contact-us')->assertOk()->assertDontSee('<iframe', false);
+        $this->assertStringNotContainsString('https://www.google.com/maps/embed', $response->headers->get('Content-Security-Policy'));
     }
 
     public function test_home_hero_slides_are_profile_driven_and_seed_preserves_editor_choice(): void

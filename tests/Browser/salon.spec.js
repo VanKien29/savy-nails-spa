@@ -34,13 +34,30 @@ test('real contact submission and CSRF protection',async({page,request})=>{
 
 
 
-test('compact categories and progressive pedicure menu without search',async({page})=>{
+test('framed service menu keeps filters and displays descriptions without row actions',async({page})=>{
     await page.goto('/services');await expect(page.locator('[data-menu-category]:visible')).toHaveCount(1);await expect(page.locator('[data-menu-category="nails"]')).toBeVisible();
-    await page.locator('[data-service-category="pedicures"]').click();await expect(page.locator('[data-service-row]:visible')).toHaveCount(6);await page.locator('[data-menu-more]').click();await expect(page.locator('[data-service-row]:visible')).toHaveCount(12);await expect(page.locator('[data-menu-more]')).toBeHidden();
-    await expect(page.getByRole('searchbox')).toHaveCount(0);await page.locator('[data-service-category="nails"]').click();await expect(page.locator('[data-menu-category="nails"]')).toBeVisible();await page.locator('[data-service-category="pedicures"]').click();await expect(page.locator('[data-service-row]:visible')).toHaveCount(6);await expect(page.locator('[data-service-category="pedicures"]')).toHaveAttribute('aria-current','true');
+    await expect(page.locator('[data-service-row]')).toHaveCount(58);await expect(page.locator('[data-service-row] a,[data-service-row] details')).toHaveCount(0);
+    await page.locator('[data-service-category="pedicures"]').click();await expect(page.locator('[data-service-row]:visible')).toHaveCount(12);await expect(page.locator('[data-menu-more]')).toHaveCount(0);
+    const signature=page.locator('[data-service-row]').filter({hasText:'The K Signature Royal Pedicure'});await expect(signature).toContainText('$110');await expect(signature).toContainText('$125');await expect(signature.locator('.ks-menu-item-includes')).toBeVisible();
+    await expect(page.getByRole('searchbox')).toHaveCount(0);await page.locator('[data-service-category="nails"]').click();await expect(page.locator('[data-menu-category="nails"]')).toBeVisible();await page.locator('[data-service-category="pedicures"]').click();await expect(page.locator('[data-service-row]:visible')).toHaveCount(12);await expect(page.locator('[data-service-category="pedicures"]')).toHaveAttribute('aria-current','true');
     await page.goto('/services?category=kids');await expect(page.locator('[data-menu-category="kids"]')).toBeVisible();await expect(page.locator('[data-menu-category]:visible')).toHaveCount(1);
 });
 
+test('floating social links and back to top work with smooth, native and reduced motion scrolling',async({page,browser,baseURL})=>{
+    await page.addInitScript(()=>Object.defineProperty(navigator,'hardwareConcurrency',{get:()=>8}));
+    for(const [width,motion] of [[1280,'no-preference'],[390,'no-preference'],[390,'reduce']]){
+        await page.setViewportSize({width,height:800});await page.emulateMedia({reducedMotion:motion});await page.goto('/services');
+        if(width===1280)await expect(page.locator('html')).toHaveClass(/lenis/);else await expect(page.locator('html')).not.toHaveClass(/lenis/);
+        const actions=page.getByRole('navigation',{name:'Social links and page controls'});
+        await expect(actions.getByRole('link',{name:/Facebook/})).toHaveAttribute('href',/facebook\.com/);await expect(actions.getByRole('link',{name:/Instagram/})).toHaveAttribute('href',/instagram\.com/);
+        const boxes=await actions.locator('a').evaluateAll(links=>links.map(link=>({y:link.getBoundingClientRect().y,height:link.getBoundingClientRect().height})));
+        expect(boxes).toHaveLength(3);expect(boxes[0].y+boxes[0].height).toBeLessThan(boxes[1].y);expect(boxes[1].y+boxes[1].height).toBeLessThan(boxes[2].y);expect(boxes.every(box=>box.height>=32)).toBeTruthy();
+        const railLeft=await actions.evaluate(el=>el.getBoundingClientRect().left);expect(await page.locator('[data-menu-category="nails"] .ks-menu-item-line>strong').evaluateAll((prices,left)=>prices.every(price=>price.getBoundingClientRect().right<left),railLeft)).toBeTruthy();
+        await page.mouse.wheel(0,1200);await expect.poll(()=>page.evaluate(()=>scrollY)).toBeGreaterThan(500);await actions.getByRole('link',{name:'Back to top',exact:true}).click();await expect.poll(()=>page.evaluate(()=>scrollY)).toBeLessThan(2);
+    }
+    const context=await browser.newContext({javaScriptEnabled:false,reducedMotion:'reduce'});
+    try{const fallback=await context.newPage();await fallback.goto(baseURL+'/services');await fallback.keyboard.press('End');await expect.poll(()=>fallback.evaluate(()=>scrollY)).toBeGreaterThan(500);await fallback.getByRole('link',{name:'Back to top',exact:true}).click();await expect.poll(()=>fallback.evaluate(()=>scrollY)).toBeLessThan(2);}finally{await context.close();}
+});
 test('smooth scrolling, inspiration slider and reduced motion preference',async({page})=>{
     await page.addInitScript(()=>Object.defineProperty(navigator,'hardwareConcurrency',{get:()=>8}));
     await page.setViewportSize({width:1280,height:800});await page.emulateMedia({reducedMotion:'no-preference'});await page.goto('/');await expect(page.locator('html')).toHaveClass(/lenis/);expect(await page.locator('.ks-reveal-pending').count()).toBeGreaterThan(0);
