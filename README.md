@@ -3,7 +3,7 @@
 
 Base cho các website khách hàng độc lập (1–5 trang): Laravel 12, Filament 5, Blade, Tailwind 4, Alpine, Vite. CMS thực dùng database; không phải multi-tenant hay page builder kéo thả. Demo “Forma Studio” dùng cùng services và components với dự án thật.
 
-Yêu cầu **PHP stable >=8.5.12 <8.6**, Composer 2, Node 22+, extensions theo `starter:check`. Dự án dùng MySQL ở local và production; SQLite in-memory chỉ dùng cho automated feature tests độc lập. Laragon trên máy này đã được cấu hình PHP 8.5.12; xem [cấu hình PHP/MySQL local](docs/LOCAL_PHP_MYSQL.md). `.tools/php` là runtime dự phòng, bị Git bỏ qua.
+Yêu cầu **PHP stable >=8.5.12 <8.6**, Composer 2, Node 22+, `pdo_mysql` và các extensions theo `starter:check`. Ứng dụng và toàn bộ feature tests đều dùng MySQL. Database website là `the_k_luxury_nail_bar`; database test riêng là `the_k_luxury_nail_bar_testing`. Bộ test từ chối chạy nếu kết nối không trỏ đúng database test. Laragon trên máy này đã được cấu hình PHP 8.5.12. `.tools/php` là runtime dự phòng, bị Git bỏ qua.
 
 ## Quick start
 
@@ -33,6 +33,8 @@ $env:STARTER_PHP = (Get-Command php).Source
 php -v
 composer quality
 ```
+
+Trước lần chạy feature tests đầu tiên, tạo database test bằng `php scripts/create-test-database.php` trong môi trường local. Script dùng kết nối MySQL trong `.env` và chỉ tạo database test cố định. Nếu tài khoản ứng dụng không có quyền tạo database, tạo `the_k_luxury_nail_bar_testing` và cấp quyền cho tài khoản test từ MySQL trước. `phpunit.xml` ép kết nối test riêng; cache/session của test dùng bộ nhớ tạm, còn dữ liệu model luôn nằm trong MySQL. Không chạy `migrate:fresh` trên database website.
 
 ## Lệnh thường dùng
 

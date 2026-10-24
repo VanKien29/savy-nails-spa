@@ -14,12 +14,14 @@ class StarterCheck extends Command
     public function handle(): int
     {
         $checks = ['PHP stable >=8.5.12 <8.6' => PHP_VERSION_ID >= 80512 && PHP_VERSION_ID < 80600 && ! preg_match('/RC|alpha|beta/i', PHP_VERSION), 'Application key exists' => (bool) config('app.key'), 'Built assets' => is_file(public_path('build/manifest.json')), 'storage writable' => is_writable(storage_path()), 'bootstrap/cache writable' => is_writable(base_path('bootstrap/cache'))];
-        foreach (['ctype', 'curl', 'dom', 'fileinfo', 'filter', 'hash', 'mbstring', 'openssl', 'pcre', 'pdo', 'session', 'tokenizer', 'xml', 'intl', 'gd', 'exif', 'zip'] as $extension) {
+        foreach (['ctype', 'curl', 'dom', 'fileinfo', 'filter', 'hash', 'mbstring', 'openssl', 'pcre', 'pdo', 'pdo_mysql', 'session', 'tokenizer', 'xml', 'intl', 'gd', 'exif', 'zip'] as $extension) {
             $checks['Extension '.$extension] = extension_loaded($extension);
         }
         try {
             DB::connection()->getPdo();
             $checks['Database connection'] = true;
+            $checks['MySQL database driver'] = config('database.default') === 'mysql'
+                && DB::connection()->getPdo()->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql';
         } catch (\Throwable) {
             $checks['Database connection'] = false;
         }
@@ -28,7 +30,7 @@ class StarterCheck extends Command
             $canonical = ($origin['scheme'] ?? '') === 'https' && ! empty($origin['host'])
                 && ! in_array($origin['host'], ['localhost', '127.0.0.1', '::1'], true)
                 && empty($origin['user']) && empty($origin['pass']) && empty($origin['query']) && empty($origin['fragment']) && in_array($origin['path'] ?? '', ['', '/'], true);
-            $checks += ['Production environment' => app()->environment('production'), 'Debug disabled' => ! config('app.debug'), 'Preview disabled' => ! config('starter.preview'), 'Secure session cookies' => (bool) config('session.secure'), 'MySQL/MariaDB driver' => config('database.default') === 'mysql', 'Canonical HTTPS origin' => $canonical, 'Showcase disabled' => ! config('starter.showcase')];
+            $checks += ['Production environment' => app()->environment('production'), 'Debug disabled' => ! config('app.debug'), 'Preview disabled' => ! config('starter.preview'), 'Secure session cookies' => (bool) config('session.secure'), 'Canonical HTTPS origin' => $canonical, 'Showcase disabled' => ! config('starter.showcase')];
         }
         foreach ($checks as $name => $pass) {
             $this->line(($pass ? 'PASS ' : 'FAIL ').$name);

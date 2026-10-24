@@ -2,10 +2,34 @@
 
 namespace Tests;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
+    public function createApplication()
+    {
+        $app = parent::createApplication();
+        $this->guardTestDatabase($app);
+
+        return $app;
+    }
+
+    protected function guardTestDatabase(Application $app): void
+    {
+        $expected = 'the_k_luxury_nail_bar_testing';
+        if (! $app->environment('testing') || $app['config']->get('database.default') !== 'mysql'
+            || $app['config']->get('database.connections.mysql.database') !== $expected) {
+            throw new \RuntimeException('Feature tests require the isolated MySQL database '.$expected.'.');
+        }
+        // This guard runs before RefreshDatabase can migrate or drop any tables.
+        $connection = $app['db']->connection('mysql');
+        if ($connection->getPdo()->getAttribute(\PDO::ATTR_DRIVER_NAME) !== 'mysql'
+            || $connection->selectOne('SELECT DATABASE() AS database_name')->database_name !== $expected) {
+            throw new \RuntimeException('Refusing to run tests against an unexpected database.');
+        }
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

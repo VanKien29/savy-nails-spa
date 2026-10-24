@@ -42,6 +42,7 @@ test('compact categories and progressive pedicure menu without search',async({pa
 });
 
 test('smooth scrolling, inspiration slider and reduced motion preference',async({page})=>{
+    await page.addInitScript(()=>Object.defineProperty(navigator,'hardwareConcurrency',{get:()=>8}));
     await page.setViewportSize({width:1280,height:800});await page.emulateMedia({reducedMotion:'no-preference'});await page.goto('/');await expect(page.locator('html')).toHaveClass(/lenis/);expect(await page.locator('.ks-reveal-pending').count()).toBeGreaterThan(0);
     await page.mouse.wheel(0,550);await expect.poll(()=>page.evaluate(()=>scrollY)).toBeGreaterThan(200);
     const slider=page.locator('[data-inspiration-slider]');await slider.scrollIntoViewIfNeeded();await page.locator('[data-slide="1"]').click();await expect.poll(()=>slider.evaluate(el=>el.scrollLeft)).toBeGreaterThan(50);

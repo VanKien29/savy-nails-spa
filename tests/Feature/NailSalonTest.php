@@ -168,7 +168,7 @@ class NailSalonTest extends TestCase
         $lead = Lead::firstOrFail();
         $this->assertSame('new', $lead->status);
         $this->assertSame('/booking', $lead->source_page);
-        $this->assertSame($payload['extra'], $lead->extra);
+        $this->assertEqualsCanonicalizing($payload['extra'], $lead->extra);
         $this->assertStringContainsString('Please add gel polish.', $lead->message);
         $this->postJson('/inquiries/booking', $payload)->assertCreated();
         $this->assertSame(1, Lead::count());
