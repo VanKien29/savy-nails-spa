@@ -20,58 +20,6 @@ if(homeHero && backTop) new IntersectionObserver(([entry])=>backTop.toggleAttrib
 import('./salon-motion').then(({initSalonMotion}) => initSalonMotion()).catch(() => {});
 if (homeHero?.matches('[data-hero-slideshow]')) import('./salon-hero').then(({initSalonHero}) => initSalonHero()).catch(() => {});
 
-// Touch stays native; mouse/pen dragging also works in narrow desktop previews.
-for (const rail of document.querySelectorAll('.ks-gallery-filters')) {
-    let drag;
-    let suppressClick = false;
-    rail.tabIndex = 0;
-    rail.setAttribute('data-lenis-prevent', '');
-    rail.addEventListener('dragstart', event => event.preventDefault());
-    rail.addEventListener('pointerdown', event => {
-        suppressClick = false;
-        if (event.pointerType === 'touch' || event.button !== 0 || rail.scrollWidth <= rail.clientWidth) return;
-        drag = {id: event.pointerId, x: event.clientX, y: event.clientY, left: rail.scrollLeft, active: false};
-    });
-    rail.addEventListener('pointermove', event => {
-        if (!drag || event.pointerId !== drag.id) return;
-        const dx = event.clientX - drag.x;
-        const dy = event.clientY - drag.y;
-        if (!drag.active) {
-            if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 6) {drag = undefined; return;}
-            if (Math.abs(dx) < 6) return;
-            drag.active = true;
-            suppressClick = true;
-            rail.setPointerCapture(event.pointerId);
-            rail.classList.add('is-dragging');
-        }
-        event.preventDefault();
-        rail.scrollLeft = drag.left - dx;
-    });
-    const finishDrag = () => {drag = undefined; rail.classList.remove('is-dragging');};
-    rail.addEventListener('pointerup', finishDrag);
-    rail.addEventListener('pointercancel', finishDrag);
-    rail.addEventListener('lostpointercapture', finishDrag);
-    rail.addEventListener('click', event => {
-        if (!suppressClick) return;
-        event.preventDefault(); event.stopImmediatePropagation(); suppressClick = false;
-    }, true);
-    rail.addEventListener('keydown', event => {
-        suppressClick = false;
-        if (event.target !== rail || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
-        event.preventDefault();
-        rail.scrollBy({left: (event.key === 'ArrowRight' ? 1 : -1) * 160, behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'instant' : 'smooth'});
-    });
-}
-
-const gallery = document.querySelector('[data-gallery]');
-if (gallery) {
-    gallery.querySelectorAll('[data-gallery-filter]').forEach(button => button.addEventListener('click', () => {
-        const category = button.dataset.galleryFilter;
-        gallery.querySelectorAll('[data-gallery-category]').forEach(item => { item.hidden = category !== 'all' && item.dataset.galleryCategory !== category; });
-        gallery.querySelectorAll('[data-gallery-filter]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
-    }));
-}
-
 const slider = document.querySelector('[data-inspiration-slider]');
 if(slider){
     const buttons=[...document.querySelectorAll('[data-slide]')];
