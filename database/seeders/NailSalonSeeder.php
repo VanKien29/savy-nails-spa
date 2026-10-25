@@ -19,7 +19,11 @@ class NailSalonSeeder extends Seeder
 {
     public function run(): void
     {
-        $source = json_decode(file_get_contents(database_path('seeders/data/the-k-menu.json')), true, flags: JSON_THROW_ON_ERROR);
+        $source = [
+            'categories' => SalonCatalogData::categories(),
+            'services' => SalonCatalogData::services(),
+            'images' => SalonCatalogData::menuImages(),
+        ];
         $reportPath = public_path('assets/optimized/report.json');
         if (! is_file($reportPath)) {
             throw new \RuntimeException('Run npm run media:optimize before installing the salon.');

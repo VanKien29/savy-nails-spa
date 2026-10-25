@@ -6,7 +6,7 @@
     <div class="ks-container ks-menu-content">
         @forelse($menuCategories as $category)
             <section class="ks-menu-panel" id="menu-{{ $category->slug }}" data-menu-category="{{ $category->slug }}" aria-labelledby="menu-title-{{ $category->slug }}">
-                <h2 id="menu-title-{{ $category->slug }}">{{ $category->name }}</h2>
+                <h2 id="menu-title-{{ $category->slug }}">{{ $category->name }}@if($category->slug === 'kids')<span class="ks-menu-subtitle">(For children under 12)</span>@endif</h2>
                 @foreach($category->services->groupBy('group') as $group => $services)
                     <section class="ks-menu-group">
                         @if($group && $group !== $category->name)<h3>{{ $group }}</h3>@endif

@@ -24,7 +24,7 @@
     <div class="ks-honeypot" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
     <label class="ks-consent"><input type="checkbox" name="consent" value="1" required><span>I agree to be contacted about this {{ $booking ? 'appointment request' : 'inquiry' }}. My information will be used to respond to my request.</span></label>
     @if(!$isDemo && config('starter.leads.captcha_site_key'))<div class="cf-turnstile" data-sitekey="{{ config('starter.leads.captcha_site_key') }}"></div><script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>@endif
-    <button type="submit" class="ks-button ks-submit"><span data-submit-label>{{ $booking ? 'Request My Appointment' : 'Send Your Message' }}</span><x-salon.icon name="arrow"/></button>
+    <button type="submit" class="ks-button ks-submit"><span data-submit-label>{{ $booking ? 'Request My Appointment' : 'Send Your Message' }}</span></button>
     </fieldset>
     <div class="ks-form-status" data-form-status role="status" tabindex="-1"></div>
     <p class="ks-form-fineprint">{{ $booking ? 'An appointment request is not a confirmed reservation.' : 'For time-sensitive questions, please call the salon.' }} <button type="button" data-open-dialog="appointment-policy">Privacy & appointment requests</button></p>

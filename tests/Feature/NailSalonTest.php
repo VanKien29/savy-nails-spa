@@ -143,7 +143,8 @@ class NailSalonTest extends TestCase
             $this->get($path)->assertOk()
                 ->assertSee('href="/favicon.ico?v=2"', false)
                 ->assertSee('rel="apple-touch-icon"', false)
-                ->assertSee('data-icon="arrow"', false)
+                ->assertSee('data-icon="arrow-up"', false)
+                ->assertDontSee('data-icon="arrow"', false)
                 ->assertDontSee('↗')->assertDontSee('✧');
         }
 
@@ -236,8 +237,8 @@ class NailSalonTest extends TestCase
             }
         }
         $home = Page::where('template', 'salon-home')->firstOrFail();
-        $this->assertCount(8, $home->sections);
-        $this->get('/')->assertDontSee('Your neighborhood luxury')->assertDontSee('Beyond the polish')->assertDontSee('A considered detail.')->assertDontSee('A little moment. A beautiful difference.')->assertSee('Before your beautiful moment.')->assertSee('A slower kind of luxury')->assertSee('Thoughtful from start to finish')->assertSee('sizes="(max-width:960px) 100vw, 65vw"', false);
+        $this->assertCount(7, $home->sections);
+        $this->get('/')->assertDontSee('Your neighborhood luxury')->assertDontSee('Beyond the polish')->assertDontSee('A considered detail.')->assertDontSee('A little moment. A beautiful difference.')->assertDontSee('Before your beautiful moment.')->assertSee('A slower kind of luxury')->assertSee('Thoughtful from start to finish')->assertSee('sizes="(max-width:960px) 100vw, 65vw"', false);
     }
 
     public function test_booking_rejects_invalid_service_date_and_untrusted_extra(): void

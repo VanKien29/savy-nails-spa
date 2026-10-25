@@ -18,7 +18,7 @@ class SalonRitualRefreshSeeder extends Seeder
         }
         $keys = ['luxury-ritual-nude', 'luxury-ritual-pearl'];
         $report = collect(json_decode(file_get_contents(public_path('assets/optimized/report.json')), true, flags: JSON_THROW_ON_ERROR));
-        $manifest = collect(json_decode(file_get_contents(database_path('seeders/data/the-k-luxury.json')), true, flags: JSON_THROW_ON_ERROR))->keyBy('key');
+        $manifest = collect(SalonCatalogData::luxuryImages())->keyBy('key');
         DB::transaction(function () use ($profile, $keys, $report, $manifest) {
             foreach ($keys as $index => $key) {
                 $row = $manifest->get($key);
