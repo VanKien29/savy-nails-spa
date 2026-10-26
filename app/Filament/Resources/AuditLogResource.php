@@ -13,6 +13,15 @@ class AuditLogResource extends StarterResource
 
     protected static ?string $pluralModelLabel = 'Nhật ký thay đổi';
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Hệ thống';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-shield-check';
+
+    public static function canDeleteAny(): bool
+    {
+        return false;
+    }
+
     public static function canCreate(): bool
     {
         return false;

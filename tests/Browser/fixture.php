@@ -18,7 +18,15 @@ $data = json_decode(stream_get_contents(STDIN), true, flags: JSON_THROW_ON_ERROR
 if (! preg_match('/^browser-[a-f0-9-]+@example\.invalid$/', $data['email'] ?? '')) {
     exit(1);
 }
-if ($data['action'] === 'create') {
+if ($data['action'] === 'cleanupMenu') {
+    if (! preg_match('/^browser-menu-[a-f0-9-]+$/', $data['category_slug'] ?? '')) {
+        exit(1);
+    }
+    if ($category = \App\Models\SalonCategory::where('slug', $data['category_slug'])->first()) {
+        \App\Models\SalonService::where('category_id', $category->id)->get()->each->delete();
+        $category->delete();
+    }
+} elseif ($data['action'] === 'create') {
     $user = new User(['name' => 'Browser test', 'email' => $data['email'], 'password' => $data['password']]);
     $user->is_admin = true;
     $user->save();

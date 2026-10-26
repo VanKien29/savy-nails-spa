@@ -19,9 +19,9 @@ test('five pages, responsive layout, assets, links and English metadata',async({
 });
 test('mobile navigation, complete service menu, gallery and keyboard dialogs',async({page})=>{
     await page.setViewportSize({width:390,height:844});await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');await page.getByRole('button',{name:'Toggle navigation'}).click();await expect(page.locator('#mobile-nav')).toHaveClass(/is-open/);await page.locator('#mobile-nav').getByRole('link',{name:'Services',exact:false}).click();
-    await expect(page.locator('[data-menu-category]:visible')).toHaveCount(5);await expect(page.locator('[data-service-row]:visible')).toHaveCount(58);
+    await expect(page.locator('[data-menu-category]:visible')).toHaveCount(5);await expect(page.locator('[data-service-row]:visible')).toHaveCount(55);
     await expect(page.getByRole('searchbox')).toHaveCount(0);await expect(page.locator('[data-service-category],.ks-menu-toolbar')).toHaveCount(0);
-    await page.goto('/gallery');await expect(page.locator('input[type=search]')).toHaveCount(0);await expect(page.locator('[data-gallery-filter],.ks-gallery-filters,.ks-image-source')).toHaveCount(0);const galleryCount=await page.locator('[data-gallery-category]').count();expect(galleryCount).toBeGreaterThan(0);await expect(page.locator('[data-gallery-category]:visible')).toHaveCount(galleryCount);await expect(page.locator('a[href*="pinterest"],a[href*="pin.it"]')).toHaveCount(0);await expect(page.locator('main')).not.toContainText('Pinterest');await page.locator('[data-lightbox]:visible').first().click();await expect(page.locator('#image-lightbox')).toBeVisible();await page.keyboard.press('Escape');await expect(page.locator('#image-lightbox')).toBeHidden();
+    await page.goto('/gallery');await expect(page.locator('input[type=search]')).toHaveCount(0);await expect(page.locator('[data-gallery-filter],.ks-gallery-filters,.ks-image-source')).toHaveCount(0);const galleryCount=await page.locator('.ks-gallery-item').count();expect(galleryCount).toBeGreaterThan(0);await expect(page.locator('.ks-gallery-item:visible')).toHaveCount(galleryCount);await expect(page.locator('a[href*="pinterest"],a[href*="pin.it"]')).toHaveCount(0);await expect(page.locator('main')).not.toContainText('Pinterest');await page.locator('.ks-gallery-item img').first().click();await expect(page.locator('[data-lightbox],#image-lightbox')).toHaveCount(0);
     await page.locator('[data-open-dialog="appointment-policy"]').first().click();await expect(page.locator('#appointment-policy')).toBeVisible();await page.keyboard.press('Escape');await expect(page.locator('#appointment-policy')).toBeHidden();
 });
 test('contact page details, image and API CSRF protection',async({page,request})=>{
@@ -35,7 +35,7 @@ test('contact page details, image and API CSRF protection',async({page,request})
 
 test('complete service menu stacks all categories in one column without filters',async({page})=>{
     await page.goto('/services');await expect(page.locator('[data-menu-category]:visible')).toHaveCount(5);
-    await expect(page.locator('[data-service-row]:visible')).toHaveCount(58);await expect(page.locator('[data-service-row] a,[data-service-row] details,[data-menu-more],.ks-menu-toolbar')).toHaveCount(0);
+    await expect(page.locator('[data-service-row]:visible')).toHaveCount(55);await expect(page.locator('[data-service-row] a,[data-service-row] details,[data-menu-more],.ks-menu-toolbar')).toHaveCount(0);
     for(const width of [390,768,1280]){
         await page.setViewportSize({width,height:844});
         const boxes=await page.locator('[data-menu-category]').evaluateAll(parts=>parts.map(part=>{const box=part.getBoundingClientRect();return {x:box.x,y:box.y,width:box.width,height:box.height};}));
@@ -43,11 +43,11 @@ test('complete service menu stacks all categories in one column without filters'
     }
     const signature=page.locator('[data-service-row]').filter({hasText:'The K Signature Royal Pedicure'});await expect(signature).toContainText('$110');await expect(signature).toContainText('$125');await expect(signature.locator('.ks-menu-item-includes')).toBeVisible();
     await expect(page.getByRole('searchbox')).toHaveCount(0);
-    await page.goto('/services?category=kids');await expect(page.locator('[data-menu-category]:visible')).toHaveCount(5);await expect(page.locator('[data-service-row]:visible')).toHaveCount(58);
+    await page.goto('/services?category=kids');await expect(page.locator('[data-menu-category]:visible')).toHaveCount(5);await expect(page.locator('[data-service-row]:visible')).toHaveCount(55);
     await page.goto('/');const pedicureLink=page.locator('.kl-collection-card[href="/services#menu-pedicures"]');await expect(pedicureLink).toHaveCount(1);await pedicureLink.click();await expect(page).toHaveURL(/\/services#menu-pedicures$/);await expect(page.locator('#menu-pedicures')).toBeInViewport();
 });
 
-test('floating social links and back to top work with smooth, native and reduced motion scrolling',async({page,browser,baseURL})=>{
+test('floating social links stay clear of prices with smooth, native and reduced motion scrolling',async({page,browser,baseURL})=>{
     await page.addInitScript(()=>Object.defineProperty(navigator,'hardwareConcurrency',{get:()=>8}));
     for(const [width,motion] of [[1280,'no-preference'],[390,'no-preference'],[390,'reduce']]){
         await page.setViewportSize({width,height:800});await page.emulateMedia({reducedMotion:motion});await page.goto('/services');
@@ -55,12 +55,12 @@ test('floating social links and back to top work with smooth, native and reduced
         const actions=page.getByRole('navigation',{name:'Social links and page controls'});
         await expect(actions.getByRole('link',{name:/Facebook/})).toHaveAttribute('href',/facebook\.com/);await expect(actions.getByRole('link',{name:/Instagram/})).toHaveAttribute('href',/instagram\.com/);
         const boxes=await actions.locator('a').evaluateAll(links=>links.map(link=>({y:link.getBoundingClientRect().y,height:link.getBoundingClientRect().height})));
-        expect(boxes).toHaveLength(3);expect(boxes[0].y+boxes[0].height).toBeLessThan(boxes[1].y);expect(boxes[1].y+boxes[1].height).toBeLessThan(boxes[2].y);expect(boxes.every(box=>width>730 ? box.height>=44 : box.height===32)).toBeTruthy();
+        expect(boxes).toHaveLength(2);expect(boxes[0].y+boxes[0].height).toBeLessThan(boxes[1].y);expect(boxes.every(box=>width>730 ? box.height>=44 : box.height===32)).toBeTruthy();
         const railLeft=await actions.evaluate(el=>el.getBoundingClientRect().left);expect(await page.locator('[data-menu-category="nails"] .ks-menu-item-line>strong').evaluateAll((prices,left)=>prices.every(price=>price.getBoundingClientRect().right<left),railLeft)).toBeTruthy();
-        await page.mouse.wheel(0,1200);await expect.poll(()=>page.evaluate(()=>scrollY)).toBeGreaterThan(500);await actions.getByRole('link',{name:'Back to top',exact:true}).click();await expect.poll(()=>page.evaluate(()=>scrollY)).toBeLessThan(2);
+        await page.mouse.wheel(0,1200);await expect.poll(()=>page.evaluate(()=>scrollY)).toBeGreaterThan(500);await expect(actions.getByRole('link',{name:'Back to top',exact:true})).toHaveCount(0);
     }
     const context=await browser.newContext({javaScriptEnabled:false,reducedMotion:'reduce'});
-    try{const fallback=await context.newPage();await fallback.goto(baseURL+'/services');await expect(fallback.locator('[data-service-row]:visible')).toHaveCount(58);await fallback.keyboard.press('End');await expect.poll(()=>fallback.evaluate(()=>scrollY)).toBeGreaterThan(500);await fallback.getByRole('link',{name:'Back to top',exact:true}).click();await expect.poll(()=>fallback.evaluate(()=>scrollY)).toBeLessThan(2);}finally{await context.close();}
+    try{const fallback=await context.newPage();await fallback.goto(baseURL+'/services');await expect(fallback.locator('[data-service-row]:visible')).toHaveCount(55);await fallback.keyboard.press('End');await expect.poll(()=>fallback.evaluate(()=>scrollY)).toBeGreaterThan(500);await expect(fallback.getByRole('link',{name:'Back to top',exact:true})).toHaveCount(0);}finally{await context.close();}
 });
 test('smooth scrolling, inspiration slider and reduced motion preference',async({page})=>{
     await page.addInitScript(()=>Object.defineProperty(navigator,'hardwareConcurrency',{get:()=>8}));
@@ -77,10 +77,10 @@ test('exclusive photo ownership and responsive editorial hero',async({page})=>{
         await page.goto(path);
         for(const key of await page.locator('picture[data-salon-image]').evaluateAll(pics=>pics.map(pic=>pic.dataset.salonImage))){expect(used.has(key),`${key} reused on ${used.get(key)} and ${path}`).toBeFalsy();used.set(key,path);}
     }
-    await page.setViewportSize({width:1440,height:1000});await page.goto('/');await expect(page.locator('main>section')).toHaveCount(8);
+    await page.setViewportSize({width:1440,height:1000});await page.goto('/');await expect(page.locator('main>section')).toHaveCount(7);
     const hero=page.locator('.kl-hero');const picture=hero.locator('.kl-hero-slide.is-active picture');expect((await picture.boundingBox()).width).toBeGreaterThan(720);await expect.poll(()=>picture.locator('img').evaluate(img=>img.currentSrc)).toContain('hero-marble-editorial.png');
     await page.setViewportSize({width:390,height:844});expect(Math.round((await picture.boundingBox()).width)).toBe(390);await expect.poll(()=>picture.locator('img').evaluate(img=>img.currentSrc)).toContain('hero-marble-editorial.png');
-    await page.locator('.kl-faqs summary').first().click();await expect(page.locator('.kl-faqs details').first()).toHaveAttribute('open','');
+    await expect(page.locator('.kl-faqs,.kl-questions')).toHaveCount(0);
 });
 
 test('mobile uses native scrolling and decorative lines draw once',async({page})=>{

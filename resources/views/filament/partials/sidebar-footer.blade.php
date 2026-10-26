@@ -1,0 +1,1 @@
+<div class="sample-sidebar-footer"><a href="/" target="_blank" rel="noopener noreferrer"><x-filament::icon icon="heroicon-o-arrow-top-right-on-square"/>Xem website</a><form action="{{ route('filament.admin.auth.logout') }}" method="post">@csrf<button type="submit"><x-filament::icon icon="heroicon-o-arrow-right-on-rectangle"/>Đăng xuất</button></form></div>

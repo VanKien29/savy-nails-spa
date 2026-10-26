@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Services\CmsAccess;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,7 +10,7 @@ abstract class StarterResource extends Resource
 {
     public static function canViewAny(): bool
     {
-        return (bool) auth()->user()?->is_admin;
+        return CmsAccess::allows(CmsAccess::area(static::getModel()));
     }
 
     public static function canCreate(): bool
@@ -29,6 +30,6 @@ abstract class StarterResource extends Resource
 
     public static function canDeleteAny(): bool
     {
-        return static::canViewAny();
+        return false;
     }
 }

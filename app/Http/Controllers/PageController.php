@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Page;
 use App\Models\Redirect;
+use App\Services\CmsAccess;
 use App\Services\PageRenderer;
 use App\Services\SeoService;
 use Illuminate\Http\Request;
@@ -41,7 +42,7 @@ class PageController extends Controller
 
     public function preview(Page $page, PageRenderer $renderer)
     {
-        abort_unless(auth()->user()?->is_admin, 403);
+        abort_unless(CmsAccess::allows('content'), 403);
 
         return response($renderer->render($page, true)->render())->header('X-Robots-Tag', 'noindex, nofollow')->header('Cache-Control', 'private, no-store');
     }

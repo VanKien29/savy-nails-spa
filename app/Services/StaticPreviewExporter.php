@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Media;
 use App\Models\Page;
+use App\Models\SalonImage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
@@ -74,6 +75,10 @@ class StaticPreviewExporter
             }
             // Only media referenced by exported pages or shared public branding is copied.
             $ids = collect(app(SiteSettingsService::class)->all())->only(['logo_id', 'mobile_logo_id', 'favicon_id', 'og_media_id'])->values();
+            if ($pages->contains('template', 'salon-contact')) {
+                $contactImage = app(SalonContent::class)->all()['profile']['contact_image'] ?? 'contact-welcome';
+                $ids->push(SalonImage::where('key', $contactImage)->value('media_id'));
+            }
             foreach ($pages as $page) {
                 $ids = $ids->merge([$page->hero_media_id, $page->og_media_id]);
                 foreach ($page->sections ?? [] as $section) {

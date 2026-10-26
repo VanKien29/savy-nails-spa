@@ -30,7 +30,7 @@ class SalonClientMediaTest extends TestCase
 
         $original = imagecreatefrompng(Storage::disk('local')->path($logo->original_path));
         $this->assertSame(127, imagecolorsforindex($original, imagecolorat($original, 0, 0))['alpha']);
-        $this->get('/gallery')->assertOk()->assertSee('ks-gallery-even')->assertSee('pinterest-long-french');
+        $this->get('/gallery')->assertOk()->assertSee('ks-gallery-masonry')->assertSee('pinterest-long-french');
 
         $settings->update(array_replace($settings->all(), ['mobile_logo_id' => null]));
         SalonImage::where('key', 'pinterest-burgundy-french')->firstOrFail()->update(['show_in_gallery' => false]);

@@ -23,10 +23,12 @@ class PageRenderer
 
         return view(config('starter.templates.'.$page->template), [
             'page' => $page, 'settings' => $settings, 'media' => $media,
-            'sections' => collect($page->sections ?? [])->filter(fn ($s) => $s['enabled'] ?? false)->sortBy('ordering'),
+            'sections' => collect($page->sections ?? [])->filter(fn ($s) => ($s['enabled'] ?? false)
+                && ($page->template !== 'salon-home' || ($s['id'] ?? '') !== 'questions'))->sortBy('ordering'),
             'navigation' => Cache::remember('starter.navigation', 600, fn () => NavigationItem::where('enabled', true)->orderBy('sort_order')->get()),
             'seo' => app(SeoService::class)->forPage($page, $preview),
             'isDemo' => config('starter.preview') || config('starter.exporting'),
+            'isPreview' => $preview,
         ]);
     }
 }

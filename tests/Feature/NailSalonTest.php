@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Pages\SiteSettings;
+use App\Filament\Pages\HeaderMenu;
 use App\Models\Lead;
 use App\Models\Media;
 use App\Models\Page;
@@ -53,7 +53,7 @@ class NailSalonTest extends TestCase
 
     public function test_five_english_pages_and_source_menu_render(): void
     {
-        $this->assertSame(58, SalonService::count());
+        $this->assertSame(55, SalonService::count());
         foreach (['/', '/about-us', '/services', '/gallery', '/contact-us'] as $path) {
             $response = $this->get($path)->assertOk()->assertSee('<html lang="en">', false)->assertSee('THE K')->assertSee('09:30 AM');
             $dom = new \DOMDocument;
@@ -78,7 +78,7 @@ class NailSalonTest extends TestCase
         $admin->is_admin = true;
         $admin->save();
         $this->actingAs($admin);
-        Livewire::test(SiteSettings::class)->fillForm(['logo_id' => $desktop->id, 'mobile_logo_id' => $mobile->id])->call('save')->assertHasNoFormErrors();
+        Livewire::test(HeaderMenu::class)->fillForm(['settings.logo_id' => $desktop->id, 'settings.mobile_logo_id' => $mobile->id])->call('save')->assertHasNoFormErrors();
         $dom = new \DOMDocument;
         @$dom->loadHTML($this->get('/')->assertOk()->getContent());
         $xpath = new \DOMXPath($dom);
@@ -143,7 +143,7 @@ class NailSalonTest extends TestCase
             $this->get($path)->assertOk()
                 ->assertSee('href="/favicon.ico?v=2"', false)
                 ->assertSee('rel="apple-touch-icon"', false)
-                ->assertSee('data-icon="arrow-up"', false)
+                ->assertDontSee('data-icon="arrow-up"', false)
                 ->assertDontSee('data-icon="arrow"', false)
                 ->assertDontSee('↗')->assertDontSee('✧');
         }
@@ -205,7 +205,7 @@ class NailSalonTest extends TestCase
         $this->assertSame(2, Lead::count());
     }
 
-    public function test_editorial_inspiration_is_labelled_and_seed_preserves_edits(): void
+    public function test_gallery_preserves_captions_and_credit_metadata_without_source_links_or_filters(): void
     {
         $images = SalonImage::where('category', 'nails')->where('show_in_gallery', true)->get();
         $this->assertCount(6, $images);
@@ -222,10 +222,12 @@ class NailSalonTest extends TestCase
         $image->update(['caption' => 'Edited inspiration caption']);
         $this->seed(NailSalonSeeder::class);
         $this->assertSame('Edited inspiration caption', $image->fresh()->caption);
-        $this->get('/gallery')->assertSee('AI-created')->assertSee('Edited inspiration caption');
+        $this->get('/gallery')->assertOk()->assertSee($image->alt)->assertDontSee('Edited inspiration caption')
+            ->assertDontSee('Style inspiration')->assertDontSee('Treatment collection')
+            ->assertDontSee('ks-gallery-filters')->assertDontSee('data-gallery-filter')->assertDontSee('ks-image-source');
     }
 
-    public function test_photographs_are_unique_across_all_public_pages_and_home_has_eight_sections(): void
+    public function test_photographs_are_unique_across_all_public_pages_and_home_has_seven_sections(): void
     {
         $seen = [];
         foreach (['/', '/about-us', '/services', '/gallery', '/contact-us'] as $path) {
@@ -283,7 +285,7 @@ class NailSalonTest extends TestCase
         $image = SalonImage::where('key', 'luxury-ritual-nude')->firstOrFail();
         $image->update(['caption' => 'Edited ritual inspiration']);
         $this->seed(NailSalonSeeder::class);
-        $this->assertSame(58, SalonService::count());
+        $this->assertSame(55, SalonService::count());
         $this->assertSame('Edited ritual', $service->fresh()->name);
         $this->assertCount(2, SalonProfile::find(1)->data['hours']);
         $this->assertSame($sections, $home->fresh()->sections);
@@ -300,8 +302,8 @@ class NailSalonTest extends TestCase
             $this->assertCount(5, $paths);
             $html = File::get($directory.'/contact-us/index.html');
             $this->assertStringContainsString('noindex, nofollow', $html);
-            $this->assertStringContainsString('Send Your Message', $html);
-            $this->assertStringContainsString('data-static-preview="true"', $html);
+            $this->assertStringContainsString('ks-contact-photo', $html);
+            $this->assertStringNotContainsString('<form', $html);
             $this->assertStringNotContainsString('Design preview', $html);
             foreach (['name="_token"', 'name="form_token"', 'PRIVATE-GUEST', 'PRIVATE-NOTE'] as $secret) {
                 $this->assertStringNotContainsString($secret, $html);

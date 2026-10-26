@@ -17,5 +17,6 @@
 @case('chevron-left') @case('prev') @case('arrow-left')<path d="M15 18 9 12 15 6"/>@break
 @case('chevron-right') @case('next') @case('arrow-right')<path d="M9 18 15 12 9 6"/>@break
 @case('arrow')<path d="M5 19 19 5M5 5h14v14"/>@break
+@default @include('components.salon.social-brand-icons')
 @endswitch
 </svg>

@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Jobs\ProcessMedia;
 use App\Models\Media;
 use App\Models\Page;
+use App\Models\PageRevision;
+use App\Models\SalonImage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -87,6 +89,25 @@ class MediaService
 
     public function inUse(Media $media): bool
     {
+        if (SalonImage::where('media_id', $media->id)->exists()) {
+            return true;
+        }
+        foreach (PageRevision::cursor() as $revision) {
+            $snapshot = $revision->snapshot;
+            if (in_array($media->id, [$snapshot['hero_media_id'] ?? null, $snapshot['og_media_id'] ?? null])) {
+                return true;
+            }
+            foreach ($snapshot['sections'] ?? [] as $section) {
+                if ((int) ($section['media_id'] ?? 0) === $media->id) {
+                    return true;
+                }
+                foreach ($section['items'] ?? [] as $item) {
+                    if ((int) ($item['media_id'] ?? 0) === $media->id) {
+                        return true;
+                    }
+                }
+            }
+        }
         if (Page::where('hero_media_id', $media->id)->orWhere('og_media_id', $media->id)->exists()) {
             return true;
         }

@@ -4,6 +4,7 @@ namespace Tests;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Storage;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -33,6 +34,9 @@ abstract class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        // Test database IDs can match live media IDs. Never share upload paths.
+        Storage::fake('local');
+        Storage::fake('public');
         // Keep compiled views separate from concurrently running local preview/export requests.
         $path = storage_path('framework/testing/views');
         if (! is_dir($path)) {

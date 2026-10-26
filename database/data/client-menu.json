@@ -1,0 +1,614 @@
+{
+  "source": "Client-provided giá menu services.pdf, 7 pages",
+  "revision": "client-menu-2026-10-v1",
+  "categories": [
+    {
+      "slug": "brows-lashes",
+      "name": "Brows & Lashes"
+    },
+    {
+      "slug": "nails",
+      "name": "Nail Services"
+    },
+    {
+      "slug": "pedicures",
+      "name": "Pedicures"
+    },
+    {
+      "slug": "kids",
+      "name": "Kid’s Services"
+    },
+    {
+      "slug": "waxing",
+      "name": "Waxing"
+    }
+  ],
+  "services": [
+    {
+      "slug": "brows-lashes-brow-services-brow-wax",
+      "category": "brows-lashes",
+      "group": "Brow Services",
+      "name": "Brow Wax",
+      "price": 14,
+      "description": "Professional brow shaping customized to your face for a clean, defined look."
+    },
+    {
+      "slug": "brows-lashes-brow-services-brow-wax-tint",
+      "category": "brows-lashes",
+      "group": "Brow Services",
+      "name": "Brow Wax + Tint",
+      "price": 40,
+      "description": "Brow shaping with a customized tint for fuller, more defined brows."
+    },
+    {
+      "slug": "brows-lashes-brow-services-brow-lamination",
+      "category": "brows-lashes",
+      "group": "Brow Services",
+      "name": "Brow Lamination",
+      "price": 80,
+      "description": "Brow lamination to create a fuller, lifted, and more defined look."
+    },
+    {
+      "slug": "brows-lashes-brow-services-brow-lamination-tint",
+      "category": "brows-lashes",
+      "group": "Brow Services",
+      "name": "Brow Lamination + Tint",
+      "price": 90,
+      "description": "Brow lamination with a customized tint for added color, fullness, and definition."
+    },
+    {
+      "slug": "brows-lashes-permanent-makeup-ombre-brows",
+      "category": "brows-lashes",
+      "group": "Permanent Makeup",
+      "name": "Ombre Brows",
+      "price": 350,
+      "description": "Soft gradient powder brows with lighter fronts and defined tails for a polished makeup look.",
+      "duration_label": "Time: 1.5-2 Hours"
+    },
+    {
+      "slug": "brows-lashes-permanent-makeup-soft-ombre-brows",
+      "category": "brows-lashes",
+      "group": "Permanent Makeup",
+      "name": "Soft Ombre Brows",
+      "price": 400,
+      "description": "A softer, more natural version of Ombre with an airy, subtle finish.",
+      "duration_label": "Time: 1.5-2 Hours"
+    },
+    {
+      "slug": "brows-lashes-permanent-makeup-nano-combo-brows",
+      "category": "brows-lashes",
+      "group": "Permanent Makeup",
+      "name": "Nano Combo Brows",
+      "price": 500,
+      "description": "Natural nano hair strokes combined with soft shading for fullness and definition.",
+      "duration_label": "Time: 2 Hours"
+    },
+    {
+      "slug": "brows-lashes-permanent-makeup-vip-hair-stroke-brows",
+      "category": "brows-lashes",
+      "group": "Permanent Makeup",
+      "name": "VIP Hair Stroke Brows",
+      "price": 600,
+      "description": "Ultra-natural machine hair strokes designed to mimic real brow hair. Perfect for sparse, thin, or missing brows.",
+      "duration_label": "Time: 2 Hours"
+    },
+    {
+      "slug": "brows-lashes-permanent-makeup-brows-touch-up-4-6-weeks",
+      "category": "brows-lashes",
+      "group": "Permanent Makeup",
+      "name": "Brows Touch Up (4-6 Weeks)",
+      "price": 120,
+      "description": "Refreshes faded color and perfects the shape and definition of your brows."
+    },
+    {
+      "slug": "brows-lashes-permanent-makeup-glossy-lips",
+      "category": "brows-lashes",
+      "group": "Permanent Makeup",
+      "name": "Glossy Lips",
+      "price": 550,
+      "description": "Enhances your natural lip color and definition for a soft, fresh, healthy-looking finish.",
+      "duration_label": "Time: 2.5 Hours"
+    },
+    {
+      "slug": "brows-lashes-permanent-makeup-upper-eyeliner-lash-line",
+      "category": "brows-lashes",
+      "group": "Permanent Makeup",
+      "name": "Upper Eyeliner (Lash Line)",
+      "price": 300,
+      "description": "Enhances the upper lash line for a subtle, more defined look.",
+      "duration_label": "Time: 1 Hour"
+    },
+    {
+      "slug": "brows-lashes-permanent-makeup-full-eyeliner-top-bottom",
+      "category": "brows-lashes",
+      "group": "Permanent Makeup",
+      "name": "Full Eyeliner (Top & Bottom)",
+      "price": 450,
+      "description": "Defines both upper and lower lash lines for a fuller.",
+      "duration_label": "Time: 2 Hours"
+    },
+    {
+      "slug": "brows-lashes-lash-services-cluster-lashes",
+      "category": "brows-lashes",
+      "group": "Lash Services",
+      "name": "Cluster Lashes",
+      "price": 60,
+      "description": "Lightweight lash clusters for a quick, beautiful boost of fullness."
+    },
+    {
+      "slug": "brows-lashes-lash-services-classic-11-full-set",
+      "category": "brows-lashes",
+      "group": "Lash Services",
+      "name": "Classic 1:1 Full Set",
+      "price": 120,
+      "description": "Classic lash extensions applied individually to each natural lash for a natural, defined look."
+    },
+    {
+      "slug": "brows-lashes-lash-services-hybrid-full-set",
+      "category": "brows-lashes",
+      "group": "Lash Services",
+      "name": "Hybrid Full Set",
+      "price": 130,
+      "description": "A blend of classic extensions and volume fans for soft texture and added fullness."
+    },
+    {
+      "slug": "brows-lashes-lash-services-wispy-full-set",
+      "category": "brows-lashes",
+      "group": "Lash Services",
+      "name": "Wispy Full Set",
+      "price": 140,
+      "description": "Soft, textured lashes with delicate spikes for a fluffy, airy finish."
+    },
+    {
+      "slug": "brows-lashes-lash-services-volume-full-set",
+      "category": "brows-lashes",
+      "group": "Lash Services",
+      "name": "Volume Full Set",
+      "price": 160,
+      "description": "Lightweight lash fans create a full, fluffy, glamorous look."
+    },
+    {
+      "slug": "brows-lashes-lash-services-mega-volume-full-set",
+      "category": "brows-lashes",
+      "group": "Lash Services",
+      "name": "Mega Volume Full Set",
+      "price": 180,
+      "description": "Ultra-lightweight fans create maximum fullness for a bold, dramatic finish."
+    },
+    {
+      "slug": "brows-lashes-lash-services-lash-fill",
+      "category": "brows-lashes",
+      "group": "Lash Services",
+      "name": "Lash Fill",
+      "price": null,
+      "description": "Refreshes your extensions by replacing grown-out or missing lashes. Recommended every 2-3 weeks.",
+      "price_note": "50% of Full Set Price"
+    },
+    {
+      "slug": "brows-lashes-lash-services-lash-lift-tint",
+      "category": "brows-lashes",
+      "group": "Lash Services",
+      "name": "Lash Lift & Tint",
+      "price": 85,
+      "description": "Lifts, curls, and darkens your natural lashes for a more defined look without extensions."
+    },
+    {
+      "slug": "brows-lashes-lash-services-lash-removal",
+      "category": "brows-lashes",
+      "group": "Lash Services",
+      "name": "Lash Removal",
+      "price": 20,
+      "description": "Gentle, professional removal of lash extensions."
+    },
+    {
+      "slug": "nails-full-set-acrylic-with-gel-color-powder",
+      "category": "nails",
+      "group": "Nail Enhancements",
+      "name": "Acrylic with Gel/ Color Powder",
+      "price": 55,
+      "fill_price": 45,
+      "price_from": true
+    },
+    {
+      "slug": "nails-full-set-ombre",
+      "category": "nails",
+      "group": "Nail Enhancements",
+      "name": "Ombre",
+      "price": 60,
+      "price_from": true
+    },
+    {
+      "slug": "nails-full-set-liquid-gel-full-set",
+      "category": "nails",
+      "group": "Nail Enhancements",
+      "name": "Liquid Gel (Includes Gel Polish)",
+      "price": 70,
+      "fill_price": 55,
+      "price_from": true
+    },
+    {
+      "slug": "nails-full-set-builder-gel-full-set",
+      "category": "nails",
+      "group": "Nail Enhancements",
+      "name": "Builder Gel (Includes Gel Polish)",
+      "price": 70,
+      "fill_price": 55,
+      "price_from": true
+    },
+    {
+      "slug": "nails-full-set-gel-x",
+      "category": "nails",
+      "group": "Nail Enhancements",
+      "name": "Gel-X (Includes Gel Polish)",
+      "price": 70,
+      "price_from": true
+    },
+    {
+      "slug": "nails-dip-powder-dip-on-natural-nails",
+      "category": "nails",
+      "group": "Dip Powder",
+      "name": "Dip on Natural Nails",
+      "price": 50,
+      "price_from": true
+    },
+    {
+      "slug": "nails-dip-powder-removal-dip",
+      "category": "nails",
+      "group": "Dip Powder",
+      "name": "Removal & Dip",
+      "price": 55,
+      "price_from": true
+    },
+    {
+      "slug": "nails-dip-powder-dip-with-tips",
+      "category": "nails",
+      "group": "Dip Powder",
+      "name": "Dip with Tips",
+      "price": 65,
+      "price_from": true
+    },
+    {
+      "slug": "nails-manicure-basic-manicure",
+      "category": "nails",
+      "group": "Manicures",
+      "name": "Basic Manicure",
+      "price": 30
+    },
+    {
+      "slug": "nails-manicure-gel-manicure",
+      "category": "nails",
+      "group": "Manicures",
+      "name": "Gel Manicure",
+      "price": 45
+    },
+    {
+      "slug": "nails-manicure-luxury-manicure",
+      "category": "nails",
+      "group": "Manicures",
+      "name": "Luxury Manicure",
+      "price": 50,
+      "price_note": "(Add Gel Polish +$15)",
+      "description": "Hydrating hand mask, warm towels, relaxing hand massage & paraffin wax."
+    },
+    {
+      "slug": "pedicures-the-k-signature-royal-pedicure",
+      "category": "pedicures",
+      "group": null,
+      "name": "The K Signature Royal Pedicure",
+      "price": 110,
+      "gel_price": 125,
+      "description": "Indulge in our exclusive Royal Spa Ritual, designed for ultimate relaxation, deep nourishment, and luxurious pampering.",
+      "includes": [
+        "Royal Herbal Tea Ritual (Hot Herbal Tea)",
+        "Warm Steam Mist Therapy",
+        "Warm Herbal Neck Wrap",
+        "Luxury Botanical Foot Soak",
+        "Nail Shaping, Cuticle Care & Callus Removal",
+        "Royal Botanical Sugar Scrub",
+        "Luxury Collagen Hydrating Mask",
+        "Relaxing Hot Stone Massage",
+        "Warm Aromatherapy Candle Oil Massage",
+        "Royal Shea Butter Moisturizing Lotion",
+        "Luxury Hot Towel Wrap",
+        "Warm Paraffin Foot Treatment",
+        "Complimentary Warm Paraffin Hand Treatment (Optional)",
+        "25-Minute Massage"
+      ],
+      "includes_label": "The Royal Experience Includes:",
+      "massage_minutes": 25
+    },
+    {
+      "slug": "pedicures-rose-champagne-bliss-pedicure",
+      "category": "pedicures",
+      "group": null,
+      "name": "Rosé Champagne Bliss Pedicure",
+      "price": 80,
+      "gel_price": 95,
+      "description": "Indulge in a romantic champagne- and rose-inspired spa experience designed to relax, rejuvenate, and pamper your feet.",
+      "includes": [
+        "Warm Rosé Aromatherapy Foot Soak",
+        "Nail Shaping & Cuticle Care, Callus Treatment",
+        "Champagne & Rose Sugar Scrub",
+        "Warm Mist Spray Treatment",
+        "Hydrating Rose Collagen Mask",
+        "Relaxing Hot Stone Massage",
+        "Warm Aromatherapy Candle Oil Massage",
+        "Nourishing Rose Shea Butter Lotion",
+        "Luxury Hot Towel Wrap",
+        "Warm Paraffin Foot Treatment",
+        "20-Minute Massage"
+      ],
+      "massage_minutes": 20
+    },
+    {
+      "slug": "pedicures-golden-99k-fairy-queen-pedicure",
+      "category": "pedicures",
+      "group": null,
+      "name": "Golden 99K Fairy Queen Pedicure",
+      "price": 99,
+      "gel_price": 114,
+      "description": "A royal spa experience inspired by pure gold, leaving your feet soft, radiant, and beautifully pampered.",
+      "includes": [
+        "Warm Steam Mist Therapy (Warm Steam)",
+        "Warm Herbal Neck Wrap",
+        "Luxury Botanical Foot Soak",
+        "Nail Shaping, Cuticle Care & Callus Removal",
+        "Golden Sugar Scrub",
+        "99K Gold Collagen Mask (Gold Leaf Mask)",
+        "Relaxing Hot Stone Massage",
+        "Warm Aromatherapy Candle Oil Massage",
+        "Royal Shea Butter Moisturizing Lotion",
+        "Luxury Hot Towel Wrap",
+        "Warm Paraffin Foot Treatment",
+        "22-Minute Massage"
+      ],
+      "includes_label": "The Golden Spa Experience Includes:",
+      "massage_minutes": 22
+    },
+    {
+      "slug": "pedicures-pearl-essence-pedicure",
+      "category": "pedicures",
+      "group": null,
+      "name": "Pearl Essence Pedicure",
+      "price": 65,
+      "gel_price": 80,
+      "description": "This nourishing and detoxifying treatment uses high-quality pearl and collagen products to remove impurities, leaving your feet soft, smooth, and rejuvenated.",
+      "includes": [
+        "Callus Treatment",
+        "Collagen Sugar Cane Scrub",
+        "Collagen Cream Mask & Hot Aroma Towel",
+        "Soak Your Feet in Collagen Crystals",
+        "Hot Stone Therapy",
+        "Herbal Pearl Massage Lotion",
+        "Collagen Muscle-Relaxing Gel",
+        "12-Minute Massage",
+        "Paraffin Treatment",
+        "Free Customer Gift: “Collagen Serum Lotion”"
+      ],
+      "massage_minutes": 12
+    },
+    {
+      "slug": "pedicures-aloe-vera-pedicure",
+      "category": "pedicures",
+      "group": null,
+      "name": "Aloe Vera Pedicure",
+      "price": 65,
+      "gel_price": 80,
+      "description": "Soothe, hydrate, and refresh tired feet with the natural healing power of aloe vera. This pedicure calms and nourishes the skin, leaving your feet soft, smooth, and revitalized.",
+      "includes": [
+        "Aloe Vera Foot Soak",
+        "Nail Shaping & Cuticle Care, Callus Treatment",
+        "Aloe Vera Sugar Scrub",
+        "Massage with Fresh Aloe Vera",
+        "Relaxing Hot Stone Massage",
+        "Warm Aromatherapy Candle Oil Massage",
+        "Nourishing Shea Butter Lotion",
+        "Luxury Hot Towel Wrap",
+        "Warm Paraffin Foot Treatment",
+        "12-Minute Massage"
+      ],
+      "massage_minutes": 12
+    },
+    {
+      "slug": "pedicures-lavender-dream-pedicure",
+      "category": "pedicures",
+      "group": null,
+      "name": "Lavender Dream Pedicure",
+      "price": 55,
+      "gel_price": 70,
+      "description": "Relaxing * Soothing * Refreshing\n\nImmerse your feet in the calming essence of lavender. This luxurious pedicure helps relax tired feet, soothe the skin, and leave your feet feeling soft, smooth, and refreshed.",
+      "includes": [
+        "Relaxing Lavender Foot Soak",
+        "Nail Shaping & Cuticle Care",
+        "Gentle Callus Treatment",
+        "Lavender Sugar Scrub",
+        "Hydrating Lavender Mask",
+        "Hot Towel Wrap",
+        "Hot Stone Massage",
+        "Moisturizing Lotion",
+        "10-Minute Massage"
+      ],
+      "price_note": "Relax Your Feet, Refresh Your Mood",
+      "massage_minutes": 10
+    },
+    {
+      "slug": "pedicures-matcha-glow-pedicure",
+      "category": "pedicures",
+      "group": null,
+      "name": "Matcha Glow Pedicure",
+      "price": 65,
+      "gel_price": 80,
+      "description": "Refresh and rejuvenate your feet with the natural goodness of matcha. This pedicure helps detoxify, hydrate, and soften your skin, leaving your feet smooth, healthy, and radiant.",
+      "includes": [
+        "Warm Matcha Aromatherapy Foot Soak",
+        "Nail Shaping & Cuticle Care, Callus Treatment",
+        "Matcha Sugar Scrub",
+        "Hydrating Green Tea Collagen Mask",
+        "Relaxing Hot Stone Massage",
+        "Warm Aromatherapy Candle Oil Massage",
+        "Nourishing Shea Butter Lotion",
+        "Luxury Hot Towel Wrap",
+        "Warm Paraffin Foot Treatment",
+        "12-Minute Massage"
+      ],
+      "massage_minutes": 12
+    },
+    {
+      "slug": "pedicures-milk-honey-pedicure",
+      "category": "pedicures",
+      "group": null,
+      "name": "Milk & Honey Pedicure",
+      "price": 55,
+      "gel_price": 70,
+      "description": "Softening * Moisturizing * Rejuvenating\n\nIndulge in the nourishing goodness of milk and honey. Milk proteins naturally moisturize the skin, while honey helps lock in hydration, leaving your feet feeling silky smooth, soft, and refreshed. It doesn’t get any sweeter than this!",
+      "includes": [
+        "Relaxing Milk Bath Foot Soak",
+        "Nail Shaping & Cuticle Care",
+        "Gentle Callus Treatment with Fresh Orange",
+        "Honey Sugar Scrub",
+        "Moisturizing Milk Masque Wrap",
+        "Warm Aromatherapy Hot Towel",
+        "Extended Massage with Creamy Milk Lotion & Essential Oils",
+        "Hot Stone Massage",
+        "10-Minute Massage"
+      ],
+      "price_note": "Enjoy Soft Skin and a Renewed Feeling",
+      "massage_minutes": 10
+    },
+    {
+      "slug": "pedicures-espresso-spa-pedicure",
+      "category": "pedicures",
+      "group": null,
+      "name": "Espresso Spa Pedicure",
+      "price": 55,
+      "gel_price": 70,
+      "description": "Awaken your senses with the rich aroma of espresso.\n\nThis rejuvenating pedicure helps exfoliate, hydrate, and soften your skin, leaving your feet smooth, refreshed, and renewed.",
+      "includes": [
+        "Warm Espresso Aromatherapy Foot Soak",
+        "Nail Shaping & Cuticle Care",
+        "Gentle Callus Removal",
+        "Espresso Sugar Scrub",
+        "Warm Mist Steam Treatment",
+        "Hydrating Coffee Collagen Mask",
+        "Relaxing Hot Stone Massage",
+        "Warm Aromatherapy Candle Oil Massage",
+        "Nourishing Shea Butter Lotion",
+        "Luxury Hot Towel Wrap",
+        "10-Minute Massage"
+      ],
+      "massage_minutes": 10
+    },
+    {
+      "slug": "pedicures-tropical-pedicure",
+      "category": "pedicures",
+      "group": null,
+      "name": "Tropical Pedicure",
+      "price": 45,
+      "gel_price": 60,
+      "description": "Escape to a tropical paradise with a refreshing sea salt foot soak, callus treatment, sugar scrub, and organic mask wrap. Enjoy an 8-minute massage with collagen lotion, tropical essential oils, and hot stones, finished with warm towels for soft, refreshed feet.",
+      "includes": [],
+      "massage_minutes": 8
+    },
+    {
+      "slug": "pedicures-mint-refresh-pedicure",
+      "category": "pedicures",
+      "group": null,
+      "name": "Mint Refresh Pedicure",
+      "price": 45,
+      "gel_price": 60,
+      "description": "Refresh and rejuvenate tired feet with a cooling mint foot soak, callus treatment, sugar scrub, and soothing mint mask wrap. Enjoy an 8-minute massage with refreshing mint lotion, essential oils, and hot stones, finished with warm towels for soft, smooth, revitalized feet.",
+      "includes": [],
+      "massage_minutes": 8
+    },
+    {
+      "slug": "pedicures-basic-pedicure",
+      "category": "pedicures",
+      "group": null,
+      "name": "Basic Pedicure",
+      "price": 40,
+      "gel_price": 55,
+      "description": "Includes cuticle cleanup, sugar scrub, callus removal, and a 4-minute massage.",
+      "includes": [],
+      "massage_minutes": 4
+    },
+    {
+      "slug": "kids-gel-manicure",
+      "category": "kids",
+      "group": null,
+      "name": "Gel Manicure",
+      "price": 35
+    },
+    {
+      "slug": "kids-basic-pedicure",
+      "category": "kids",
+      "group": null,
+      "name": "Basic Pedicure",
+      "price": 35
+    },
+    {
+      "slug": "kids-gel-pedicure",
+      "category": "kids",
+      "group": null,
+      "name": "Gel Pedicure",
+      "price": 45
+    },
+    {
+      "slug": "kids-gel-polish-change",
+      "category": "kids",
+      "group": null,
+      "name": "Gel Polish Change",
+      "price": 25
+    },
+    {
+      "slug": "waxing-eyebrow-waxing",
+      "category": "waxing",
+      "group": null,
+      "name": "Eyebrow Wax",
+      "price": 14
+    },
+    {
+      "slug": "waxing-eyebrow-tint",
+      "category": "waxing",
+      "group": null,
+      "name": "Eyebrow Tint",
+      "price": 40
+    },
+    {
+      "slug": "waxing-upper-lip",
+      "category": "waxing",
+      "group": null,
+      "name": "Upper Lip",
+      "price": 12
+    },
+    {
+      "slug": "waxing-chin",
+      "category": "waxing",
+      "group": null,
+      "name": "Chin",
+      "price": 20,
+      "price_from": true
+    },
+    {
+      "slug": "waxing-full-face",
+      "category": "waxing",
+      "group": null,
+      "name": "Full Face",
+      "price": 50
+    },
+    {
+      "slug": "waxing-underarms",
+      "category": "waxing",
+      "group": null,
+      "name": "Underarms",
+      "price": 40
+    },
+    {
+      "slug": "waxing-legs-wax",
+      "category": "waxing",
+      "group": null,
+      "name": "Legs",
+      "price": 60,
+      "price_from": true
+    }
+  ]
+}

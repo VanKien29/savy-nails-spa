@@ -73,8 +73,17 @@ class Page extends Model
                 throw ValidationException::withMessages(['is_home' => 'Chỉ được có một trang chủ.']);
             }
             $page->sections = app(SectionRegistry::class)->validate($page->sections ?? []);
+            $ids = collect($page->sections)->pluck('id')->filter();
+            if ($ids->duplicates()->isNotEmpty()) {
+                throw ValidationException::withMessages(['sections' => 'Mã khối không được trùng trong cùng một trang.']);
+            }
         });
         static::updating(function (Page $page) {
+            if ($page->isDirty(['title', 'slug', 'template', 'status', 'published_at', 'sections', 'seo_title', 'seo_description', 'hero_media_id', 'og_media_id', 'noindex', 'alternates'])) {
+                PageRevision::create(['page_id' => $page->id, 'user_id' => auth()->id(), 'snapshot' => collect($page->getOriginal())->except(['id', 'created_at', 'updated_at'])->all()]);
+                $keep = PageRevision::where('page_id', $page->id)->latest('id')->limit(30)->pluck('id');
+                PageRevision::where('page_id', $page->id)->whereNotIn('id', $keep)->delete();
+            }
             if (($page->isDirty('slug') || $page->isDirty('is_home')) && $page->getOriginal('status') === 'published') {
                 $old = $page->getOriginal('is_home') ? '/' : '/'.$page->getOriginal('slug');
                 if ($old === $page->path()) {

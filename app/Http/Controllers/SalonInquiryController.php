@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SalonBookingRequest;
 use App\Http\Requests\StoreLeadRequest;
+use App\Services\SalonContent;
 use App\Services\SiteSettingsService;
 use Illuminate\Http\JsonResponse;
 
@@ -11,7 +12,7 @@ class SalonInquiryController extends Controller
 {
     public function contact(StoreLeadRequest $request, LeadController $controller)
     {
-        return $this->respond($request, $controller->store($request), 'Thank you. Your message has been received. Please call us if you need a prompt response.');
+        return $this->respond($request, $controller->store($request), app(SalonContent::class)->all()['profile']['copy']['contact']['success_message']);
     }
 
     public function booking(SalonBookingRequest $request, LeadController $controller)

@@ -30,10 +30,23 @@ class SecurityHeaders
         }
         $mapFrameSource = $request->is('contact-us') && app(SiteSettingsService::class)->get('maps_embed_url')
             ? ' https://www.google.com/maps/embed' : '';
-        // Alpine/Livewire need evaluated expressions. No arbitrary rich HTML or user script is accepted.
-        $response->headers->set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'{$devSource} https://www.googletagmanager.com https://connect.facebook.net https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'{$devSource}; img-src 'self' data: https:{$devSource}; font-src 'self' data:{$devSource}; connect-src 'self'{$devSource}{$devSocket} https://*.google-analytics.com https://www.googletagmanager.com https://www.facebook.com; frame-src https://challenges.cloudflare.com{$mapFrameSource}; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'");
+        // Alpine/Livewire need evaluated expressions. Admin keeps the restricted policy.
+        $policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'{$devSource} https://www.googletagmanager.com https://connect.facebook.net https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'{$devSource}; img-src 'self' data: https:{$devSource}; font-src 'self' data:{$devSource}; connect-src 'self'{$devSource}{$devSocket} https://*.google-analytics.com https://www.googletagmanager.com https://www.facebook.com; frame-src https://challenges.cloudflare.com{$mapFrameSource}; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'";
+        $publicHtml = $response->isSuccessful()
+            && str_starts_with((string) $response->headers->get('Content-Type'), 'text/html')
+            && ! $request->is('admin', 'admin/*', 'starter', 'starter/*', 'livewire', 'livewire/*', 'up')
+            && ! config('starter.preview') && ! config('starter.exporting');
+        $settings = app(SiteSettingsService::class);
+        if ($publicHtml && (filled($settings->get('script_head')) || filled($settings->get('script_body_end')))) {
+            // The site's administrator explicitly enables external embeds by supplying code.
+            $policy = "default-src 'self' http: https: data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https: data: blob:; style-src 'self' 'unsafe-inline' http: https:; img-src 'self' http: https: data: blob:; font-src 'self' http: https: data:; connect-src 'self' http: https: ws: wss:; frame-src 'self' http: https: data: blob:; media-src 'self' http: https: data: blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' http: https:; frame-ancestors 'self'";
+        }
+        $response->headers->set('Content-Security-Policy', $policy);
         if ($request->isSecure()) {
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000');
+        }
+        if ($request->is('admin', 'admin/*', 'livewire', 'livewire/*')) {
+            $response->headers->set('Cache-Control', 'private, no-store');
         }
         if (! app()->environment(['production', 'testing']) || config('starter.preview') || config('starter.exporting') || $response->isClientError() || $response->isServerError() || $request->is('admin', 'admin/*', 'starter', 'starter/*', 'livewire', 'livewire/*', 'up')) {
             $response->headers->set('X-Robots-Tag', 'noindex, nofollow');

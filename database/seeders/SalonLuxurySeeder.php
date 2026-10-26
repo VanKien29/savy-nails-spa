@@ -7,6 +7,7 @@ use App\Models\SalonImage;
 use App\Models\SalonProfile;
 use App\Services\SiteSettingsService;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class SalonLuxurySeeder extends Seeder
@@ -14,7 +15,8 @@ class SalonLuxurySeeder extends Seeder
     public function run(): void
     {
         $profile = SalonProfile::findOrFail(1);
-        if (($profile->data['luxury_revision'] ?? null) === 'editorial-v6') {
+        // Existing CMS sites receive the narrow client-design upgrade without resetting owner content.
+        if (in_array($profile->data['luxury_revision'] ?? null, ['editorial-v5', 'editorial-v6'], true)) {
             return;
         }
         $report = collect(json_decode(file_get_contents(public_path('assets/optimized/report.json')), true, flags: JSON_THROW_ON_ERROR));
@@ -63,7 +65,7 @@ class SalonLuxurySeeder extends Seeder
                 ]),
                 $section('finale', 'A little time, just for you', 'Good nails. Even better moments.', 'Your next beautiful detail starts here.'),
             ]]);
-            \Illuminate\Support\Facades\Cache::forget('salon.catalog');
+            Cache::forget('salon.catalog');
         });
     }
 }

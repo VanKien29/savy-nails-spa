@@ -14,10 +14,16 @@ class SalonContent
     public function all(): array
     {
         return $this->loaded ??= Cache::remember('salon.catalog', 600, fn () => [
-            'profile' => SalonProfile::find(1)?->data ?? [],
+            'profile' => array_replace(SalonProfile::find(1)?->data ?? [], ['copy' => array_replace_recursive(collect(config('cms.copy'))->map(fn ($fields) => collect($fields)->map(fn ($field) => $field[1])->all())->all(), SalonProfile::find(1)?->data['copy'] ?? [])]),
             'categories' => SalonCategory::with(['image', 'services.image'])->orderBy('sort_order')->get(),
-            'images' => SalonImage::orderBy('sort_order')->get()->keyBy('key'),
+            'images' => SalonImage::with('media')->orderBy('sort_order')->get()->keyBy('key'),
         ]);
+    }
+
+    public function forget(): void
+    {
+        $this->loaded = null;
+        Cache::forget('salon.catalog');
     }
 
     public function structuredData(): array

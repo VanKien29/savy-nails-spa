@@ -1,11 +1,11 @@
 @php($services = $salon['categories']->flatMap->services)
 @php($selectedService = $isDemo ? null : old('extra.service_id', is_scalar(request('service')) ? request('service') : null))
-<form class="ks-form" action="{{ route($booking ? 'salon.booking' : 'salon.contact', absolute:false) }}" method="post" data-salon-form @if($isDemo) data-static-preview="true" @endif>
+<form class="ks-form" action="{{ route($booking ? 'salon.booking' : 'salon.contact', absolute:false) }}" method="post" data-salon-form data-sending="{{ $copy['form']['sending_label'] }}" data-rate-limit="{{ $copy['form']['rate_limit'] }}" data-send-error="{{ $copy['form']['send_error'] }}" @if($isDemo) data-static-preview="true" @endif>
     @if(!$isDemo)
         @csrf<input type="hidden" name="page_id" value="{{ $page->id }}"><input type="hidden" name="form_token" value="{{ Crypt::encryptString((string)time()) }}">
     @endif
     @if(!$isDemo && session('success'))<div class="ks-form-alert" role="status">{{ session('success') }}</div>@endif
-    @if(!$isDemo && $errors->any())<div class="ks-form-alert is-error" role="alert"><strong>Please check your details.</strong>@foreach($errors->all() as $error)<p>{{ $error }}</p>@endforeach</div>@endif
+    @if(!$isDemo && $errors->any())<div class="ks-form-alert is-error" role="alert"><strong>{{ $copy['form']['error_heading'] }}</strong>@foreach($errors->all() as $error)<p>{{ $error }}</p>@endforeach</div>@endif
     <fieldset>
     @if($booking)
         <input type="hidden" name="extra[form]" value="booking">
@@ -17,15 +17,15 @@
         <p class="ks-field-note">Salon local time · America/New_York. Availability will be confirmed by our team.</p>
         <div class="ks-form-step"><span>03</span><h3>A way to reach you</h3></div>
     @endif
-    <div class="ks-form-grid"><x-forms.input name="full_name" label="Full name" autocomplete="name" placeholder="Your name" maxlength="120" required :static-preview="$isDemo"/><x-forms.input name="phone" label="Phone number" type="tel" autocomplete="tel" placeholder="(910) 000-0000" maxlength="24" :required="$booking" :static-preview="$isDemo"/></div>
-    <x-forms.input name="email" label="Email address (optional)" type="email" autocomplete="email" placeholder="you@example.com" maxlength="160" :static-preview="$isDemo"/>
-    @if(!$booking)<p class="ks-field-note">Please provide a phone number or email address so we can respond.</p>@endif
-    <label class="ks-field"><span>{{ $booking ? 'Anything you would like us to know? (optional)' : 'Your message (optional)' }}</span><textarea name="{{ $booking ? 'notes' : 'message' }}" rows="3" maxlength="{{ $booking ? 2500 : 4000 }}" placeholder="{{ $booking ? 'A design idea, gel polish preference, or a little note for our team…' : 'How can we help with your next visit?' }}">{{ $isDemo ? '' : old($booking ? 'notes' : 'message') }}</textarea></label>
+    <div class="ks-form-grid"><x-forms.input name="full_name" :label="$copy['form']['name_label']" autocomplete="name" :placeholder="$copy['form']['name_placeholder']" maxlength="120" required :static-preview="$isDemo"/><x-forms.input name="phone" :label="$copy['form']['phone_label']" type="tel" autocomplete="tel" :placeholder="$copy['form']['phone_placeholder']" maxlength="24" :required="$booking" :static-preview="$isDemo"/></div>
+    <x-forms.input name="email" :label="$copy['form']['email_label']" type="email" autocomplete="email" :placeholder="$copy['form']['email_placeholder']" maxlength="160" :static-preview="$isDemo"/>
+    @if(!$booking)<p class="ks-field-note">{{ $copy['form']['contact_note'] }}</p>@endif
+    <label class="ks-field"><span>{{ $booking ? 'Anything you would like us to know? (optional)' : $copy['form']['message_label'] }}</span><textarea name="{{ $booking ? 'notes' : 'message' }}" rows="3" maxlength="{{ $booking ? 2500 : 4000 }}" placeholder="{{ $booking ? 'A design idea, gel polish preference, or a little note for our team…' : $copy['form']['message_placeholder'] }}">{{ $isDemo ? '' : old($booking ? 'notes' : 'message') }}</textarea></label>
     <div class="ks-honeypot" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
-    <label class="ks-consent"><input type="checkbox" name="consent" value="1" required><span>I agree to be contacted about this {{ $booking ? 'appointment request' : 'inquiry' }}. My information will be used to respond to my request.</span></label>
+    <label class="ks-consent"><input type="checkbox" name="consent" value="1" required><span>{{ $copy['form']['consent'] }}</span></label>
     @if(!$isDemo && config('starter.leads.captcha_site_key'))<div class="cf-turnstile" data-sitekey="{{ config('starter.leads.captcha_site_key') }}"></div><script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>@endif
-    <button type="submit" class="ks-button ks-submit"><span data-submit-label>{{ $booking ? 'Request My Appointment' : 'Send Your Message' }}</span></button>
+    <button type="submit" class="ks-button ks-submit"><span data-submit-label>{{ $booking ? 'Request My Appointment' : $copy['form']['submit_label'] }}</span></button>
     </fieldset>
     <div class="ks-form-status" data-form-status role="status" tabindex="-1"></div>
-    <p class="ks-form-fineprint">{{ $booking ? 'An appointment request is not a confirmed reservation.' : 'For time-sensitive questions, please call the salon.' }} <button type="button" data-open-dialog="appointment-policy">Privacy & appointment requests</button></p>
+    <p class="ks-form-fineprint">{{ $booking ? 'An appointment request is not a confirmed reservation.' : $copy['form']['fineprint'] }} <button type="button" data-open-dialog="appointment-policy">{{ $copy['global']['policy_label'] }}</button></p>
 </form>

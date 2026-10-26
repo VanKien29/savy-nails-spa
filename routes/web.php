@@ -8,6 +8,10 @@ use App\Models\Page;
 use App\Services\PageRenderer;
 use Illuminate\Support\Facades\Route;
 
+Route::redirect('/admin/salon-services', '/admin/service-menu');
+Route::redirect('/admin/salon-categories', '/admin/service-menu');
+Route::redirect('/admin/salon-images', '/admin/website-content?section=gallery');
+Route::redirect('/admin/pages/{path?}', '/admin/website-content')->where('path', '.*');
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt', [SeoController::class, 'robots']);
 Route::post('/contact', [LeadController::class, 'store'])->middleware('throttle:leads')->name('leads.store');

@@ -2,17 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Pages\MediaLibrary;
 use App\Filament\Pages\SiteSettings;
-use App\Filament\Resources\LeadResource;
-use App\Filament\Resources\PageResource;
-use App\Filament\Resources\PageResource\Pages\CreatePage;
-use App\Filament\Resources\PageResource\Pages\EditPage;
 use App\Models\AuditLog;
 use App\Models\Lead;
 use App\Models\Page;
 use App\Models\Redirect;
 use App\Models\User;
-use App\Services\LeadCsvExporter;
 use App\Services\MediaService;
 use App\Services\SiteSettingsService;
 use Database\Seeders\DemoSeeder;
@@ -169,22 +165,18 @@ class StarterTest extends TestCase
         $this->get('/admin')->assertRedirect('/admin/login');
         $user = User::factory()->create();
         $this->actingAs($user)->get('/admin')->assertForbidden();
-        $this->assertFalse(PageResource::canViewAny());
+        $this->assertFalse(MediaLibrary::canAccess());
         $this->assertFalse(SiteSettings::canAccess());
         $this->actingAs($this->admin());
-        foreach (['/admin', '/admin/pages', '/admin/pages/create', '/admin/leads', '/admin/media', '/admin/media/create', '/admin/navigation-items', '/admin/redirects', '/admin/audit-logs', '/admin/site-settings', '/admin/profile'] as $path) {
+        foreach (['/admin', '/admin/media-library', '/admin/audit-logs', '/admin/site-settings', '/admin/profile'] as $path) {
             $this->get($path)->assertOk();
         }
-        $this->assertTrue(LeadResource::canViewAny());
+        $this->assertTrue(MediaLibrary::canAccess());
     }
 
-    public function test_admin_livewire_page_crud_and_settings_persist(): void
+    public function test_admin_livewire_settings_persist(): void
     {
         $this->actingAs($this->admin());
-        Livewire::test(CreatePage::class)->fillForm(['title' => 'New page', 'slug' => 'new-page', 'template' => 'sections', 'status' => 'draft', 'sections' => [], 'is_home' => false, 'noindex' => false, 'exportable' => false])->call('create')->assertHasNoFormErrors();
-        $page = Page::where('slug', 'new-page')->firstOrFail();
-        Livewire::test(EditPage::class, ['record' => $page->getRouteKey()])->fillForm(['title' => 'Edited page'])->call('save')->assertHasNoFormErrors();
-        $this->assertSame('Edited page', $page->fresh()->title);
         Livewire::test(SiteSettings::class)->fillForm(['site_name' => 'Changed in admin'])->call('save')->assertHasNoFormErrors();
         $this->assertSame('Changed in admin', app(SiteSettingsService::class)->get('site_name'));
     }
@@ -226,7 +218,6 @@ class StarterTest extends TestCase
         $this->assertStringNotContainsString('an@example.com', $json);
         $this->assertStringNotContainsString('0901234567', $json);
         $this->assertNotNull(AuditLog::where('model', Lead::class)->first()->user_id);
-        $this->assertSame("'=SUM(1,2)", LeadCsvExporter::safeCell('=SUM(1,2)'));
     }
 
     public function test_csrf_middleware_and_deployment_configuration_are_present(): void

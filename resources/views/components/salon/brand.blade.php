@@ -5,6 +5,7 @@
     @if($logo)
         <x-media.picture :media="$logo" :mobile-media="$mobileLogo" :mobile-breakpoint="730" :alt="$settings['site_name']" :eager="$eager" sizes="(max-width: 730px) 186px, 210px" class="ks-brand-logo"/>
     @else
-        <span class="ks-monogram" aria-hidden="true">K<span><x-salon.icon name="sparkle"/></span></span><span><strong>THE K</strong><small>LUXURY NAIL BAR</small></span>
+        @php($brandCopy = app(\App\Services\SalonContent::class)->all()['profile']['copy']['global'])
+        <span class="ks-monogram" aria-hidden="true">{{ $brandCopy['brand_monogram'] }}<span><x-salon.icon name="sparkle"/></span></span><span><strong>{{ $brandCopy['brand_title'] }}</strong><small>{{ $brandCopy['brand_subtitle'] }}</small></span>
     @endif
 </a>

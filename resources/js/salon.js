@@ -21,7 +21,7 @@ import('./salon-motion').then(({initSalonMotion}) => initSalonMotion()).catch(()
 if (homeHero?.matches('[data-hero-slideshow]')) import('./salon-hero').then(({initSalonHero}) => initSalonHero()).catch(() => {});
 
 const slider = document.querySelector('[data-inspiration-slider]');
-if(slider){
+if(slider?.firstElementChild){
     const buttons=[...document.querySelectorAll('[data-slide]')];
     const update=()=>buttons.forEach(button=>{button.disabled=Number(button.dataset.slide)<0 ? slider.scrollLeft<3 : slider.scrollLeft+slider.clientWidth>=slider.scrollWidth-3;});
     const slide=direction=>slider.scrollBy({left:direction*(slider.firstElementChild.getBoundingClientRect().width+18),behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});
@@ -56,14 +56,14 @@ for (const form of document.querySelectorAll('[data-salon-form]')) {
         const status = form.querySelector('[data-form-status]');
         const previous = label.textContent;
         const body = new FormData(form);
-        button.disabled = true; label.textContent = 'Sending your request…'; status.textContent = ''; status.classList.remove('is-error');
+        button.disabled = true; label.textContent = form.dataset.sending; status.textContent = ''; status.classList.remove('is-error');
         form.setAttribute('aria-busy','true');
         try {
             const response = await fetch(form.action, {method:'POST', body, headers:{Accept:'application/json'}, credentials:'same-origin'});
             const data = await response.json().catch(()=>({}));
-            if (!response.ok) throw new Error(Object.values(data.errors || {}).flat().join(' ') || (response.status===429 ? 'Please wait a minute before trying again.' : 'We could not send your request. Please refresh this page or call the salon.'));
+            if (!response.ok) throw new Error(Object.values(data.errors || {}).flat().join(' ') || (response.status===429 ? form.dataset.rateLimit : form.dataset.sendError));
             status.textContent=data.message; form.reset(); select?.dispatchEvent(new Event('change')); status.focus();
-        } catch (error) { status.textContent=error.message || 'Please try again or call the salon.'; status.classList.add('is-error'); status.focus(); }
+        } catch (error) { status.textContent=error.message || form.dataset.sendError; status.classList.add('is-error'); status.focus(); }
         finally { button.disabled=false; label.textContent=previous; form.removeAttribute('aria-busy'); }
     });
 }

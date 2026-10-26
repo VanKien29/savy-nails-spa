@@ -1,0 +1,73 @@
+import {test,expect} from '@playwright/test';
+import {randomUUID} from 'node:crypto';
+import {spawnSync} from 'node:child_process';
+
+test('one visual menu editor works on desktop and mobile',async({page})=>{
+    const email=`browser-${randomUUID()}@example.invalid`;
+    const password=`K${randomUUID()}a9!`;
+    const categoryName=`Browser menu ${randomUUID()}`;
+    const categorySlug=categoryName.toLowerCase().replaceAll(' ','-');
+    const serviceName=`Browser treatment ${randomUUID()}`;
+    function fixture(action){
+        const result=spawnSync(process.env.STARTER_PHP||'php',['tests/Browser/fixture.php'],{input:JSON.stringify({action,email,password,category_slug:categorySlug}),encoding:'utf8'});
+        if(result.status!==0)throw new Error(result.stderr||'Fixture failed');
+    }
+    fixture('create');
+    try{
+        await page.setViewportSize({width:1440,height:1000});
+        await page.goto('/admin/login');
+        await page.locator('input[type=email]').fill(email);await page.locator('input[type=password]').fill(password);
+        await page.getByRole('button',{name:/Đăng nhập|Sign in/i}).click();
+        await page.locator('.fi-sidebar').getByRole('link',{name:'Menu dịch vụ',exact:true}).click();
+        await expect(page.locator('.fi-sidebar').getByRole('link',{name:'Danh mục dịch vụ',exact:true})).toHaveCount(0);
+        await expect(page.locator('.menu-editor-service')).toHaveCount(21);
+        await page.locator('.menu-editor-category-button').filter({hasText:'Nail Services'}).click();
+        await expect(page.locator('.menu-editor-service')).toHaveCount(11);
+        await expect(page.locator('.menu-editor-preview .ks-menu-price-pair').first()).toContainText('$45+');
+        await page.screenshot({path:'test-results/admin-menu-desktop.png',fullPage:true,animations:'disabled'});
+        const first=page.locator('.menu-editor-service').first();
+        await first.getByRole('button',{name:/^Sửa /}).click();
+        const editor=page.getByRole('dialog').last();
+        await expect(editor.getByRole('textbox',{name:/Tên dịch vụ/})).toBeVisible();
+        await expect(editor.getByText('Mã đường dẫn',{exact:true})).toHaveCount(0);
+        await expect(editor.getByText('Thứ tự',{exact:true})).toHaveCount(0);
+        await page.screenshot({path:'test-results/admin-menu-edit-form.png',fullPage:true,animations:'disabled'});
+        await editor.getByRole('button',{name:/Huỷ thao tác|Hủy|Cancel/}).click();
+        await page.setViewportSize({width:390,height:844});
+        await page.screenshot({path:'test-results/admin-menu-mobile.png',fullPage:true,animations:'disabled'});
+        expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+        await page.setViewportSize({width:1440,height:1000});
+        await page.getByRole('button',{name:'Thêm danh mục',exact:true}).click();
+        let modal=page.getByRole('dialog').last();
+        await modal.getByRole('textbox',{name:/Tên danh mục/}).fill(categoryName);
+        await modal.getByRole('button',{name:'Thêm danh mục',exact:true}).click();
+        await expect(page.locator('.menu-editor-toolbar h2')).toHaveText(categoryName);
+        await page.getByRole('button',{name:'Thêm dịch vụ',exact:true}).first().click();
+        modal=page.getByRole('dialog').last();
+        await modal.getByRole('textbox',{name:/Tên dịch vụ/}).fill(serviceName);
+        await modal.getByRole('spinbutton',{name:'Giá thường / Full Set',exact:true}).fill('49');
+        await modal.getByRole('button',{name:'Thêm vào menu',exact:true}).click();
+        const row=page.locator('.menu-editor-service').filter({hasText:serviceName});
+        await expect(row).toContainText('$49');
+        let client=await page.request.get('/services');expect(await client.text()).toContain(serviceName);
+        await row.getByRole('button',{name:`Ẩn ${serviceName}`,exact:true}).click();
+        await expect(row).toHaveCount(0);
+        client=await page.request.get('/services');expect(await client.text()).not.toContain(serviceName);
+        await page.getByRole('checkbox',{name:/Hiện cả/}).check();
+        await expect(row).toContainText('Đang ẩn trên website');
+        await row.getByRole('button',{name:`Hiện ${serviceName}`,exact:true}).click();
+        await row.getByRole('button',{name:`Sửa ${serviceName}`,exact:true}).click();
+        modal=page.getByRole('dialog').last();
+        await modal.getByRole('spinbutton',{name:'Giá thường / Full Set',exact:true}).fill('52');
+        await modal.getByRole('button',{name:'Lưu thay đổi',exact:true}).click();
+        await expect(row).toContainText('$52');
+        await row.getByRole('button',{name:`Sửa ${serviceName}`,exact:true}).click();
+        await page.getByRole('dialog').last().getByRole('button',{name:'Xóa dịch vụ',exact:true}).click();
+        await page.getByRole('alertdialog').getByRole('button',{name:'Xóa dịch vụ',exact:true}).click();
+        await expect(row).toHaveCount(0);
+        await page.getByRole('button',{name:'Sửa danh mục',exact:true}).click();
+        await page.getByRole('dialog').last().getByRole('button',{name:'Xóa danh mục',exact:true}).click();
+        await page.getByRole('alertdialog').getByRole('button',{name:/Xác nhận|Confirm|Xóa danh mục/i}).click();
+        await expect(page.locator('.menu-editor-category-button').filter({hasText:categoryName})).toHaveCount(0);
+    }finally{fixture('cleanupMenu');fixture('cleanup');}
+});

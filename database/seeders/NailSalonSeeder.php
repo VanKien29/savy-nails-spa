@@ -54,7 +54,7 @@ class NailSalonSeeder extends Seeder
             }
             $categories = SalonCategory::all()->keyBy('slug');
             foreach ($source['services'] as $index => $row) {
-                $slug = Str::slug($row['category'].'-'.($row['group'] ?? '').'-'.$row['name']);
+                $slug = $row['slug'] ?? Str::slug($row['category'].'-'.($row['group'] ?? '').'-'.$row['name']);
                 SalonService::firstOrCreate(['slug' => $slug], array_replace(collect($row)->except(['category', 'image'])->all(), ['category_id' => $categories[$row['category']]->id, 'image_id' => isset($row['image']) ? $images[$row['image']]->id : null, 'sort_order' => $index, 'active' => true]));
             }
             if (! $new) {
@@ -130,5 +130,7 @@ class NailSalonSeeder extends Seeder
         $this->call(SalonHeroSlideshowSeeder::class);
         $this->call(SalonClientMediaSeeder::class);
         $this->call(SalonMapSeeder::class);
+        $this->call(SalonClientDesignSeeder::class);
+        $this->call(SalonClientMenuSeeder::class);
     }
 }

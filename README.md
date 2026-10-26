@@ -1,5 +1,7 @@
-> **Current client:** THE K LUXURY NAIL BAR — five English pages, white/gold design, dynamic 58-service catalog and MySQL-backed contact requests. See [client setup and content map](docs/clients/the-k-luxury-nail-bar.md), [verification](docs/THE_K_VERIFICATION.md) and [asset provenance](docs/THE_K_ASSETS.md). For this client, optimize media and run `php artisan db:seed --class=NailSalonSeeder`; the generic Forma demo command below is for starter examples.
+> **Current client:** THE K LUXURY NAIL BAR — five English pages, white/gold design and a dynamic 55-service catalog matching the customer menu, including Full Set / Fill-in prices. See [client setup and content map](docs/clients/the-k-luxury-nail-bar.md), [verification](docs/THE_K_VERIFICATION.md) and [asset provenance](docs/THE_K_ASSETS.md). For this client, migrate the database, optimize media and run `php artisan db:seed --class=NailSalonSeeder`; the generic Forma demo command below is for starter examples.
 # Laravel Landing Starter
+
+CMS THE K: xem [yêu cầu hệ thống, tài khoản Admin, bảo mật và hướng dẫn vận hành](CMS_REQUIREMENTS.md). Truy cập `/admin` để quản lý nội dung.
 
 Base cho các website khách hàng độc lập (1–5 trang): Laravel 12, Filament 5, Blade, Tailwind 4, Alpine, Vite. CMS thực dùng database; không phải multi-tenant hay page builder kéo thả. Demo “Forma Studio” dùng cùng services và components với dự án thật.
 
@@ -23,7 +25,7 @@ php artisan serve
 
 Password admin được nhập kín, tối thiểu 14 ký tự; không có tài khoản/mật khẩu mặc định. Chỉ user `is_admin=true` vào được `/admin`. Đổi mật khẩu tại Profile. Password reset chỉ bật nếu `MAIL_MAILER` khác `log`/`array`; hãy kiểm thử SMTP thật trước khi giao khách. `starter:setup` giữ nguyên tài khoản đã tồn tại, không tự nâng quyền.
 
-Windows trong workspace đã chuẩn bị: mở terminal Laragon với PHP 8.5.12 rồi chạy `php artisan serve`, hoặc chạy `.\scripts\dev.ps1`, rồi mở `http://127.0.0.1:8000`. Script ưu tiên PHP đạt baseline trong PATH, chỉ dùng `.tools/php` dự phòng khi cần và chỉ thay PATH của phiên hiện tại. PHP 8.3 không đạt baseline của dự án.
+Windows trong workspace đã chuẩn bị: mở terminal Laragon với PHP 8.5.12 rồi chạy `php artisan serve --port=8001`, hoặc chạy `.\scripts\dev.ps1`, rồi mở `http://127.0.0.1:8001`. Có thể chọn cổng khác bằng `.\scripts\dev.ps1 -Port 8002`. Script ưu tiên PHP đạt baseline trong PATH, chỉ dùng `.tools/php` dự phòng khi cần và chỉ thay PATH của phiên hiện tại. PHP 8.3 không đạt baseline của dự án.
 
 Trong terminal PowerShell khác, chọn runtime trước khi chạy Composer/Artisan:
 

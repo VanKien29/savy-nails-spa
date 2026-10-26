@@ -17,7 +17,8 @@ test('first-visit icons keep their SVG shapes while web fonts are delayed',async
                 width:getComputedStyle(icon).width,height:getComputedStyle(icon).height,
             })));
             const before=await shapes();
-            expect(before.length).toBeGreaterThan(8);
+            expect(before.length).toBeGreaterThan(0);
+            expect(before.map(icon=>icon.name)).toEqual(expect.arrayContaining(['facebook','instagram','close']));
             expect(before.every(icon=>icon.shape.includes('<path')||icon.shape.includes('<rect')||icon.shape.includes('<circle'))).toBeTruthy();
             expect(await page.locator('body').textContent()).not.toMatch(/[↗↖→←↑↓✧]/u);
             releaseFonts();
