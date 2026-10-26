@@ -25,6 +25,6 @@ if (-not $starterCompatible) {
         }
     }
 }
-if (-not $starterCompatible) { throw 'Install stable PHP 8.4.27+ (8.4.x) or 8.5.12+ (8.5.x) before serving this project.' }
+if (-not $starterCompatible) { throw 'Install stable PHP 8.4.26+ (8.4.x) or 8.5.11+ (8.5.x) before serving this project.' }
 Write-Host ('Using PHP: ' + (Get-Command php).Source)
 php artisan serve --host=127.0.0.1 --port=$Port
