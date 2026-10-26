@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\PhpRuntime;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +14,7 @@ class StarterCheck extends Command
 
     public function handle(): int
     {
-        $checks = ['PHP stable >=8.5.12 <8.6' => PHP_VERSION_ID >= 80512 && PHP_VERSION_ID < 80600 && ! preg_match('/RC|alpha|beta/i', PHP_VERSION), 'Application key exists' => (bool) config('app.key'), 'Built assets' => is_file(public_path('build/manifest.json')), 'storage writable' => is_writable(storage_path()), 'bootstrap/cache writable' => is_writable(base_path('bootstrap/cache'))];
+        $checks = [PhpRuntime::REQUIREMENT => PhpRuntime::isSupported(), 'Application key exists' => (bool) config('app.key'), 'Built assets' => is_file(public_path('build/manifest.json')), 'storage writable' => is_writable(storage_path()), 'bootstrap/cache writable' => is_writable(base_path('bootstrap/cache'))];
         foreach (['ctype', 'curl', 'dom', 'fileinfo', 'filter', 'hash', 'mbstring', 'openssl', 'pcre', 'pdo', 'pdo_mysql', 'session', 'tokenizer', 'xml', 'intl', 'gd', 'exif', 'zip'] as $extension) {
             $checks['Extension '.$extension] = extension_loaded($extension);
         }

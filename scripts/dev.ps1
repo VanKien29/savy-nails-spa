@@ -6,17 +6,25 @@ param(
 $ErrorActionPreference = 'Stop'
 $starterRoot = Split-Path -Parent $PSScriptRoot
 Set-Location -LiteralPath $starterRoot
-$starterPhp = Join-Path $starterRoot '.tools/php'
 $starterCommand = Get-Command php -ErrorAction SilentlyContinue
 $starterCompatible = $false
 if ($starterCommand) {
-    & $starterCommand.Source -r 'exit(PHP_VERSION_ID >= 80512 && PHP_VERSION_ID < 80600 ? 0 : 1);'
+    & $starterCommand.Source scripts/check-php-runtime.php
     $starterCompatible = $LASTEXITCODE -eq 0
 }
-if (-not $starterCompatible -and (Test-Path -LiteralPath (Join-Path $starterPhp 'php.exe'))) {
-    $env:PATH = $starterPhp + ';' + $env:PATH
+if (-not $starterCompatible) {
+    foreach ($starterRuntime in @('.tools/php84', '.tools/php')) {
+        $starterPhp = Join-Path $starterRoot $starterRuntime
+        $starterExecutable = Join-Path $starterPhp 'php.exe'
+        if (-not (Test-Path -LiteralPath $starterExecutable)) { continue }
+        & $starterExecutable scripts/check-php-runtime.php
+        if ($LASTEXITCODE -eq 0) {
+            $env:PATH = $starterPhp + ';' + $env:PATH
+            $starterCompatible = $true
+            break
+        }
+    }
 }
-php -r 'exit(PHP_VERSION_ID >= 80512 && PHP_VERSION_ID < 80600 ? 0 : 1);'
-if ($LASTEXITCODE -ne 0) { throw 'Install stable PHP >=8.5.12 <8.6 before serving this project.' }
+if (-not $starterCompatible) { throw 'Install stable PHP 8.4.27+ (8.4.x) or 8.5.12+ (8.5.x) before serving this project.' }
 Write-Host ('Using PHP: ' + (Get-Command php).Source)
 php artisan serve --host=127.0.0.1 --port=$Port

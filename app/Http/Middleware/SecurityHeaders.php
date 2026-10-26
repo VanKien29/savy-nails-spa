@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Services\SiteSettingsService;
+use App\Support\PhpRuntime;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -10,7 +11,7 @@ class SecurityHeaders
 {
     public function handle(Request $request, Closure $next)
     {
-        if (app()->environment('production') && (PHP_VERSION_ID < 80512 || PHP_VERSION_ID >= 80600 || config('app.debug'))) {
+        if (app()->environment('production') && (! PhpRuntime::isSupported() || config('app.debug'))) {
             abort(503, 'Deployment configuration requires attention.');
         }
         $response = $next($request);

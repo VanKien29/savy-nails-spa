@@ -5,6 +5,9 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        php: ['8.4', '8.5']
     services:
       mysql:
         image: mysql:8.4
@@ -22,7 +25,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.5'
+          php-version: ${{ matrix.php }}
           extensions: gd, intl, exif, pdo_mysql, zip
           coverage: none
       - uses: actions/setup-node@v4
@@ -31,7 +34,7 @@ jobs:
           cache: npm
       - name: Verify patched PHP runtime
         run: |
-          php -r 'exit(PHP_VERSION_ID >= 80512 && PHP_VERSION_ID < 80600 ? 0 : 1);'
+          php scripts/check-php-runtime.php
       - run: composer install --no-interaction --prefer-dist
       - run: cp .env.example .env && php artisan key:generate
       - name: Configure isolated MySQL test database
@@ -47,7 +50,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: verification-artifacts
+          name: verification-artifacts-php-${{ matrix.php }}
           path: |
             test-results/
             dist/preview/
