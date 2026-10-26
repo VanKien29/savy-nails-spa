@@ -14,11 +14,11 @@ class SalonLuxurySeeder extends Seeder
     public function run(): void
     {
         $profile = SalonProfile::findOrFail(1);
-        if (($profile->data['luxury_revision'] ?? null) === 'editorial-v5') {
+        if (($profile->data['luxury_revision'] ?? null) === 'editorial-v6') {
             return;
         }
         $report = collect(json_decode(file_get_contents(public_path('assets/optimized/report.json')), true, flags: JSON_THROW_ON_ERROR));
-        $manifest = json_decode(file_get_contents(database_path('seeders/data/the-k-luxury.json')), true, flags: JSON_THROW_ON_ERROR);
+        $manifest = SalonCatalogData::luxuryImages();
         DB::transaction(function () use ($profile, $report, $manifest) {
             foreach (SalonImage::where('show_in_gallery', true)->get() as $old) {
                 $old->update(['show_in_gallery' => false]);
@@ -32,7 +32,7 @@ class SalonLuxurySeeder extends Seeder
                 SalonImage::updateOrCreate(['key' => $row['key']], ['alt' => $row['alt'], 'caption' => $row['caption'], 'variants' => $variants, 'category' => 'nails', 'is_inspiration' => true, 'show_in_gallery' => str_starts_with($row['placement'], 'gallery.'), 'sort_order' => $index, 'source_url' => null, 'source_credit' => 'AI-created editorial inspiration']);
             }
             $data = $profile->data;
-            $data['luxury_revision'] = 'editorial-v5';
+            $data['luxury_revision'] = 'editorial-v6';
             $data['hero_image'] = 'luxury-hero';
             $data['hero_mobile_image'] = 'luxury-hero-mobile';
             $data['story_image'] = 'luxury-story';
@@ -61,14 +61,9 @@ class SalonLuxurySeeder extends Seeder
                     ['title' => 'Make a little time', 'text' => 'Send your preferred date and time. Our team will contact you to confirm your visit.'],
                     ['title' => 'Make it yours', 'text' => 'Bring your inspiration and tell us about the finish you have in mind.'],
                 ]),
-                $section('questions', 'A little clarity', 'Before your beautiful moment.', 'A few details to help you plan your visit.', [
-                    ['title' => 'How can I plan my visit?', 'text' => 'Explore the service menu, then contact the salon with your preferred treatment or call us directly. Our team will help you find the right time.'],
-                    ['title' => 'Can I add gel polish to a pedicure?', 'text' => 'Gel options are listed with individual pedicures in our service menu. Please ask the salon about any treatment without a listed gel price.'],
-                    ['title' => 'Do you have services for children?', 'text' => 'Yes. Our Little Luxuries menu is designed for children under 12, with manicure, pedicure and polish change options.'],
-                    ['title' => 'What are your salon hours?', 'text' => 'Monday through Saturday, 9:30 AM–7:30 PM. Sunday, 9:30 AM–7:00 PM. Please call for holiday hours.'],
-                ]),
                 $section('finale', 'A little time, just for you', 'Good nails. Even better moments.', 'Your next beautiful detail starts here.'),
             ]]);
+            \Illuminate\Support\Facades\Cache::forget('salon.catalog');
         });
     }
 }

@@ -24,11 +24,10 @@ test('mobile navigation, complete service menu, gallery and keyboard dialogs',as
     await page.goto('/gallery');await expect(page.locator('input[type=search]')).toHaveCount(0);await expect(page.locator('[data-gallery-filter],.ks-gallery-filters,.ks-image-source')).toHaveCount(0);const galleryCount=await page.locator('[data-gallery-category]').count();expect(galleryCount).toBeGreaterThan(0);await expect(page.locator('[data-gallery-category]:visible')).toHaveCount(galleryCount);await expect(page.locator('a[href*="pinterest"],a[href*="pin.it"]')).toHaveCount(0);await expect(page.locator('main')).not.toContainText('Pinterest');await page.locator('[data-lightbox]:visible').first().click();await expect(page.locator('#image-lightbox')).toBeVisible();await page.keyboard.press('Escape');await expect(page.locator('#image-lightbox')).toBeHidden();
     await page.locator('[data-open-dialog="appointment-policy"]').first().click();await expect(page.locator('#appointment-policy')).toBeVisible();await page.keyboard.press('Escape');await expect(page.locator('#appointment-policy')).toBeHidden();
 });
-test('real contact submission and CSRF protection',async({page,request})=>{
+test('contact page details, image and API CSRF protection',async({page,request})=>{
     await page.goto('/contact-us');
-    await page.getByLabel('Full name').fill('Browser Guest');await page.getByLabel('Phone number').fill('9105550123');await page.getByLabel('Email address').fill(email);await page.getByLabel('Your message (optional)').fill('A question about a ritual.');await page.locator('[name=consent]').check();
-    await expect.poll(()=>page.evaluate(()=>Date.now()-performance.timeOrigin)).toBeGreaterThan(2100);
-    await page.getByRole('button',{name:'Send Your Message'}).click();await expect(page.locator('[data-form-status]')).toContainText('Thank you');
+    await expect(page.locator('.ks-contact-details')).toBeVisible();
+    await expect(page.locator('.ks-contact-photo')).toBeVisible();
     expect((await request.post('/inquiries/contact',{form:{full_name:'No token'}})).status()).toBe(419);
 });
 

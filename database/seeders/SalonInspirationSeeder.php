@@ -15,7 +15,7 @@ class SalonInspirationSeeder extends Seeder
             return;
         }
         $report = collect(json_decode(file_get_contents(public_path('assets/optimized/report.json')), true, flags: JSON_THROW_ON_ERROR));
-        $source = json_decode(file_get_contents(database_path('seeders/data/the-k-pinterest.json')), true, flags: JSON_THROW_ON_ERROR);
+        $source = SalonCatalogData::pinterestImages();
         foreach ($source as $index => $row) {
             $entry = $report->first(fn ($entry) => str_replace('\\', '/', $entry['file']) === 'the-k/'.$row['source']);
             if (empty($entry['variants'])) {

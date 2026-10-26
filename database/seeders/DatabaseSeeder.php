@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
-    { /* No production demo data or default accounts. Use starter:setup explicitly. */
+    {
+        $this->call(NailSalonSeeder::class);
     }
 }

@@ -14,6 +14,8 @@
 @case('check')<path d="m5 12 4 4L19 6"/>@break
 @case('search')<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>@break
 @case('plus')<path d="M12 5v14M5 12h14"/>@break
+@case('chevron-left') @case('prev') @case('arrow-left')<path d="M15 18 9 12 15 6"/>@break
+@case('chevron-right') @case('next') @case('arrow-right')<path d="M9 18 15 12 9 6"/>@break
 @case('arrow')<path d="M5 19 19 5M5 5h14v14"/>@break
 @endswitch
 </svg>
