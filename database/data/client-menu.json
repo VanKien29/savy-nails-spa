@@ -1,6 +1,6 @@
 {
   "source": "Client-provided giá menu services.pdf, 7 pages",
-  "revision": "client-menu-2026-10-v1",
+  "revision": "client-menu-2026-10-v2",
   "categories": [
     {
       "slug": "brows-lashes",
@@ -585,8 +585,7 @@
       "category": "waxing",
       "group": null,
       "name": "Chin",
-      "price": 20,
-      "price_from": true
+      "price": 20
     },
     {
       "slug": "waxing-full-face",
@@ -607,8 +606,7 @@
       "category": "waxing",
       "group": null,
       "name": "Legs",
-      "price": 60,
-      "price_from": true
+      "price": 60
     }
   ]
 }
