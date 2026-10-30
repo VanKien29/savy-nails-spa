@@ -388,10 +388,10 @@ html{scroll-padding-top:96px}
 .ks-socials{flex-wrap:wrap}
 
 /* Client logo branding on bronze: keep the original wide logo proportions. */
-:root{--ks-brand-bronze:color-mix(in srgb,var(--ks-gold-text) 96%,white);--ks-brand-cream:#fff4df;--ks-header:96px}
+:root{--ks-brand-bronze:color-mix(in srgb,var(--ks-gold-text) 96%,white);--ks-brand-cream:#fff4df;--ks-header:110px}
 .ks-header,.ks-footer{background:var(--ks-brand-bronze);color:#fff}
 .ks-header{border-bottom-color:#ffffff30}
-.ks-header .ks-brand-logo{width:210px;height:75px}
+.ks-header .ks-brand-logo{width:260px;height:104px}
 .ks-header .ks-brand-logo img,.ks-footer .ks-brand-logo img{object-position:left center}
 .ks-header .ks-desktop-nav a,.ks-header .ks-mobile-nav a{color:#fff}
 .ks-header .ks-desktop-nav a:hover,.ks-header .ks-desktop-nav a[aria-current=page]{color:var(--ks-brand-cream)}
@@ -403,7 +403,7 @@ html{scroll-padding-top:96px}
 .ks-header .ks-mobile-nav a{border-bottom-color:#ffffff30}
 .ks-header .ks-mobile-nav a:hover,.ks-header .ks-mobile-nav a[aria-current=page]{background:#ffffff12;color:#fff}
 .ks-header a:focus-visible,.ks-header button:focus-visible,.ks-footer a:focus-visible,.ks-footer button:focus-visible{outline:2px solid #fff;outline-offset:5px}
-.ks-footer .ks-brand-logo{width:210px;max-width:100%;height:75px}
+.ks-footer .ks-brand-logo{width:260px;max-width:100%;height:104px}
 .ks-footer-grid{align-items:start}
 .ks-footer .ks-footer-grid p,.ks-footer .ks-address,.ks-footer .ks-footer-phone,.ks-footer .ks-footer-inline,.ks-footer .ks-footer-grid nav a,.ks-footer .ks-footer-bottom{color:var(--ks-brand-cream)}
 .ks-footer .ks-footer-grid h2{color:#fff}
@@ -414,7 +414,7 @@ html{scroll-padding-top:96px}
 .ks-header .ks-monogram,.ks-header .ks-brand strong,.ks-header .ks-brand small,.ks-footer .ks-monogram,.ks-footer .ks-brand strong,.ks-footer .ks-brand small{color:#fff}
 .ks-header .ks-monogram>span,.ks-footer .ks-monogram>span{background:var(--ks-brand-bronze)}
 @media(max-width:730px){
-    :root{--ks-header:76px}
-    .ks-header .ks-brand-logo{width:186px;height:66px}
-    .ks-footer .ks-brand-logo{width:186px;height:66px}
+    :root{--ks-header:94px}
+    .ks-header .ks-brand-logo{width:220px;height:88px}
+    .ks-footer .ks-brand-logo{width:220px;height:88px}
 }
