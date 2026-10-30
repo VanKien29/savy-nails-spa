@@ -113,4 +113,16 @@ class ClientDesignTest extends TestCase
             File::deleteDirectory($directory);
         }
     }
+
+    public function test_about_brand_image_can_be_changed_in_admin(): void
+    {
+        $upload = app(MediaService::class)->upload(UploadedFile::fake()->image('about-brand.jpg', 800, 800));
+        Livewire::withQueryParams(['section' => 'about'])->test(WebsiteContent::class)
+            ->fillForm(['profile.about_brand_image' => 'uploaded-media-'.$upload->id])
+            ->call('save')->assertHasNoFormErrors();
+
+        $this->get('/about-us')->assertOk()->assertSee($upload->url(), false);
+        $this->assertSame('uploaded-media-'.$upload->id, SalonProfile::findOrFail(1)->data['about_brand_image']);
+        $this->get('/admin/website-content?section=about')->assertOk()->assertSee('Ảnh thương hiệu & lời mời');
+    }
 }

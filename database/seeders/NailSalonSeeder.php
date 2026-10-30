@@ -132,6 +132,7 @@ class NailSalonSeeder extends Seeder
         $this->call(SalonMapSeeder::class);
         $this->call(SalonClientDesignSeeder::class);
         $this->call(SalonClientMenuSeeder::class);
+        $this->call(SalonAboutBrandImageSeeder::class);
         $this->call(SalonOriginalLogoSeeder::class);
     }
 }

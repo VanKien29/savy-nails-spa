@@ -71,6 +71,7 @@ class WebsiteContent extends Page
     {
         $page = $this->page();
         $profile = app(SalonContent::class)->all()['profile'];
+        $profile['about_brand_image'] ??= 'brand-logo';
         $this->form->fill(['blocks' => collect($page?->sections ?? [])->keyBy('id')->all(), 'profile' => $profile,
             'settings' => app(SiteSettingsService::class)->all(),
             'gallery_images' => SalonImage::where('show_in_gallery', true)->orderBy('sort_order')->pluck('key')->all(),
@@ -131,7 +132,7 @@ class WebsiteContent extends Page
             ])->validate();
         }
         DB::transaction(function () use ($state) {
-            $imageKeys = collect($state['profile'] ?? [])->only(['hero_image', 'hero_slides', 'story_image', 'about_image', 'contact_image', 'home_lookbook', 'menu_brow_images'])->flatten()
+            $imageKeys = collect($state['profile'] ?? [])->only(['hero_image', 'hero_slides', 'story_image', 'about_image', 'about_brand_image', 'contact_image', 'home_lookbook', 'menu_brow_images'])->flatten()
                 ->merge(collect($state['blocks'] ?? [])->pluck('items')->flatten(1)->pluck('label'))
                 ->merge($state['gallery_images'] ?? [])->filter()->unique();
             foreach ($imageKeys as $key) {

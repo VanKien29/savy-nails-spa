@@ -128,6 +128,7 @@ class WebsiteContentSections
                 self::items('promise'),
             ]),
             self::tab('brand', '03. Thương hiệu & lời mời', 'Section cuối trang: thương hiệu, lời giới thiệu và liên kết Contact Us.', [
+                WebsiteContent::imagePicker('profile.about_brand_image', 'Ảnh thương hiệu & lời mời'),
                 ...WebsiteContent::copyFields('about', ['brand_heading', 'brand_accent']),
                 ...self::blockFields('intro', heading: false),
                 ...WebsiteContent::copyFields('about', ['visit_note']),
