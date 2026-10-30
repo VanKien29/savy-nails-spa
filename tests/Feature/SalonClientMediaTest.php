@@ -7,7 +7,7 @@ use App\Models\SalonImage;
 use App\Services\SiteSettingsService;
 use Database\Seeders\NailSalonSeeder;
 use Database\Seeders\SalonClientMediaSeeder;
-use Database\Seeders\SalonPearlLogoSeeder;
+use Database\Seeders\SalonOriginalLogoSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -25,7 +25,7 @@ class SalonClientMediaTest extends TestCase
 
         $settings = app(SiteSettingsService::class);
         $logo = Media::findOrFail($settings->get('logo_id'));
-        $this->assertSame('the-k-pearl-logo-transparent.png', $logo->name);
+        $this->assertSame('the-k-client-logo-transparent.png', $logo->name);
         $this->assertSame($logo->id, $settings->get('mobile_logo_id'));
         $this->assertSame(6, SalonImage::where('show_in_gallery', true)->count());
 
@@ -37,7 +37,7 @@ class SalonClientMediaTest extends TestCase
         SalonImage::where('key', 'pinterest-burgundy-french')->firstOrFail()->update(['show_in_gallery' => false]);
         $this->seed(SalonClientMediaSeeder::class);
         $mediaCount = Media::count();
-        $this->seed(SalonPearlLogoSeeder::class);
+        $this->seed(SalonOriginalLogoSeeder::class);
         $this->assertSame($mediaCount, Media::count());
         $this->assertSame($logo->id, $settings->get('logo_id'));
         $this->assertNull($settings->get('mobile_logo_id'));
