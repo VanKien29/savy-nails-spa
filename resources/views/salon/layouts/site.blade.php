@@ -8,7 +8,8 @@
     <link rel="preload" href="{{ Vite::asset('node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="{{ Vite::asset('node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-italic.woff2') }}" as="font" type="font/woff2" crossorigin>
     @vite(['resources/css/salon.css','resources/js/salon.js'])
-    @if($page->template === 'salon-home')@vite('resources/css/salon-luxury.css')@endif
+    @if(in_array($page->template, ['salon-home', 'salon-savy-home'], true))@vite('resources/css/salon-luxury.css')@endif
+    @if($settings['site_name'] === 'Savy Nails & Spa')@vite('resources/css/salon-savy.css')@endif
     <style>
         :root{--ks-gold:{{ $settings['primary_color'] }};--ks-ink:{{ $settings['secondary_color'] }};--ks-gold-text:{{ $settings['accent_text_color'] }};--ks-cream:{{ $settings['surface_color'] }};--ks-serif:{!! match($settings['heading_font']){'sans'=>"'Be Vietnam Pro',sans-serif",'system'=>'system-ui,sans-serif',default=>"'Cormorant Garamond',Georgia,serif"} !!};--ks-sans:{!! match($settings['body_font']){'serif'=>"'Cormorant Garamond',Georgia,serif",'system'=>'system-ui,sans-serif',default=>"'Be Vietnam Pro',sans-serif"} !!}}
         .ks-site{background:{{ $settings['background_color'] }}}
@@ -17,7 +18,7 @@
     <noscript><style>@media(max-width:730px){.ks-mobile-nav{display:grid!important}}</style></noscript>
     @include('partials.custom-code', ['placement' => 'script_head'])
 </head>
-<body id="top" class="ks-site page-{{ $page->slug }}{{ $isDemo ? ' is-demo' : '' }}" data-animations="{{ $settings['features']['animations'] ? 'on' : 'off' }}" @if(!$isDemo && $settings['cookie_consent'] && ($settings['ga4_id'] || $settings['gtm_id'] || $settings['meta_pixel_id'])) data-tracking="{{ json_encode(collect($settings)->only(['ga4_id','gtm_id','meta_pixel_id'])) }}" @endif>
+<body id="top" class="ks-site page-{{ $page->slug }}{{ $settings['site_name'] === 'Savy Nails & Spa' ? ' client-savy' : '' }}{{ $isDemo ? ' is-demo' : '' }}" data-animations="{{ $settings['features']['animations'] ? 'on' : 'off' }}" @if(!$isDemo && $settings['cookie_consent'] && ($settings['ga4_id'] || $settings['gtm_id'] || $settings['meta_pixel_id'])) data-tracking="{{ json_encode(collect($settings)->only(['ga4_id','gtm_id','meta_pixel_id'])) }}" @endif>
     <a href="#main" class="ks-skip">{{ $copy['global']['skip_content'] }}</a>
     @include('salon.partials.header')
     <main id="main">@yield('content')</main>

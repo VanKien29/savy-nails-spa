@@ -80,7 +80,7 @@ class SalonImage extends Model
                 throw ValidationException::withMessages(['media_id' => 'Chỉ chọn ảnh đã xử lý xong.']);
             }
             foreach ($image->variants ?? [] as $variant) {
-                if (! preg_match('~^the-k/[a-z0-9.-]+-[0-9]+\.(webp|avif)$~', $variant['file'] ?? '')) {
+                if (! preg_match('~^[a-z0-9][a-z0-9-]*/[a-z0-9.-]+-[0-9]+\.(webp|avif)$~', $variant['file'] ?? '')) {
                     throw new \InvalidArgumentException('Invalid public image variant.');
                 }
             }
