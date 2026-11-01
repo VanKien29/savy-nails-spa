@@ -33,7 +33,10 @@ try{
         report.routes.push({route,status:200,noindex:true,formsInteractive:true});
     }
     assert.match(await(await page.request.get(new URL('/robots.txt',origin).href)).text(),/Disallow: \//);
-    for(const privatePath of ['/.env','/admin','/composer.json','/vendor/autoload.php'])assert.equal((await page.request.get(new URL(privatePath,origin).href)).status(),404);
+    for(const privatePath of ['/.env','/admin','/composer.json','/vendor/autoload.php']){
+        const status=(await page.request.get(new URL(privatePath,origin).href)).status();
+        assert.ok([403,404].includes(status),privatePath+' must be forbidden or missing; received '+status);
+    }
     assert.deepEqual(errors,[]);
     await page.goto(origin);await page.screenshot({path:'test-results/static-preview.png'});
     await fs.writeFile('test-results/static-preview.json',JSON.stringify(report,null,2));
