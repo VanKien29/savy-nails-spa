@@ -36,3 +36,5 @@ Validation:
 - Screenshots: test-results/savy-{1280,768,390}-{home,about-us,services,gallery,contact-us}.png (local ignored artifacts).
 
 Reproduction: install Composer/npm dependencies, configure the local MySQL database, run npm run media:optimize, migrate, seed SavyNailsSeeder, and build. Use PHP 8.5.12 or later within the project's 8.5 baseline.
+
+Map destination update: the client-supplied URL now uses Google Maps CID 17343372594423126593. Run `php artisan db:seed --class=SavyMapLinkSeeder --no-interaction` to update an existing installation's map/Google social links without resetting its menu or other client content. New Savy seeds use the same URL constant. All five public routes were checked for the new href and absence of the old short link.
