@@ -9,7 +9,6 @@
     <link rel="preload" href="{{ Vite::asset('node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-italic.woff2') }}" as="font" type="font/woff2" crossorigin>
     @vite(['resources/css/salon.css','resources/js/salon.js'])
     @if(in_array($page->template, ['salon-home', 'salon-savy-home'], true))@vite('resources/css/salon-luxury.css')@endif
-    @if($settings['site_name'] === 'Savy Nails & Spa')@vite('resources/css/salon-savy.css')@endif
     <style>
         :root{--ks-gold:{{ $settings['primary_color'] }};--ks-ink:{{ $settings['secondary_color'] }};--ks-gold-text:{{ $settings['accent_text_color'] }};--ks-cream:{{ $settings['surface_color'] }};--ks-serif:{!! match($settings['heading_font']){'sans'=>"'Be Vietnam Pro',sans-serif",'system'=>'system-ui,sans-serif',default=>"'Cormorant Garamond',Georgia,serif"} !!};--ks-sans:{!! match($settings['body_font']){'serif'=>"'Cormorant Garamond',Georgia,serif",'system'=>'system-ui,sans-serif',default=>"'Be Vietnam Pro',sans-serif"} !!}}
         .ks-site{background:{{ $settings['background_color'] }}}

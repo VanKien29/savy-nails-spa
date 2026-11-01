@@ -18,7 +18,9 @@ class SavyNailsSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call(NailSalonSeeder::class);
+        if (! SalonProfile::whereKey(1)->exists()) {
+            $this->call(NailSalonSeeder::class);
+        }
 
         DB::transaction(function (): void {
             $report = collect(json_decode(file_get_contents(public_path('assets/optimized/report.json')), true, flags: JSON_THROW_ON_ERROR));
@@ -70,6 +72,7 @@ class SavyNailsSeeder extends Seeder
             $profile = SalonProfile::whereKey(1)->lockForUpdate()->firstOrFail();
             $data = array_replace_recursive($profile->data, [
                 'city' => 'Walla Walla, Washington',
+                'postal_address' => ['streetAddress' => '634 S 9th Ave', 'addressLocality' => 'Walla Walla', 'addressRegion' => 'WA', 'postalCode' => '99362', 'addressCountry' => 'US'],
                 'short_city' => 'Walla Walla, WA',
                 'timezone' => 'America/Los_Angeles',
                 'booking_url' => null,
@@ -162,7 +165,7 @@ class SavyNailsSeeder extends Seeder
             Page::where('slug', 'booking')->update(['status' => 'draft', 'exportable' => false]);
 
             NavigationItem::whereIn('location', ['header', 'footer'])->update(['enabled' => false]);
-            foreach ([['Home', '/'], ['Services', '/services'], ['Gallery', '/gallery'], ['Contact', '/contact-us']] as $index => [$label, $url]) {
+            foreach ([['Home', '/'], ['About Us', '/about-us'], ['Services', '/services'], ['Gallery', '/gallery'], ['Contact Us', '/contact-us']] as $index => [$label, $url]) {
                 NavigationItem::updateOrCreate(['url' => $url, 'location' => 'header'], ['label' => $label, 'sort_order' => $index, 'enabled' => true]);
                 NavigationItem::updateOrCreate(['url' => $url, 'location' => 'footer'], ['label' => $label, 'sort_order' => $index, 'enabled' => true]);
             }

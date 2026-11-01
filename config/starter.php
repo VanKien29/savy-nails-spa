@@ -9,9 +9,9 @@ return [
     'retired_paths' => ['/booking'],
     'retired_templates' => ['salon-booking'],
     'templates' => ['sections' => 'pages.sections', 'studio' => 'pages.studio',
-        'salon-home' => 'salon.pages.home', 'salon-savy-home' => 'salon.pages.savy-home', 'salon-about' => 'salon.pages.about',
-        'salon-services' => 'salon.pages.services', 'salon-gallery' => 'salon.pages.gallery',
-        'salon-contact' => 'salon.pages.contact', 'salon-booking' => 'salon.pages.booking', 'salon-content' => 'salon.pages.content'],
+        'salon-home' => 'salon.pages.home', 'salon-savy-home' => 'salon.pages.savy-reference', 'salon-about' => 'salon.pages.savy-reference',
+        'salon-services' => 'salon.pages.savy-reference', 'salon-gallery' => 'salon.pages.savy-reference',
+        'salon-contact' => 'salon.pages.savy-reference', 'salon-booking' => 'salon.pages.booking', 'salon-content' => 'salon.pages.content'],
     'media' => ['disk' => 'public', 'max_kb' => 8192, 'max_pixels' => 25000000, 'widths' => [640, 1280, 1920], 'queue' => (bool) env('MEDIA_QUEUE', false)],
     'leads' => [
         'notification_email' => env('LEAD_NOTIFICATION_EMAIL'),
