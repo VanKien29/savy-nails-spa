@@ -6,10 +6,10 @@
     $galleryFiles = $home ? [8, 2, 1, 4, 12, 7] : range(1, 12);
     $phone = preg_replace('/[^0-9+]/', '', $settings['hotline']);
     $bannerImage = match($slug) {
-        'about-us' => '16933.jpg',
-        'services' => '26867-e1713761727547.jpg',
-        'gallery' => 'avatar-9.jpg',
-        default => '55792.jpg',
+        'about-us' => 'banner-emerald-nails.jpg',
+        'services' => 'banner-dark-manicure.jpg',
+        'gallery' => 'banner-dark-manicure.jpg',
+        default => 'banner-emerald-nails.jpg',
     };
 @endphp
 <!doctype html>
