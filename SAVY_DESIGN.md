@@ -11,6 +11,7 @@ Implemented:
 - Gold-overlay About section, floral service background, two-column menu with dotted price leaders.
 - Rounded About cards, three-column bordered gallery, carousel, lightbox, FAQ and reveal effects.
 - Large inner-page title banners, shared three-column footer and contact-only appointment actions.
+- Inner-page banners use page-specific nail/spa photographs, an 82% ivory overlay and solid dark-brown headings for legibility; these above-the-fold images load eagerly with responsive variants.
 - Playfair Display, Libre Franklin and Dancing Script fonts served locally.
 - Responsive layouts at 1280, 768 and 390 pixels, reduced motion and keyboard controls.
 

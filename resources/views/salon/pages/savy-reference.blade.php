@@ -5,6 +5,12 @@
     $referenceMedia = collect(json_decode(file_get_contents(public_path('assets/optimized/report.json')), true))->keyBy(fn ($entry) => str_replace('\\', '/', $entry['file']));
     $galleryFiles = $home ? [8, 2, 1, 4, 12, 7] : range(1, 12);
     $phone = preg_replace('/[^0-9+]/', '', $settings['hotline']);
+    $bannerImage = match($slug) {
+        'about-us' => '16933.jpg',
+        'services' => '26867-e1713761727547.jpg',
+        'gallery' => 'avatar-9.jpg',
+        default => '55792.jpg',
+    };
 @endphp
 <!doctype html>
 <html lang="{{ $seo['language'] }}">
@@ -50,7 +56,10 @@
         @endforeach
     </section>
 @else
-    <section class="av-page-banner"><h1 data-reveal>{{ $pageLabel }}</h1></section>
+    <section class="av-page-banner">
+        <div class="av-page-banner-image" aria-hidden="true">@include('salon.partials.reference-image', ['file' => $bannerImage, 'eager' => true, 'sizes' => '100vw', 'alt' => ''])</div>
+        <h1>{{ $pageLabel }}</h1>
+    </section>
     @if($slug === 'services')
         @include('salon.partials.reference-menu')
     @elseif($slug === 'gallery')
