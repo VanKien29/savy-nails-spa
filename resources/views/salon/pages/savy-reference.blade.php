@@ -82,7 +82,12 @@
     <div class="av-container av-footer-grid">
         <div><a class="av-brand av-footer-brand" href="/" aria-label="Savy Nails & Spa — Home"><span class="av-brand-ring"><b>S</b><i>✧</i></span><small>SAVY NAILS &amp; SPA</small></a><div class="av-socials">@foreach($settings['social_links'] as $social)<a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="{{ $social['label'] }}">{{ $social['label'] }}</a>@endforeach</div></div>
         <div><h2>Contact</h2><a href="tel:{{ $phone }}">{{ $settings['hotline'] }}</a><a href="{{ $settings['maps_url'] }}" target="_blank" rel="noopener noreferrer">{{ $settings['address'] }}</a><h2>Business Hours</h2>@foreach($salon['profile']['hours'] as $hour)<p>{{ $hour['days'] }}:<br>{{ $hour['time'] }}</p>@endforeach</div>
-        <a class="av-map-card" href="{{ $settings['maps_url'] }}" target="_blank" rel="noopener noreferrer"><span class="av-map-pin">⌖</span><strong>Savy Nails &amp; Spa</strong><span>634 S 9th Ave<br>Walla Walla, WA 99362</span><b>Open in Google Maps ↗</b></a>
+        <div class="av-map-card">
+            @if($settings['maps_embed_url'])
+                <iframe src="{{ $settings['maps_embed_url'] }}" title="Google Maps — salon location" width="480" height="295" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+            @endif
+            <a href="{{ $settings['maps_url'] }}" target="_blank" rel="noopener noreferrer">Open in Google Maps ↗</a>
+        </div>
     </div>
     <div class="av-copyright">Copyright © {{ date('Y') }} Savy Nails &amp; Spa. All rights reserved.</div>
 </footer>

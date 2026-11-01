@@ -29,7 +29,9 @@ class SecurityHeaders
                 $devSocket = ' '.($url['scheme'] === 'https' ? 'wss' : 'ws').'://'.$host;
             }
         }
-        $mapFrameSource = $request->is('contact-us') && app(SiteSettingsService::class)->get('maps_embed_url')
+        $sharedSalonMap = app(SiteSettingsService::class)->get('site_name') === 'Savy Nails & Spa'
+            && in_array($request->path(), ['/', 'about-us', 'services', 'gallery', 'contact-us'], true);
+        $mapFrameSource = ($request->is('contact-us') || $sharedSalonMap) && app(SiteSettingsService::class)->get('maps_embed_url')
             ? ' https://www.google.com/maps/embed' : '';
         // Alpine/Livewire need evaluated expressions. Admin keeps the restricted policy.
         $policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'{$devSource} https://www.googletagmanager.com https://connect.facebook.net https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'{$devSource}; img-src 'self' data: https:{$devSource}; font-src 'self' data:{$devSource}; connect-src 'self'{$devSource}{$devSocket} https://*.google-analytics.com https://www.googletagmanager.com https://www.facebook.com; frame-src https://challenges.cloudflare.com{$mapFrameSource}; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'";

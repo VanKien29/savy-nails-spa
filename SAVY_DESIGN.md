@@ -15,7 +15,11 @@ Implemented:
 - Playfair Display, Libre Franklin and Dancing Script fonts served locally.
 - Responsive layouts at 1280, 768 and 390 pixels, reduced motion and keyboard controls.
 
-Intentional content differences: Savy branding, address, telephone, hours, social links and PDF service menu replace the reference salon's data. Contact actions replace its form/online scheduler. The testimonial-shaped section contains Savy introduction copy rather than unverified customer reviews. The footer map panel links to the supplied Google Maps listing.
+Intentional content differences: Savy branding, address, telephone, hours, social links and PDF service menu replace the reference salon's data. Contact actions replace its form/online scheduler. The testimonial-shaped section contains Savy introduction copy rather than unverified customer reviews. The footer now embeds the real Google Maps listing supplied by the client, with an outbound Maps link.
+
+Google Maps embed: lazy iframe using the canonical maps/embed URL for CID 17343372594423126593. Frame permissions allow only Google's maps/embed path on the five configured Savy public routes; admin routes remain restricted. Verified the live map and location marker in the browser. Rerun SavyMapLinkSeeder to apply the embed setting on an existing installation.
+
+Embed verification: SavyMapEmbedTest passed (1 test, 19 assertions) for all five public pages, admin frame restrictions and empty-setting fallback. The focused real-map browser check passed at 1280px and 390px; Google iframe controls rendered, and map screenshots were captured at test-results/savy-google-map-{1280,390}.png. Production asset build and focused Pint checks passed.
 
 Image inputs in resources/media/savy are taken from the user-requested reference's /wp-content/uploads/2024/04/ directory; savy-logo.png is client-provided. Nail/spa photos are reference imagery and are not represented as Savy customer photographs. All raster files pass through npm run media:optimize. Background files are capped at their 1000px source resolution; no upscaling is performed.
 

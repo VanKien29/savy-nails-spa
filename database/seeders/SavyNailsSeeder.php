@@ -145,7 +145,7 @@ class SavyNailsSeeder extends Seeder
                 'primary_color' => '#c6a15b', 'secondary_color' => '#2b241c', 'accent_text_color' => '#8a642b',
                 'background_color' => '#fffdf9', 'surface_color' => '#f7f0e4', 'home_gold_color' => '#c6a15b', 'home_dark_color' => '#2b241c',
                 'heading_font' => 'serif', 'body_font' => 'sans', 'hotline' => '509-529-7289',
-                'address' => '634 S 9th Ave, Walla Walla, WA 99362', 'maps_url' => SavyMapLinkSeeder::MAP_URL, 'maps_embed_url' => '',
+                'address' => '634 S 9th Ave, Walla Walla, WA 99362', 'maps_url' => SavyMapLinkSeeder::MAP_URL, 'maps_embed_url' => SavyMapLinkSeeder::EMBED_URL,
                 'copyright' => 'All rights reserved.', 'legal' => 'Nails · Spa · Waxing',
                 'default_title' => 'Savy Nails & Spa | Nails, Spa & Waxing in Walla Walla, WA',
                 'default_description' => 'Visit Savy Nails & Spa in Walla Walla, WA for manicures, nail enhancements, spa pedicures and waxing. Call or message us to book.',
