@@ -1,5 +1,6 @@
 @php
-    $imageVariants = collect($referenceMedia->get('savy/'.$file)['variants'] ?? []);
+    $imageKey = str_contains($file, '/') ? $file : 'savy/'.$file;
+    $imageVariants = collect($referenceMedia->get($imageKey)['variants'] ?? []);
     $imageFallback = $imageVariants->last();
 @endphp
 @if($imageFallback)

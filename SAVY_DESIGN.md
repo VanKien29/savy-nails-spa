@@ -11,7 +11,7 @@ Implemented:
 - Gold-overlay About section, floral service background, two-column menu with dotted price leaders.
 - Rounded About cards, three-column bordered gallery, carousel, lightbox, FAQ and reveal effects.
 - Large inner-page title banners, shared three-column footer and contact-only appointment actions.
-- Inner-page banners use new black-manicure/emerald photographs, a dark green/charcoal gradient and warm-white headings. The ivory wash has been removed; these above-the-fold images load eagerly with responsive variants.
+- Inner-page banners use the existing warm bronze spa and nude/gold manicure artwork (the-k/luxury-ritual.png, luxury-hero.png and luxury-look-gold.png), a chocolate-brown gradient and warm-white headings. These replace the off-palette green/black stock photos; above-the-fold images load eagerly with responsive variants.
 - Playfair Display, Libre Franklin and Dancing Script fonts served locally.
 - Responsive layouts at 1280, 768 and 390 pixels, reduced motion and keyboard controls.
 
@@ -19,11 +19,11 @@ Intentional content differences: Savy branding, address, telephone, hours, socia
 
 Image inputs in resources/media/savy are taken from the user-requested reference's /wp-content/uploads/2024/04/ directory; savy-logo.png is client-provided. Nail/spa photos are reference imagery and are not represented as Savy customer photographs. All raster files pass through npm run media:optimize. Background files are capped at their 1000px source resolution; no upscaling is performed.
 
-New banner sources (stock inspiration, not salon/customer photographs):
+Previous stock candidates (retained as source assets but no longer used by banners):
 
 - banner-dark-manicure.jpg: de Aura, https://unsplash.com/photos/womans-hand-with-long-black-stiletto-nails-Y5P9SyEEQWM (Unsplash License).
 - banner-emerald-nails.jpg: https://www.pexels.com/photo/close-up-photo-of-a-person-s-fingernails-with-black-manicure-8259423/ (Pexels free stock photo).
-- Banner sources are downloaded at 1920px and optimized to responsive WebP variants. Dark overlay and white text separate the banners from surrounding cream sections.
+- Current banner artwork reuses already optimized responsive WebP variants from the repository. Bronze, champagne, warm brown and ivory match the site's gold/cream palette; the dark brown overlay keeps headings readable.
 
 Validation:
 
