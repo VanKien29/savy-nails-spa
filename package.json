@@ -10,7 +10,8 @@
     "test:browser": "playwright test",
     "test:media": "node --test tests/Frontend/*.test.mjs",
     "audit:lighthouse": "node scripts/lighthouse.mjs",
-    "verify:preview": "node scripts/verify-preview.mjs"
+    "verify:preview": "node scripts/verify-preview.mjs",
+    "verify:delivery": "node scripts/verify-delivery.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.0",

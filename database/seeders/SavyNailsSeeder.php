@@ -172,6 +172,7 @@ class SavyNailsSeeder extends Seeder
         });
 
         app(SalonContent::class)->forget();
+        $this->call(SavySocialImageSeeder::class);
     }
 
     private function pageContent(string $slug): array

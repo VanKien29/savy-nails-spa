@@ -28,6 +28,7 @@ Previous stock candidates (retained as source assets but no longer used by banne
 - banner-dark-manicure.jpg: de Aura, https://unsplash.com/photos/womans-hand-with-long-black-stiletto-nails-Y5P9SyEEQWM (Unsplash License).
 - banner-emerald-nails.jpg: https://www.pexels.com/photo/close-up-photo-of-a-person-s-fingernails-with-black-manicure-8259423/ (Pexels free stock photo).
 - Current banner artwork reuses already optimized responsive WebP variants from the repository. Bronze, champagne, warm brown and ivory match the site's gold/cream palette; the dark brown overlay keeps headings readable.
+- Social previews use the dedicated nude-and-gold manicure image (`/storage/media/4/1536.webp`) with matching Open Graph/Twitter metadata on all five public routes. The image is served as WebP with explicit 1536×1024 dimensions and descriptive alt text.
 
 Validation:
 
@@ -37,6 +38,8 @@ Validation:
 - starter:check, starter:seo-audit and starter:media-audit: PASS.
 - composer quality: FAIL at existing Pint formatting violations in eight unchanged starter/test files; Composer validation/audit and PHP syntax passed. Focused Savy seeder Pint passed. Backend feature suite was not rerun for this template replacement.
 - starter:export-demo: PASS, all five routes exported. An additional static preview server launch was rejected by automatic approval review without a stated reason; live static-preview browser checks were not executed.
+- Live delivery audit after the latest deploy: PASS — 5 public routes, 28 raster image responses, all `image/webp`; hashed build assets use one-year immutable caching; raster assets use one-day browser caching plus one-year Vercel edge caching; conditional requests returned `304`.
+- Public HTML uses `Cache-Control: public, max-age=0, must-revalidate` with a five-minute edge cache and stale-while-revalidate. Laravel settings/catalog/navigation caches remain scoped to public reads and are invalidated on content mutation; admin/private HTML is not cached.
 - Screenshots: test-results/savy-{1280,768,390}-{home,about-us,services,gallery,contact-us}.png (local ignored artifacts).
 
 Reproduction: install Composer/npm dependencies, configure the local MySQL database, run npm run media:optimize, migrate, seed SavyNailsSeeder, and build. Use PHP 8.5.12 or later within the project's 8.5 baseline.

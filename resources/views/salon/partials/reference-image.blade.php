@@ -1,6 +1,6 @@
 @php
     $imageKey = str_contains($file, '/') ? $file : 'savy/'.$file;
-    $imageVariants = collect($referenceMedia->get($imageKey)['variants'] ?? []);
+    $imageVariants = collect($referenceMedia->get($imageKey)['variants'] ?? [])->filter(fn ($variant) => str_ends_with($variant['file'], '.webp'))->sortBy('width');
     $imageFallback = $imageVariants->last();
 @endphp
 @if($imageFallback)
