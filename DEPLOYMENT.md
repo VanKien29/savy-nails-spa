@@ -20,7 +20,8 @@ Verification against the deployed public URL:
 - Canonical: https://savy-nails-spa.vercel.app/; X-Robots-Tag: noindex, nofollow; X-Content-Type-Options: nosniff.
 - Logo: the client-provided wordmark is background-extracted, tinted gold on light surfaces, white on the hero, and served through responsive WebP variants in the header, hero and footer.
 - Social preview: all five routes reference the warm nude-and-gold manicure WebP at `/storage/media/4/1536.webp`; Open Graph/Twitter metadata reports `image/webp`, 1536×1024, and descriptive alt text.
-- Delivery cache audit: 28 raster responses across the five routes were `image/webp`; raster assets return one-day browser caching and one-year Vercel edge caching; hashed `/build/assets` return one-year immutable caching; conditional requests returned `304`.
+- Delivery cache audit: 29 raster responses across the five routes were `image/webp`; raster assets return one-day browser caching and one-year Vercel edge caching; hashed `/build/assets` return one-year immutable caching; conditional requests returned `304`.
+- Motion smoke check: desktop and 390px static previews reported no console errors or horizontal overflow; the sticky-header state, scroll progress, reveal observer and logo loading all passed.
 - Local production build and SEO audit: passed. Earlier full composer quality remains blocked by pre-existing Pint violations documented in SAVY_DESIGN.md; this deployment did not claim a clean full backend suite.
 
 To update: build assets, set SITE_URL to the public URL, run starter:seo-audit and starter:export-demo, inspect the generated public artifact, deploy using the static configuration, then rerun `npm run verify:preview -- https://savy-nails-spa.vercel.app` and `node scripts/verify-delivery.mjs https://savy-nails-spa.vercel.app`. Push source changes with git push savy main. Keep deployment credentials and generated artifacts outside Git.

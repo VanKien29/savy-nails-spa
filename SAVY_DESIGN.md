@@ -14,6 +14,7 @@ Implemented:
 - Inner-page banners use the existing warm bronze spa and nude/gold manicure artwork (the-k/luxury-ritual.png, luxury-hero.png and luxury-look-gold.png), a chocolate-brown gradient and warm-white headings. These replace the off-palette green/black stock photos; above-the-fold images load eagerly with responsive variants.
 - Playfair Display, Libre Franklin and Dancing Script fonts served locally.
 - Responsive layouts at 1280, 768 and 390 pixels, reduced motion and keyboard controls.
+- Reference-style motion pass: smooth anchor scrolling with sticky-header offset, scroll progress indicator, shrinking header shadow, scroll-triggered reveals with staggered timing, subtle hero parallax, button/card/image hover lift and page-banner zoom. All enhanced motion is disabled or made instant for `prefers-reduced-motion`.
 
 Intentional content differences: Savy branding, address, telephone, hours, social links and PDF service menu replace the reference salon's data. Contact actions replace its form/online scheduler. The testimonial-shaped section contains Savy introduction copy rather than unverified customer reviews. The footer now embeds the real Google Maps listing supplied by the client, with an outbound Maps link.
 
@@ -38,7 +39,7 @@ Validation:
 - starter:check, starter:seo-audit and starter:media-audit: PASS.
 - composer quality: FAIL at existing Pint formatting violations in eight unchanged starter/test files; Composer validation/audit and PHP syntax passed. Focused Savy seeder Pint passed. Backend feature suite was not rerun for this template replacement.
 - starter:export-demo: PASS, all five routes exported. An additional static preview server launch was rejected by automatic approval review without a stated reason; live static-preview browser checks were not executed.
-- Live delivery audit after the latest deploy: PASS — 5 public routes, 28 raster image responses, all `image/webp`; hashed build assets use one-year immutable caching; raster assets use one-day browser caching plus one-year Vercel edge caching; conditional requests returned `304`.
+- Live delivery audit after the latest deploy: PASS — 5 public routes, 29 raster image responses, all `image/webp`; hashed build assets use one-year immutable caching; raster assets use one-day browser caching plus one-year Vercel edge caching; conditional requests returned `304`.
 - Public HTML uses `Cache-Control: public, max-age=0, must-revalidate` with a five-minute edge cache and stale-while-revalidate. Laravel settings/catalog/navigation caches remain scoped to public reads and are invalidated on content mutation; admin/private HTML is not cached.
 - Screenshots: test-results/savy-{1280,768,390}-{home,about-us,services,gallery,contact-us}.png (local ignored artifacts).
 

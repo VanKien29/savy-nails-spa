@@ -22,6 +22,7 @@
     @include('partials.custom-code', ['placement' => 'script_head'])
 </head>
 <body id="top" class="av-site av-page-{{ $slug }}">
+<div class="av-scroll-progress" aria-hidden="true"><span></span></div>
 <a class="av-skip" href="#main">Skip to content</a>
 <header class="av-header">
     <div class="av-header-inner">
