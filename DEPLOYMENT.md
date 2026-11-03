@@ -3,9 +3,9 @@
 - Website: https://savy-nails-spa.vercel.app
 - Project/account: vankien29/savy-nails-spa
 - Deployed: 3 November 2026, Asia/Saigon.
-- Source revision: 9df97d4 (single navigation hover underline).
-- Deployment: dpl_3XPNdaA6cUFRVtuk2taqNgtNeZRD, status READY, target production.
-- Immutable URL: https://savy-nails-mn8nxqe69-vankien29.vercel.app
+- Source revision: fdbb001 (floating Facebook/Instagram quick links and mobile bottom spacing).
+- Deployment: dpl_BKNnvnk54rgZ3kFLNMKC4VSmQJGK, status READY, target production.
+- Immutable URL: https://savy-nails-2cvuf76z3-vankien29.vercel.app
 - Git repository: https://github.com/VanKien29/savy-nails-spa
 
 Mode: static client preview, exported with PHP 8.5.12 from the local public Savy database. All five public pages, responsive media/fonts, gallery, FAQ, contact links and the Google Maps embed are included. Laravel/admin/database and online form persistence are not hosted on Vercel. Preview remains noindex by design; canonical points to the website URL above.
@@ -22,6 +22,7 @@ Verification against the deployed public URL:
 - Social preview: all five routes reference the warm nude-and-gold manicure WebP at `/storage/media/4/1536.webp`; Open Graph/Twitter metadata reports `image/webp`, 1536×1024, and descriptive alt text.
 - Delivery cache audit: 29 raster responses across the five routes were `image/webp`; raster assets return one-day browser caching and one-year Vercel edge caching; hashed `/build/assets` return one-year immutable caching; conditional requests returned `304`.
 - Motion smoke check: desktop and 390px static previews reported no console errors or horizontal overflow; the sticky-header state, scroll progress, reveal observer and logo loading all passed.
+- Mobile floating controls: Facebook, Instagram and Back to top share one safe-area-aware stack; the public page reserves bottom space so the final content is not hidden behind the controls.
 - Local production build and SEO audit: passed. Earlier full composer quality remains blocked by pre-existing Pint violations documented in SAVY_DESIGN.md; this deployment did not claim a clean full backend suite.
 
 To update: build assets, set SITE_URL to the public URL, run starter:seo-audit and starter:export-demo, inspect the generated public artifact, deploy using the static configuration, then rerun `npm run verify:preview -- https://savy-nails-spa.vercel.app` and `node scripts/verify-delivery.mjs https://savy-nails-spa.vercel.app`. Push source changes with git push savy main. Keep deployment credentials and generated artifacts outside Git.
