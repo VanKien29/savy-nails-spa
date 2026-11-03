@@ -95,12 +95,12 @@
 <div class="av-floating-actions" aria-label="Quick links">
     @foreach($settings['social_links'] as $social)
         @if(strtolower($social['label']) === 'facebook')
-            <a class="av-floating-social" href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">FB</a>
+            <a class="av-floating-social" href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" focusable="false"><path d="M14 21v-8h2.7l.4-3H14V8.1c0-.9.3-1.5 1.6-1.5H17V3.9c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4V10H8v3h2.8v8z"/></svg></a>
         @elseif(strtolower($social['label']) === 'instagram')
-            <a class="av-floating-social" href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">IG</a>
+            <a class="av-floating-social" href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
         @endif
     @endforeach
-    <a class="av-back-top" href="#top" aria-label="Back to top">↑</a>
+    <a class="av-back-top" href="#top" aria-label="Back to top"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 11 6-6 6 6M12 5v14"/></svg></a>
 </div>
 <dialog class="av-lightbox" aria-label="Nail inspiration preview"><button type="button" class="av-dialog-close" aria-label="Close image">×</button><img alt="Nail design inspiration"></dialog>
 <noscript><style>.av-nav{display:flex!important}.av-nav-toggle{display:none}</style></noscript>
