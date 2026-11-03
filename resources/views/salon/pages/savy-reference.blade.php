@@ -92,7 +92,16 @@
     </div>
     <div class="av-copyright">Copyright © {{ date('Y') }} Savy Nails &amp; Spa. All rights reserved.</div>
 </footer>
-<a class="av-back-top" href="#top" aria-label="Back to top">↑</a>
+<div class="av-floating-actions" aria-label="Quick links">
+    @foreach($settings['social_links'] as $social)
+        @if(strtolower($social['label']) === 'facebook')
+            <a class="av-floating-social" href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">FB</a>
+        @elseif(strtolower($social['label']) === 'instagram')
+            <a class="av-floating-social" href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">IG</a>
+        @endif
+    @endforeach
+    <a class="av-back-top" href="#top" aria-label="Back to top">↑</a>
+</div>
 <dialog class="av-lightbox" aria-label="Nail inspiration preview"><button type="button" class="av-dialog-close" aria-label="Close image">×</button><img alt="Nail design inspiration"></dialog>
 <noscript><style>.av-nav{display:flex!important}.av-nav-toggle{display:none}</style></noscript>
 @include('partials.custom-code', ['placement' => 'script_body_end'])
