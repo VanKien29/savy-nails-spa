@@ -3,9 +3,9 @@
 - Website: https://savy-nails-spa.vercel.app
 - Project/account: vankien29/savy-nails-spa
 - Deployed: 3 November 2026, Asia/Saigon.
-- Source revision: 79dc29d (reference-style scroll and hover motion).
-- Deployment: dpl_BhZR1xjk8cQ6Si1FWRscyqKvkosY, status READY, target production.
-- Immutable URL: https://savy-nails-ge64w6seu-vankien29.vercel.app
+- Source revision: 9df97d4 (single navigation hover underline).
+- Deployment: dpl_3XPNdaA6cUFRVtuk2taqNgtNeZRD, status READY, target production.
+- Immutable URL: https://savy-nails-mn8nxqe69-vankien29.vercel.app
 - Git repository: https://github.com/VanKien29/savy-nails-spa
 
 Mode: static client preview, exported with PHP 8.5.12 from the local public Savy database. All five public pages, responsive media/fonts, gallery, FAQ, contact links and the Google Maps embed are included. Laravel/admin/database and online form persistence are not hosted on Vercel. Preview remains noindex by design; canonical points to the website URL above.
