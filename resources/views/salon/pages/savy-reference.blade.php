@@ -25,7 +25,7 @@
 <a class="av-skip" href="#main">Skip to content</a>
 <header class="av-header">
     <div class="av-header-inner">
-        <a class="av-brand" href="/" aria-label="Savy Nails & Spa — Home"><span class="av-brand-ring"><b>S</b><i>✧</i></span><small>SAVY NAILS &amp; SPA</small></a>
+        <a class="av-brand" href="/" aria-label="Savy Nails & Spa — Home">@include('salon.partials.reference-image', ['file' => 'savy-logo-transparent.png', 'class' => 'av-brand-logo', 'sizes' => '150px', 'eager' => true, 'alt' => 'Savy Nails & Spa'])</a>
         <nav class="av-nav" id="av-navigation" aria-label="Main navigation">
             @foreach([['Home','/'],['About Us','/about-us'],['Services','/services'],['Gallery','/gallery'],['Contact Us','/contact-us']] as [$label,$url])
             <a href="{{ $url }}" @if($page->path() === $url) aria-current="page" @endif>{{ $label }}</a>
@@ -39,7 +39,7 @@
 @if($home)
     <section class="av-hero">
         <div class="av-hero-photo">@include('salon.partials.reference-image', ['file'=>'26867-e1713761727547.jpg','eager'=>true,'sizes'=>'100vw','alt'=>'Nude manicure with delicate dried flowers'])</div>
-        <div class="av-container av-hero-inner"><div class="av-hero-brand" data-reveal><span>SAVY</span><p>Nails &amp; Spa</p></div><h1>Nail Salon in Walla Walla, WA 99362</h1></div>
+        <div class="av-container av-hero-inner"><div class="av-hero-brand" data-reveal>@include('salon.partials.reference-image', ['file' => 'savy-logo-transparent.png', 'class' => 'av-hero-logo', 'sizes' => '470px', 'eager' => true, 'alt' => 'Savy Nails & Spa'])</div><h1>Nail Salon in Walla Walla, WA 99362</h1></div>
     </section>
     <section class="av-home-about"><div class="av-about-scene"><div class="av-about-overlay" data-reveal><h2>About Us</h2><p><strong>Welcome to Savy Nails &amp; Spa, where beauty meets relaxation!</strong><br>Take a moment for yourself with a manicure, nail enhancement, relaxing spa pedicure or waxing service. Bring your inspiration and enjoy a finish that feels like you.</p><p>Savy Nails &amp; Spa is located at <a href="{{ $settings['maps_url'] }}" target="_blank" rel="noopener noreferrer">{{ $settings['address'] }}</a>.</p></div></div></section>
     @include('salon.partials.reference-menu')
@@ -80,7 +80,7 @@
 </main>
 <footer class="av-footer">
     <div class="av-container av-footer-grid">
-        <div><a class="av-brand av-footer-brand" href="/" aria-label="Savy Nails & Spa — Home"><span class="av-brand-ring"><b>S</b><i>✧</i></span><small>SAVY NAILS &amp; SPA</small></a><div class="av-socials">@foreach($settings['social_links'] as $social)<a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="{{ $social['label'] }}">{{ $social['label'] }}</a>@endforeach</div></div>
+        <div><a class="av-brand av-footer-brand" href="/" aria-label="Savy Nails & Spa — Home">@include('salon.partials.reference-image', ['file' => 'savy-logo-transparent.png', 'class' => 'av-footer-logo', 'sizes' => '220px', 'alt' => 'Savy Nails & Spa'])</a><div class="av-socials">@foreach($settings['social_links'] as $social)<a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="{{ $social['label'] }}">{{ $social['label'] }}</a>@endforeach</div></div>
         <div><h2>Contact</h2><a href="tel:{{ $phone }}">{{ $settings['hotline'] }}</a><a href="{{ $settings['maps_url'] }}" target="_blank" rel="noopener noreferrer">{{ $settings['address'] }}</a><h2>Business Hours</h2>@foreach($salon['profile']['hours'] as $hour)<p>{{ $hour['days'] }}:<br>{{ $hour['time'] }}</p>@endforeach</div>
         <div class="av-map-card">
             @if($settings['maps_embed_url'])

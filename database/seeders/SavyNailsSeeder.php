@@ -24,13 +24,13 @@ class SavyNailsSeeder extends Seeder
 
         DB::transaction(function (): void {
             $report = collect(json_decode(file_get_contents(public_path('assets/optimized/report.json')), true, flags: JSON_THROW_ON_ERROR));
-            $logo = $report->first(fn (array $entry) => str_replace('\\', '/', $entry['file']) === 'savy/savy-logo.png');
+            $logo = $report->first(fn (array $entry) => str_replace('\\', '/', $entry['file']) === 'savy/savy-logo-transparent.png');
             if (empty($logo['variants'])) {
                 throw new \RuntimeException('Run npm run media:optimize before applying the Savy Nails client seed.');
             }
 
             SalonImage::updateOrCreate(['key' => 'savy-logo-art'], [
-                'alt' => 'Savy Nails & Spa logo with white wordmark over a soft blue and pink background',
+                'alt' => 'Savy Nails & Spa white wordmark on a transparent background',
                 'caption' => 'Savy Nails & Spa',
                 'variants' => array_map(fn (array $variant) => array_replace($variant, ['file' => str_replace('\\', '/', $variant['file'])]), $logo['variants']),
                 'category' => 'branding',

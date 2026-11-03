@@ -21,7 +21,7 @@ Google Maps embed: lazy iframe using the canonical maps/embed URL for CID 173433
 
 Embed verification: SavyMapEmbedTest passed (1 test, 19 assertions) for all five public pages, admin frame restrictions and empty-setting fallback. The focused real-map browser check passed at 1280px and 390px; Google iframe controls rendered, and map screenshots were captured at test-results/savy-google-map-{1280,390}.png. Production asset build and focused Pint checks passed.
 
-Image inputs in resources/media/savy are taken from the user-requested reference's /wp-content/uploads/2024/04/ directory; savy-logo.png is client-provided. Nail/spa photos are reference imagery and are not represented as Savy customer photographs. All raster files pass through npm run media:optimize. Background files are capped at their 1000px source resolution; no upscaling is performed.
+Image inputs in resources/media/savy are taken from the user-requested reference's /wp-content/uploads/2024/04/ directory; the transparent Savy wordmark is client-provided and is used in the header, hero and footer. Nail/spa photos are reference imagery and are not represented as Savy customer photographs. All raster files pass through npm run media:optimize. Background files are capped at their 1000px source resolution; no upscaling is performed.
 
 Previous stock candidates (retained as source assets but no longer used by banners):
 
