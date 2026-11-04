@@ -13,6 +13,7 @@ Implemented:
 - Large inner-page title banners, shared three-column footer and contact-only appointment actions.
 - Inner-page banners use the existing warm bronze spa and nude/gold manicure artwork (the-k/luxury-ritual.png, luxury-hero.png and luxury-look-gold.png), a chocolate-brown gradient and warm-white headings. These replace the off-palette green/black stock photos; above-the-fold images load eagerly with responsive variants.
 - Playfair Display, Libre Franklin and Dancing Script fonts served locally.
+- SAVY favicons use a font-independent outlined S in warm white on the site's gold background. All five routes declare versioned SVG/ICO/32px PNG, 180px Apple Touch and a SAVY-named manifest with 192/512px icons. Root automatic favicon requests also receive the S icon. Rebuild with `npm run icons:build`; PNG/ICO are intentional browser/app icon compatibility formats.
 - Responsive layouts at 1280, 768 and 390 pixels, reduced motion and keyboard controls.
 - Reference-style motion pass: smooth anchor scrolling with sticky-header offset, scroll progress indicator, shrinking header shadow, scroll-triggered reveals with staggered timing, subtle hero parallax, button/card/image hover lift and page-banner zoom. All enhanced motion is disabled or made instant for `prefers-reduced-motion`.
 

@@ -2,11 +2,13 @@ import sharp from 'sharp';
 import {readFile, writeFile, mkdir} from 'node:fs/promises';
 
 // The monogram is outlined SVG, so neither it nor its raster fallbacks need fonts.
-const source = await readFile('public/assets/the-k/favicon.svg');
-await mkdir('resources/media/the-k', {recursive:true});
-await sharp(source).resize(512,512).png().toFile('resources/media/the-k/site-icon.png');
+const brand = process.argv.includes('--brand=the-k') ? 'the-k' : 'savy';
+const version = brand === 'savy' ? 'savy-20261104' : '2';
+const source = await readFile(`public/assets/${brand}/favicon.svg`);
+await mkdir(`resources/media/${brand}`, {recursive:true});
+await sharp(source).resize(512,512).png().toFile(`resources/media/${brand}/site-icon.png`);
 for (const size of [16,32,180,192,512]) {
-    await sharp(source).resize(size,size).png({palette:true}).toFile(`public/assets/the-k/favicon-${size}.png`);
+    await sharp(source).resize(size,size).png({palette:true}).toFile(`public/assets/${brand}/favicon-${size}.png`);
 }
 const sizes = [16,32,48];
 const images = await Promise.all(sizes.map(size => sharp(source).resize(size,size).png().toBuffer()));
@@ -27,8 +29,8 @@ images.forEach((image,index) => {
 await writeFile('public/favicon.ico', Buffer.concat([header,...images]));
 await writeFile('public/favicon.svg', source);
 await writeFile('public/site.webmanifest', JSON.stringify({
-    name:'THE K LUXURY NAIL BAR',short_name:'THE K',start_url:'/',display:'browser',
-    theme_color:'#b49563',background_color:'#faf7f0',
-    icons:[192,512].map(size=>({src:`/assets/the-k/favicon-${size}.png?v=2`,sizes:`${size}x${size}`,type:'image/png'})),
+    name:brand === 'savy' ? 'Savy Nails & Spa' : 'THE K LUXURY NAIL BAR',short_name:brand === 'savy' ? 'SAVY' : 'THE K',start_url:'/',display:'browser',
+    theme_color:brand === 'savy' ? '#a27a40' : '#b49563',background_color:'#faf7f0',
+    icons:[192,512].map(size=>({src:`/assets/${brand}/favicon-${size}.png?v=${version}`,sizes:`${size}x${size}`,type:'image/png'})),
 },null,2)+'\n');
 console.log('Built outlined SVG, multi-size ICO, PNG favicons and web manifest.');

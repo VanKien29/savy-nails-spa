@@ -2,6 +2,12 @@
 @php($favicon = $media->get($settings['favicon_id'] ?? null))
 @if($favicon)
     <link rel="icon" href="{{ $favicon->url() }}">
+@elseif($fallback === 'savy')
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="/favicon.ico?v=savy-20261104">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/savy/favicon-32.png?v=savy-20261104">
+    <link rel="icon" type="image/svg+xml" sizes="any" href="/assets/savy/favicon.svg?v=savy-20261104">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/savy/favicon-180.png?v=savy-20261104">
+    <link rel="manifest" href="/site.webmanifest?v=savy-20261104">
 @elseif($fallback === 'the-k')
     <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="/favicon.ico?v=2">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/the-k/favicon-32.png?v=2">
