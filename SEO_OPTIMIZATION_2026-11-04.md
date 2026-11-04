@@ -1,5 +1,7 @@
 # SAVY SEO/performance optimization — 4 November 2026
 
+Historical measurement note: the results below were measured with click-to-load Maps. The client subsequently requested the automatically displayed iframe again, with a relaxed target above 90. See the latest DEPLOYMENT.md entry for the restored-map build and its measurements; these older scores are not claimed for that later build.
+
 Client decisions: retain Vercel as a noindex preview until a later PHP hosting launch; retain the supplied map. No indexing requests or public production-mode deployment were made.
 
 ## External result on the final live build

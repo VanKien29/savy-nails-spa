@@ -4,6 +4,23 @@ const header = document.querySelector('.av-header');
 const progress = document.querySelector('.av-scroll-progress span');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+document.querySelectorAll('[data-auto-map]').forEach(frame => {
+    const loadMap = () => {
+        frame.src = frame.dataset.autoMap;
+        frame.removeAttribute('data-auto-map');
+    };
+    if (!('IntersectionObserver' in window)) {
+        loadMap();
+        return;
+    }
+    const observer = new IntersectionObserver(entries => {
+        if (!entries.some(entry => entry.isIntersecting)) return;
+        loadMap();
+        observer.disconnect();
+    }, {rootMargin: '300px'});
+    observer.observe(frame);
+});
+
 if (!reduced) document.documentElement.classList.add('js-motion');
 
 toggle?.addEventListener('click', () => {
@@ -78,17 +95,6 @@ if (rail && !reduced && !navigator.connection?.saveData) {
     }, 5000);
 }
 const dialog = document.querySelector('.av-lightbox');
-document.querySelectorAll('[data-load-map]').forEach(button => button.addEventListener('click', () => {
-    const placeholder = button.closest('[data-map-src]');
-    const frame = document.createElement('iframe');
-    frame.src = placeholder.dataset.mapSrc;
-    frame.title = 'Google Maps — salon location';
-    frame.width = '480';
-    frame.height = '295';
-    frame.referrerPolicy = 'no-referrer-when-downgrade';
-    frame.allowFullscreen = true;
-    placeholder.replaceWith(frame);
-}));
 let trigger;
 document.querySelectorAll('[data-lightbox-file]').forEach(button => button.addEventListener('click', () => {
     trigger = button;

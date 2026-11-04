@@ -33,4 +33,4 @@ Rerun Google PageSpeed mobile/desktop on the actual host after DNS and TLS settl
 
 The client explicitly requested keeping the supplied San Ramon map while the website address remains Walla Walla. That mismatch is retained and should be revisited before a local-business SEO campaign. Schema syntax validation does not certify the factual match of the listing.
 
-Interactive map: visitors press “View interactive map” to load the real Google embed. The external Maps link works without JavaScript. This avoids loading Google's script bundle before the map is requested.
+Interactive map: the real Google embed loads automatically within 300px of the viewport, with reserved dimensions and no activation button. A noscript iframe supports disabled JavaScript; the external Maps link remains available. This supersedes the earlier click-to-load optimization at the client's request. Viewport loading prevents Google requests from competing with the hero image on initial load.
