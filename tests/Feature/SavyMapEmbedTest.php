@@ -31,7 +31,9 @@ class SavyMapEmbedTest extends TestCase
         ] as [$slug, $template]) {
             Page::create(['title' => $slug, 'slug' => $slug, 'template' => $template, 'is_home' => $slug === 'home', 'status' => 'published', 'sections' => []]);
             $response = $this->get($slug === 'home' ? '/' : '/'.$slug)->assertOk();
-            $response->assertSee('src="'.e(SavyMapLinkSeeder::EMBED_URL).'"', false);
+            $response->assertSee('data-map-src="'.e(SavyMapLinkSeeder::EMBED_URL).'"', false)
+                ->assertSee('View interactive map')
+                ->assertDontSee('<iframe', false);
             $this->assertStringContainsString('https://www.google.com/maps/embed', $response->headers->get('Content-Security-Policy'));
         }
         $this->assertStringNotContainsString('https://www.google.com/maps/embed', $this->get('/admin/login')->headers->get('Content-Security-Policy'));

@@ -86,7 +86,7 @@
         <div><h2>Contact</h2><a href="tel:{{ $phone }}">{{ $settings['hotline'] }}</a><a href="{{ $settings['maps_url'] }}" target="_blank" rel="noopener noreferrer">{{ $settings['address'] }}</a><h2>Business Hours</h2>@foreach($salon['profile']['hours'] as $hour)<p>{{ $hour['days'] }}:<br>{{ $hour['time'] }}</p>@endforeach</div>
         <div class="av-map-card">
             @if($settings['maps_embed_url'])
-                <iframe src="{{ $settings['maps_embed_url'] }}" title="Google Maps — salon location" width="480" height="295" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+                <div class="av-map-placeholder" data-map-src="{{ $settings['maps_embed_url'] }}"><p>{{ $settings['address'] }}</p><button type="button" data-load-map>View interactive map</button></div>
             @endif
             <a href="{{ $settings['maps_url'] }}" target="_blank" rel="noopener noreferrer">Open in Google Maps ↗</a>
         </div>

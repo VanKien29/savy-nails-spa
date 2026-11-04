@@ -5,6 +5,8 @@ test('real Google map loads in the shared footer on desktop and mobile', async (
         await page.setViewportSize({width, height: 900});
         await page.goto('/contact-us');
         await page.locator('.av-map-card').scrollIntoViewIfNeeded();
+        await expect(page.locator('.av-map-card iframe')).toHaveCount(0);
+        await page.getByRole('button', {name: 'View interactive map'}).click();
         await expect(page.locator('.av-map-card iframe')).toHaveAttribute('src', 'https://www.google.com/maps/embed?pb=!1m3!3m2!1m1!4s17343372594423126593');
         await expect(page.frameLocator('.av-map-card iframe').getByRole('link', {name: /Open in Maps/})).toBeVisible({timeout: 30000});
         await page.locator('.av-map-card').screenshot({path: 'test-results/savy-google-map-' + width + '.png'});

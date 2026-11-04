@@ -2,7 +2,6 @@ const toggle = document.querySelector('.av-nav-toggle');
 const nav = document.querySelector('.av-nav');
 const header = document.querySelector('.av-header');
 const progress = document.querySelector('.av-scroll-progress span');
-const heroPhoto = document.querySelector('.av-hero-photo img');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 if (!reduced) document.documentElement.classList.add('js-motion');
@@ -25,7 +24,6 @@ const updateScrollEffects = () => {
     const ratio = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
     header?.classList.toggle('is-scrolled', window.scrollY > 16);
     if (progress) progress.style.transform = `scaleX(${ratio})`;
-    if (heroPhoto && !reduced) heroPhoto.style.setProperty('--av-hero-shift', `${Math.min(window.scrollY * 0.08, 42)}px`);
 };
 let scrollFrame;
 window.addEventListener('scroll', () => {
@@ -47,7 +45,9 @@ document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => anch
 }));
 
 if (!reduced && 'IntersectionObserver' in window) {
-    document.querySelectorAll('[data-reveal], .av-menu-panel, .av-feature, .av-gallery-photo, .av-faq details, .av-contact-grid > *, .av-footer-grid > *').forEach(element => element.classList.add('av-motion-item'));
+    document.querySelectorAll('[data-reveal], .av-menu-panel, .av-feature, .av-gallery-photo, .av-faq details, .av-contact-grid > *, .av-footer-grid > *').forEach(element => {
+        if (element.getBoundingClientRect().top >= innerHeight) element.classList.add('av-motion-item');
+    });
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('av-revealing');
@@ -78,6 +78,17 @@ if (rail && !reduced && !navigator.connection?.saveData) {
     }, 5000);
 }
 const dialog = document.querySelector('.av-lightbox');
+document.querySelectorAll('[data-load-map]').forEach(button => button.addEventListener('click', () => {
+    const placeholder = button.closest('[data-map-src]');
+    const frame = document.createElement('iframe');
+    frame.src = placeholder.dataset.mapSrc;
+    frame.title = 'Google Maps — salon location';
+    frame.width = '480';
+    frame.height = '295';
+    frame.referrerPolicy = 'no-referrer-when-downgrade';
+    frame.allowFullscreen = true;
+    placeholder.replaceWith(frame);
+}));
 let trigger;
 document.querySelectorAll('[data-lightbox-file]').forEach(button => button.addEventListener('click', () => {
     trigger = button;
