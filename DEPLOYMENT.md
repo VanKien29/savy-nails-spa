@@ -3,12 +3,14 @@
 - Website: https://savy-nails-spa.vercel.app
 - Project/account: vankien29/savy-nails-spa
 - Deployed: 4 November 2026, Asia/Saigon.
-- Source revision: aa97c14 (SAVY favicon and manifest branding).
-- Deployment: dpl_2rvoZWwqgfVP5DbJm2evcXvW6cgR, status READY, target production.
-- Immutable URL: https://savy-nails-8wn3534qf-vankien29.vercel.app
+- Source revision: 8f9b190 (rendering, contrast, on-demand Maps and hosting SEO preparation).
+- Deployment: dpl_ESinVimzrFXFM6n12Y4j45wKZ8KF, status READY, target production.
+- Immutable URL: https://savy-nails-emfhenb3z-vankien29.vercel.app
 - Git repository: https://github.com/VanKien29/savy-nails-spa
 
 Mode: static client preview, exported with PHP 8.5.12 from the local public Savy database. All five public pages, responsive media/fonts, gallery, FAQ, contact links and the Google Maps embed are included. Laravel/admin/database and online form persistence are not hosted on Vercel. Preview remains noindex by design; canonical points to the website URL above.
+
+The client confirmed keeping this Vercel URL as a preview until a later PHP hosting launch. Hosting instructions: SAVY_HOSTING_SEO.md. Final external PageSpeed home-page results: mobile 98/100/100/69, desktop 100/100/100/69 (Performance/Accessibility/Best Practices/SEO); the noindex preview SEO limitation is intentional. Details and local production-policy checks: SEO_OPTIMIZATION_2026-11-04.md. Google Maps now loads only after View interactive map; the outbound link remains available.
 
 Only the rendered artifact and static Vercel config were deployed from tmp/savy-vercel. Laravel source, environment files, customer records and public.zip were excluded. The local project association now points to Savy rather than the former THE K Vercel project. Git-based automatic builds are not configured: new website content must be exported before publishing.
 
