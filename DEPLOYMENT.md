@@ -3,14 +3,14 @@
 - Website: https://savy-nails-spa.vercel.app
 - Project/account: vankien29/savy-nails-spa
 - Deployed: 4 November 2026, Asia/Saigon.
-- Source revision: 8f9b190 (rendering, contrast, on-demand Maps and hosting SEO preparation).
-- Deployment: dpl_ESinVimzrFXFM6n12Y4j45wKZ8KF, status READY, target production.
-- Immutable URL: https://savy-nails-emfhenb3z-vankien29.vercel.app
+- Source revision: aaded60 (automatic viewport-based Maps, rendering, contrast and hosting SEO preparation).
+- Deployment: dpl_4L8AFAudPy1FRk9nQbxVWQ72t7hX, status READY, target production.
+- Immutable URL: https://savy-nails-1zvxzhg18-vankien29.vercel.app
 - Git repository: https://github.com/VanKien29/savy-nails-spa
 
 Mode: static client preview, exported with PHP 8.5.12 from the local public Savy database. All five public pages, responsive media/fonts, gallery, FAQ, contact links and the Google Maps embed are included. Laravel/admin/database and online form persistence are not hosted on Vercel. Preview remains noindex by design; canonical points to the website URL above.
 
-The client confirmed keeping this Vercel URL as a preview until a later PHP hosting launch. Hosting instructions: SAVY_HOSTING_SEO.md. Final external PageSpeed home-page results: mobile 98/100/100/69, desktop 100/100/100/69 (Performance/Accessibility/Best Practices/SEO); the noindex preview SEO limitation is intentional. Details and local production-policy checks: SEO_OPTIMIZATION_2026-11-04.md. Google Maps now loads only after View interactive map; the outbound link remains available.
+The client confirmed keeping this Vercel URL as a preview until a later PHP hosting launch. Hosting instructions: SAVY_HOSTING_SEO.md. Final external PageSpeed home-page results with automatic Maps: mobile 98/100/100/69, desktop 100/100/100/69 (Performance/Accessibility/Best Practices/SEO). Report: https://pagespeed.web.dev/analysis/https-savy-nails-spa-vercel-app/zzwbxzc1uo?form_factor=mobile (4 November, 18:27 GMT+7). The noindex preview SEO limitation is intentional; the SEO >90 target still requires the public hosting launch. Details and local production-policy checks: SEO_OPTIMIZATION_2026-11-04.md. Google Maps loads automatically within 300px of the viewport, with no activation button, a noscript iframe and the outbound Maps link.
 
 Only the rendered artifact and static Vercel config were deployed from tmp/savy-vercel. Laravel source, environment files, customer records and public.zip were excluded. The local project association now points to Savy rather than the former THE K Vercel project. Git-based automatic builds are not configured: new website content must be exported before publishing.
 
@@ -18,6 +18,7 @@ Verification against the deployed public URL:
 
 - Vercel READY; HTTPS root and all four nested pages respond successfully.
 - Remote Savy Playwright suite: 3 tests passed, covering desktop/tablet/mobile routes, image loading, no overflow, menu/prices, contact-only booking, lightbox, keyboard controls and the real Google map.
+- Automatic-map revision: PHP 8.5.12 feature test passed (1 test, 39 assertions), focused Pint passed, and Vite/export passed. Mobile/desktop screenshots: test-results/savy-google-map-390.png and test-results/savy-google-map-1280.png. The direct native-lazy iframe initially scored 78 on mobile; viewport-based automatic loading restored 98 without requiring a click.
 - Remote static-preview verifier: passed for all five routes, styles/scripts/images, noindex, robots, and private-path denial. Vercel returns 403 for /vendor/autoload.php; /.env, /admin and /composer.json return 404. The verifier now accepts either denial response.
 - Canonical: https://savy-nails-spa.vercel.app/; X-Robots-Tag: noindex, nofollow; X-Content-Type-Options: nosniff.
 - Logo: the client-provided wordmark is background-extracted, tinted gold on light surfaces, white on the hero, and served through responsive WebP variants in the header, hero and footer.
