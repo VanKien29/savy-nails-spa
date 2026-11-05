@@ -16,11 +16,11 @@ class CreateCmsAdmin extends Command
 
     public function handle(): int
     {
-        $email = $this->option('email') ?: 'admin.'.Str::lower(Str::random(8)).'@thek.local';
+        $email = $this->option('email') ?: 'admin.'.Str::lower(Str::random(8)).'@savy.local';
         Validator::make(['email' => $email], ['email' => 'required|email|max:160|unique:users,email'])->validate();
         $password = $this->option('generate') ? Str::password(24) : $this->secret('Mật khẩu mới');
         Validator::make(['password' => $password], ['password' => ['required', Password::min(14)->mixedCase()->numbers()->symbols()]])->validate();
-        $user = new User(['name' => 'THE K Administrator', 'email' => $email, 'password' => $password]);
+        $user = new User(['name' => 'Savy Administrator', 'email' => $email, 'password' => $password]);
         $user->is_admin = true;
         $user->is_active = true;
         $user->save();

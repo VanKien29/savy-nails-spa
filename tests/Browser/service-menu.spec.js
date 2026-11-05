@@ -20,10 +20,10 @@ test('one visual menu editor works on desktop and mobile',async({page})=>{
         await page.getByRole('button',{name:/Đăng nhập|Sign in/i}).click();
         await page.locator('.fi-sidebar').getByRole('link',{name:'Menu dịch vụ',exact:true}).click();
         await expect(page.locator('.fi-sidebar').getByRole('link',{name:'Danh mục dịch vụ',exact:true})).toHaveCount(0);
-        await expect(page.locator('.menu-editor-service')).toHaveCount(21);
-        await page.locator('.menu-editor-category-button').filter({hasText:'Nail Services'}).click();
-        await expect(page.locator('.menu-editor-service')).toHaveCount(11);
-        await expect(page.locator('.menu-editor-preview .ks-menu-price-pair').first()).toContainText('$45+');
+        await expect(page.locator('.menu-editor-service')).toHaveCount(8);
+        await page.locator('.menu-editor-category-button').filter({hasText:'Manicure & Nail Enhancements'}).click();
+        await expect(page.locator('.menu-editor-service')).toHaveCount(8);
+        await expect(page.locator('.menu-editor-preview .ks-menu-item-line strong').first()).toContainText(/\$\d/);
         await page.screenshot({path:'test-results/admin-menu-desktop.png',fullPage:true,animations:'disabled'});
         const first=page.locator('.menu-editor-service').first();
         await first.getByRole('button',{name:/^Sửa /}).click();

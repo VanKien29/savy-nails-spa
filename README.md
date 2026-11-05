@@ -1,11 +1,11 @@
-> **Current client:** THE K LUXURY NAIL BAR — five English pages, white/gold design and a dynamic 55-service catalog matching the customer menu, including Full Set / Fill-in prices. See [client setup and content map](docs/clients/the-k-luxury-nail-bar.md), [verification](docs/THE_K_VERIFICATION.md) and [asset provenance](docs/THE_K_ASSETS.md). For this client, migrate the database, optimize media and run `php artisan db:seed --class=NailSalonSeeder`; the generic Forma demo command below is for starter examples.
+> **Current client:** Savy Nails & Spa — five English pages, white/gold design, 31 approved services and contact-only appointments. Use `SavyNailsSeeder` for a new database and `php artisan savy:cleanup --apply` for an existing Savy installation. See `SAVY_CLEANUP.md` for deployment and migration details.
 # Laravel Landing Starter
 
-CMS THE K: xem [yêu cầu hệ thống, tài khoản Admin, bảo mật và hướng dẫn vận hành](CMS_REQUIREMENTS.md). Truy cập `/admin` để quản lý nội dung.
+CMS SAVY: xem [yêu cầu hệ thống, tài khoản Admin, bảo mật và hướng dẫn vận hành](CMS_REQUIREMENTS.md). Truy cập `/admin` để quản lý nội dung.
 
 Base cho các website khách hàng độc lập (1–5 trang): Laravel 12, Filament 5, Blade, Tailwind 4, Alpine, Vite. CMS thực dùng database; không phải multi-tenant hay page builder kéo thả. Demo “Forma Studio” dùng cùng services và components với dự án thật.
 
-Yêu cầu tương thích **PHP stable 8.4.26+ trong nhánh 8.4 hoặc 8.5.11+ trong nhánh 8.5**, Composer 2, Node 22+, `pdo_mysql` và các extensions theo `starter:check`. Khi triển khai, dùng PHP đã vá bảo mật: bản upstream 8.4.27+/8.5.12+ hoặc gói backport của nhà cung cấp; xem `HUONG-DAN-HOSTING.md`. Ứng dụng và toàn bộ feature tests đều dùng MySQL. Database website là `the_k_luxury_nail_bar`; database test riêng là `the_k_luxury_nail_bar_testing`. Bộ test từ chối chạy nếu kết nối không trỏ đúng database test. Composer đặt `config.platform.php=8.4.26` để các thư viện luôn tương thích PHP 8.4. `.tools/php84` là runtime PHP 8.4 dự phòng, `.tools/php` là runtime PHP 8.5 dự phòng; cả hai bị Git bỏ qua.
+Yêu cầu tương thích **PHP stable 8.4.26+ trong nhánh 8.4 hoặc 8.5.11+ trong nhánh 8.5**, Composer 2, Node 22+, `pdo_mysql` và các extensions theo `starter:check`. Khi triển khai, dùng PHP đã vá bảo mật: bản upstream 8.4.27+/8.5.12+ hoặc gói backport của nhà cung cấp; xem `HUONG-DAN-HOSTING.md`. Ứng dụng và toàn bộ feature tests đều dùng MySQL. Database website là `savy_nails_spa`; database test riêng là `savy_nails_spa_testing`. Bộ test từ chối chạy nếu kết nối không trỏ đúng database test. Composer đặt `config.platform.php=8.4.26` để các thư viện luôn tương thích PHP 8.4. `.tools/php84` là runtime PHP 8.4 dự phòng, `.tools/php` là runtime PHP 8.5 dự phòng; cả hai bị Git bỏ qua.
 
 ## Quick start
 
@@ -36,7 +36,7 @@ php -v
 composer quality
 ```
 
-Trước lần chạy feature tests đầu tiên, tạo database test bằng `php scripts/create-test-database.php` trong môi trường local. Script dùng kết nối MySQL trong `.env` và chỉ tạo database test cố định. Nếu tài khoản ứng dụng không có quyền tạo database, tạo `the_k_luxury_nail_bar_testing` và cấp quyền cho tài khoản test từ MySQL trước. `phpunit.xml` ép kết nối test riêng; cache/session của test dùng bộ nhớ tạm, còn dữ liệu model luôn nằm trong MySQL. Không chạy `migrate:fresh` trên database website.
+Trước lần chạy feature tests đầu tiên, tạo database test bằng `php scripts/create-test-database.php` trong môi trường local. Script dùng kết nối MySQL trong `.env` và chỉ tạo database test cố định. Nếu tài khoản ứng dụng không có quyền tạo database, tạo `savy_nails_spa_testing` và cấp quyền cho tài khoản test từ MySQL trước. `phpunit.xml` ép kết nối test riêng; cache/session của test dùng bộ nhớ tạm, còn dữ liệu model luôn nằm trong MySQL. Không chạy `migrate:fresh` trên database website.
 
 ## Lệnh thường dùng
 

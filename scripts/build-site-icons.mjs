@@ -2,8 +2,8 @@ import sharp from 'sharp';
 import {readFile, writeFile, mkdir} from 'node:fs/promises';
 
 // The monogram is outlined SVG, so neither it nor its raster fallbacks need fonts.
-const brand = process.argv.includes('--brand=the-k') ? 'the-k' : 'savy';
-const version = brand === 'savy' ? 'savy-20261104' : '2';
+const brand = 'savy';
+const version = 'savy-20261104';
 const source = await readFile(`public/assets/${brand}/favicon.svg`);
 await mkdir(`resources/media/${brand}`, {recursive:true});
 await sharp(source).resize(512,512).png().toFile(`resources/media/${brand}/site-icon.png`);
@@ -29,8 +29,8 @@ images.forEach((image,index) => {
 await writeFile('public/favicon.ico', Buffer.concat([header,...images]));
 await writeFile('public/favicon.svg', source);
 await writeFile('public/site.webmanifest', JSON.stringify({
-    name:brand === 'savy' ? 'Savy Nails & Spa' : 'THE K LUXURY NAIL BAR',short_name:brand === 'savy' ? 'SAVY' : 'THE K',start_url:'/',display:'browser',
-    theme_color:brand === 'savy' ? '#a27a40' : '#b49563',background_color:'#faf7f0',
+    name:'Savy Nails & Spa',short_name:'SAVY',start_url:'/',display:'browser',
+    theme_color:'#a27a40',background_color:'#faf7f0',
     icons:[192,512].map(size=>({src:`/assets/${brand}/favicon-${size}.png?v=${version}`,sizes:`${size}x${size}`,type:'image/png'})),
 },null,2)+'\n');
 console.log('Built outlined SVG, multi-size ICO, PNG favicons and web manifest.');

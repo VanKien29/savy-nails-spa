@@ -1,1 +1,0 @@
-<section class="kl-finale kl-dark"><div class="ks-container"><h2>{{ ($finale['heading'] ?? '') }}</h2><p>{{ ($finale['body'] ?? '') }}</p><a href="{{ $copy['home']['contact_url'] }}" class="ks-button kl-button-gold">{{ $copy['home']['contact_label'] }} </a></div><x-salon.ornament kind="orbit"/></section>

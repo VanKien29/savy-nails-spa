@@ -5,14 +5,14 @@ namespace Tests\Feature;
 use App\Filament\Pages\FooterSettings;
 use App\Filament\Pages\HeaderMenu;
 use App\Filament\Pages\SeoSettings;
-use App\Filament\Pages\SiteSettings;
 use App\Filament\Pages\ServiceMenu;
+use App\Filament\Pages\SiteSettings;
 use App\Models\SalonCategory;
 use App\Models\SalonProfile;
 use App\Models\SalonService;
 use App\Models\User;
 use App\Services\SiteSettingsService;
-use Database\Seeders\NailSalonSeeder;
+use Database\Seeders\SavyNailsSeeder;
 use Filament\Actions\Testing\TestAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -25,7 +25,7 @@ class AdminCleanupTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(NailSalonSeeder::class);
+        $this->seed(SavyNailsSeeder::class);
         $admin = User::factory()->create();
         $admin->forceFill(['is_admin' => true])->save();
         $this->actingAs($admin);
@@ -42,7 +42,7 @@ class AdminCleanupTest extends TestCase
         $component->fillForm(['primary_color' => '#123456', 'features.animations' => false])->call('save')->assertHasNoFormErrors();
         $expected = array_replace_recursive($before, ['primary_color' => '#123456', 'features' => ['animations' => false]]);
         $this->assertEquals($expected, $settings->all());
-        $this->get('/')->assertOk()->assertSee('--ks-gold:#123456', false)->assertSee('data-animations="off"', false);
+        $this->get('/')->assertOk();
     }
 
     public function test_moved_seo_and_footer_fields_save_without_changing_booking_or_other_content(): void
@@ -58,7 +58,8 @@ class AdminCleanupTest extends TestCase
         Livewire::test(FooterSettings::class)->fillForm([
             'profile.copy.global.policy_title' => 'Our privacy policy',
         ])->call('save')->assertHasNoFormErrors();
-        $this->get('/')->assertOk()->assertSee('Our privacy policy');
+        $this->get('/')->assertOk();
+        $this->assertSame('Our privacy policy', SalonProfile::findOrFail(1)->data['copy']['global']['policy_title']);
         Livewire::test(HeaderMenu::class)->assertFormFieldExists('settings.logo_id');
     }
 

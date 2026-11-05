@@ -3,9 +3,9 @@
 return [
     'copy' => [
         'global' => [
-            'brand_monogram' => ['Monogram dự phòng (khi chưa có logo)', 'K'],
-            'brand_title' => ['Tên thương hiệu dự phòng', 'THE K'], 'brand_subtitle' => ['Dòng phụ thương hiệu dự phòng', 'LUXURY NAIL BAR'],
-            'booking_label' => ['Nút đặt lịch', 'Booking'], 'booking_url' => ['Liên kết đặt lịch POS', 'https://lamournails6484.simplepos.us/new-home'],
+            'brand_monogram' => ['Monogram dự phòng (khi chưa có logo)', 'S'],
+            'brand_title' => ['Tên thương hiệu dự phòng', 'SAVY'], 'brand_subtitle' => ['Dòng phụ thương hiệu dự phòng', 'NAILS & SPA'],
+            'booking_label' => ['Nút liên hệ', 'Contact to Book'], 'booking_url' => ['Liên kết liên hệ', '/contact-us'],
             'skip_content' => ['Bỏ qua điều hướng', 'Skip to content'],
             'policy_label' => ['Liên kết chính sách', 'Privacy & appointment requests'],
             'policy_title' => ['Tiêu đề chính sách', 'Privacy & contact requests'],
@@ -25,17 +25,17 @@ return [
             'contact_url' => ['Liên kết cuối trang', '/contact-us'],
         ],
         'about' => [
-            'frame_title' => ['Tên trên khung ảnh', 'THE K'], 'frame_caption' => ['Chú thích khung ảnh', 'YOUR OWN KIND OF LUXURY'],
+            'frame_title' => ['Tên trên khung ảnh', 'SAVY'], 'frame_caption' => ['Chú thích khung ảnh', 'YOUR OWN KIND OF LUXURY'],
             'quote' => ['Câu trích dẫn', 'A little moment.'], 'quote_accent' => ['Trích dẫn nhấn mạnh', 'A beautiful difference.'],
             'services_label' => ['Nút dịch vụ', 'Discover Our Services'], 'services_url' => ['Liên kết dịch vụ', '/services'],
-            'values_eyebrow' => ['Tiêu đề nhỏ giá trị', 'The K point of view'],
+            'values_eyebrow' => ['Tiêu đề nhỏ giá trị', 'Savy point of view'],
             'brand_heading' => ['Tiêu đề thương hiệu', 'One destination.'], 'brand_accent' => ['Tiêu đề nhấn mạnh', 'So many beautiful possibilities.'],
             'visit_note' => ['Đoạn mời ghé thăm', 'For questions about your next treatment, call us — we would love to help.'],
-            'contact_label' => ['Nút liên hệ', 'Find Your Way to THE K'], 'contact_url' => ['Liên kết liên hệ', '/contact-us'],
+            'contact_label' => ['Nút liên hệ', 'Find Your Way to SAVY'], 'contact_url' => ['Liên kết liên hệ', '/contact-us'],
         ],
         'gallery' => [
-            'social_heading' => ['Tiêu đề mạng xã hội', 'A little more inspiration?'], 'social_body' => ['Nội dung mạng xã hội', 'Connect with THE K on Instagram.'],
-            'social_label' => ['Nút mạng xã hội', 'Follow THE K'],
+            'social_heading' => ['Tiêu đề mạng xã hội', 'A little more inspiration?'], 'social_body' => ['Nội dung mạng xã hội', 'Connect with SAVY on Instagram.'],
+            'social_label' => ['Nút mạng xã hội', 'Follow SAVY'],
         ],
         'menu' => [
             'full_set_label' => ['Tiêu đề cột Full Set', 'Full Set'],
@@ -69,7 +69,7 @@ return [
             'send_error' => ['Gửi thất bại', 'We could not send your request. Please refresh this page or call the salon.'],
         ],
         'footer' => [
-            'intro' => ['Lời giới thiệu chân trang', 'Your own kind of luxury, right here in Fayetteville, NC.'],
+            'intro' => ['Lời giới thiệu chân trang', 'Your own kind of luxury, right here in Walla Walla, WA.'],
             'hours_label' => ['Tiêu đề giờ mở cửa', 'Business Hours'], 'call_label' => ['Nút gọi', 'Give us a call'],
             'signature' => ['Dòng thương hiệu cuối trang', 'Nails · Lashes · Brows'],
         ],

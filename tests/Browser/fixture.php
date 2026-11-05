@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Lead;
+use App\Models\SalonCategory;
+use App\Models\SalonService;
 use App\Models\User;
 use Illuminate\Contracts\Console\Kernel;
 
@@ -22,8 +24,8 @@ if ($data['action'] === 'cleanupMenu') {
     if (! preg_match('/^browser-menu-[a-f0-9-]+$/', $data['category_slug'] ?? '')) {
         exit(1);
     }
-    if ($category = \App\Models\SalonCategory::where('slug', $data['category_slug'])->first()) {
-        \App\Models\SalonService::where('category_id', $category->id)->get()->each->delete();
+    if ($category = SalonCategory::where('slug', $data['category_slug'])->first()) {
+        SalonService::where('category_id', $category->id)->get()->each->delete();
         $category->delete();
     }
 } elseif ($data['action'] === 'create') {

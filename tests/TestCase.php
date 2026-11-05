@@ -18,7 +18,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function guardTestDatabase(Application $app): void
     {
-        $expected = 'the_k_luxury_nail_bar_testing';
+        $expected = 'savy_nails_spa_testing';
         if (! $app->environment('testing') || $app['config']->get('database.default') !== 'mysql'
             || $app['config']->get('database.connections.mysql.database') !== $expected) {
             throw new \RuntimeException('Feature tests require the isolated MySQL database '.$expected.'.');

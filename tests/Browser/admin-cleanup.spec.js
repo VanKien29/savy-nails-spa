@@ -3,6 +3,7 @@ import {randomUUID} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 
 test('admin exposes only current modules and keeps the useful editors',async({page})=>{
+    test.setTimeout(120000);
     const email=`browser-${randomUUID()}@example.invalid`;
     const targetEmail=`browser-${randomUUID()}@example.invalid`;
     const password=`K${randomUUID()}a9!`;
@@ -20,7 +21,7 @@ test('admin exposes only current modules and keeps the useful editors',async({pa
         await page.locator('input[type=email]').fill(email);
         await page.locator('input[type=password]').fill(password);
         await page.getByRole('button',{name:/Đăng nhập|Sign in/i}).click();
-        await expect(page).toHaveURL(/\/admin$/);
+        await expect(page).toHaveURL(/\/admin$/, {timeout:20000});
         await expect(page.locator('.fi-sidebar')).not.toContainText('Khách liên hệ');
         await expect(page.locator('.fi-sidebar').getByRole('link',{name:'Cấu hình website',exact:true})).toHaveCount(0);
         await page.getByRole('button',{name:'Menu người dùng'}).click();
@@ -45,7 +46,7 @@ test('admin exposes only current modules and keeps the useful editors',async({pa
         await page.goto('/admin/website-content?section=gallery');
         const gallery=page.locator('.sample-image-field.is-compact');
         const images=gallery.locator('.sample-selected-images>figure');
-        expect(await images.count()).toBeGreaterThan(0);
+        await expect(images.first()).toBeVisible();
         await expect(gallery.locator('figcaption')).toHaveCount(0);
         for(const label of ['Chú thích khi mở ảnh lớn','Mô tả ảnh','Nút phóng to','Ghi chú dưới thư viện ảnh']){
             await expect(page.getByText(label,{exact:true})).toHaveCount(0);

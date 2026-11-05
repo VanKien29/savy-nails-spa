@@ -3,9 +3,8 @@
 namespace Tests\Feature;
 
 use App\Filament\Pages\FooterSettings;
-use App\Filament\Pages\SiteSettings;
-use App\Filament\Pages\WebsiteContent;
 use App\Filament\Pages\ServiceMenu;
+use App\Filament\Pages\SiteSettings;
 use App\Filament\Resources\UserResource;
 use App\Filament\Resources\UserResource\Pages\ManageUsers;
 use App\Models\AuditLog;
@@ -20,7 +19,7 @@ use App\Services\CmsAccess;
 use App\Services\MediaService;
 use App\Services\SalonContent;
 use App\Services\SiteSettingsService;
-use Database\Seeders\NailSalonSeeder;
+use Database\Seeders\SavyNailsSeeder;
 use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -44,7 +43,7 @@ class CmsManagementTest extends TestCase
 
     private function salon(): void
     {
-        $this->seed(NailSalonSeeder::class);
+        $this->seed(SavyNailsSeeder::class);
         app(SalonContent::class)->forget();
     }
 
@@ -109,7 +108,8 @@ class CmsManagementTest extends TestCase
     {
         $this->salon();
         $this->actingAs($this->account());
-        $service = SalonService::whereNotNull('massage_minutes')->firstOrFail();
+        $service = SalonService::firstOrFail();
+        $service->update(['massage_minutes' => 15]);
         $metadata = $service->only(['image_id', 'massage_minutes', 'featured']);
         Livewire::test(ServiceMenu::class)
             ->callAction(TestAction::make('editService')->arguments(['id' => $service->id]), data: ['name' => 'Updated classic menu service'])
@@ -125,14 +125,13 @@ class CmsManagementTest extends TestCase
         $this->get('/')->assertOk()->assertSee('Updated classic menu category');
     }
 
-    public function test_profile_copy_changes_client_and_html_is_escaped(): void
+    public function test_footer_contact_changes_are_saved_and_html_is_escaped(): void
     {
         $this->salon();
         $this->actingAs($this->account('editor'));
-        Livewire::test(WebsiteContent::class)->fillForm(['profile.copy.home.menu_label' => 'Browse our new menu'])->call('save')->assertHasNoFormErrors();
-        Livewire::test(FooterSettings::class)->fillForm(['profile.copy.footer.intro' => '<script>alert(1)</script>'])->call('save')->assertHasNoFormErrors();
+        Livewire::test(FooterSettings::class)->fillForm(['settings.address' => '<script>alert(1)</script>'])->call('save')->assertHasNoFormErrors();
         app(SalonContent::class)->forget();
-        $this->get('/')->assertOk()->assertSee('Browse our new menu')->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false)->assertDontSee('<script>alert(1)</script>', false);
+        $this->get('/')->assertOk()->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false)->assertDontSee('<script>alert(1)</script>', false);
     }
 
     public function test_copy_links_cannot_inject_script_urls(): void
@@ -174,7 +173,7 @@ class CmsManagementTest extends TestCase
         $this->assertSame('Updated', PageRevision::where('page_id', $page->id)->latest('id')->first()->snapshot['title']);
     }
 
-    public function test_home_blocks_follow_order_and_visibility(): void
+    public function test_obsolete_home_blocks_cannot_restore_the_retired_layout(): void
     {
         $this->salon();
         $page = Page::where('is_home', true)->firstOrFail();
@@ -187,8 +186,8 @@ class CmsManagementTest extends TestCase
             return $section;
         })->all();
         $page->update(['sections' => $sections]);
-        $response = $this->get('/')->assertOk()->assertDontSee('kl-collection-grid', false);
-        $this->assertLessThan(strpos($response->getContent(), 'data-hero-slideshow'), strpos($response->getContent(), 'class="ks-section kl-journey"'));
+        $this->get('/')->assertOk()->assertSee('av-hero', false)->assertSee('Your Savy Moment')
+            ->assertDontSee('kl-collection-grid', false)->assertDontSee('data-hero-slideshow', false);
     }
 
     public function test_last_administrator_cannot_be_disabled(): void
@@ -262,6 +261,6 @@ class CmsManagementTest extends TestCase
         Page::create(['title' => 'Our New Collection', 'slug' => 'new-collection', 'template' => 'salon-content', 'status' => 'published', 'sections' => [
             ['id' => 'welcome', 'type' => 'about', 'variant' => 'centered', 'enabled' => true, 'heading' => 'A new chapter', 'body' => 'Made for you', 'button_label' => 'Explore', 'button_url' => '/services'],
         ]]);
-        $this->get('/new-collection')->assertOk()->assertSee('ks-header', false)->assertSee('A new chapter')->assertSee('Made for you')->assertSee('Explore');
+        $this->get('/new-collection')->assertOk()->assertSee('av-header', false)->assertSee('A new chapter')->assertSee('Made for you')->assertSee('Explore');
     }
 }

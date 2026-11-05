@@ -12,7 +12,7 @@ Mode: static client preview, exported with PHP 8.5.12 from the local public Savy
 
 The client confirmed keeping this Vercel URL as a preview until a later PHP hosting launch. Hosting instructions: SAVY_HOSTING_SEO.md. Final external PageSpeed home-page results with automatic Maps: mobile 98/100/100/69, desktop 100/100/100/69 (Performance/Accessibility/Best Practices/SEO). Report: https://pagespeed.web.dev/analysis/https-savy-nails-spa-vercel-app/zzwbxzc1uo?form_factor=mobile (4 November, 18:27 GMT+7). The noindex preview SEO limitation is intentional; the SEO >90 target still requires the public hosting launch. Details and local production-policy checks: SEO_OPTIMIZATION_2026-11-04.md. Google Maps loads automatically within 300px of the viewport, with no activation button, a noscript iframe and the outbound Maps link.
 
-Only the rendered artifact and static Vercel config were deployed from tmp/savy-vercel. Laravel source, environment files, customer records and public.zip were excluded. The local project association now points to Savy rather than the former THE K Vercel project. Git-based automatic builds are not configured: new website content must be exported before publishing.
+Only the rendered artifact and static Vercel config were deployed from tmp/savy-vercel. Laravel source, environment files, customer records and public.zip were excluded. The project association points to the Savy Vercel project. Git-based automatic builds are not configured: new website content must be exported before publishing. The current PHP-hosting cleanup and migration instructions are in SAVY_CLEANUP.md.
 
 Verification against the deployed public URL:
 
@@ -30,6 +30,6 @@ Verification against the deployed public URL:
 - The client's cropped mobile view was reproduced in the existing Chrome DevTools iPhone frame: it extended below the application window. Selecting Zoom → Fit to window restored the complete frame without changing website layout.
 - Local production build and SEO audit: passed. Earlier full composer quality remains blocked by pre-existing Pint violations documented in SAVY_DESIGN.md; this deployment did not claim a clean full backend suite.
 
-To update: build assets, set SITE_URL to the public URL, run starter:seo-audit and starter:export-demo, inspect the generated public artifact, deploy using the static configuration, then rerun `npm run verify:preview -- https://savy-nails-spa.vercel.app` and `node scripts/verify-delivery.mjs https://savy-nails-spa.vercel.app`. Push source changes with git push savy main. Keep deployment credentials and generated artifacts outside Git.
+To update the preview: build assets, set SITE_URL to the canonical public URL, run starter:seo-audit and starter:export-demo, inspect the generated public artifact, deploy using the static configuration, then rerun `npm run verify:preview -- https://savy-nails-spa.vercel.app` and `node scripts/verify-delivery.mjs https://savy-nails-spa.vercel.app`. Push source changes with git push origin main. The sole origin remote targets https://github.com/VanKien29/savy-nails-spa.git. Keep deployment credentials and generated artifacts outside Git.
 
 Rollback: promote the immutable deployment above from the Vercel project dashboard. This static deployment has no remote application database to roll back.

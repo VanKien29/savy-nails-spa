@@ -8,7 +8,7 @@ use App\Models\Page;
 use App\Models\User;
 use App\Services\PageRenderer;
 use App\Services\SiteSettingsService;
-use Database\Seeders\NailSalonSeeder;
+use Database\Seeders\SavyNailsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -24,7 +24,7 @@ class ScriptWidgetsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(NailSalonSeeder::class);
+        $this->seed(SavyNailsSeeder::class);
         $admin = User::factory()->create();
         $admin->forceFill(['is_admin' => true, 'cms_role' => 'admin'])->save();
         $this->actingAs($admin);

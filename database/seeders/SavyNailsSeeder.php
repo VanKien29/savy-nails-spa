@@ -8,6 +8,7 @@ use App\Models\SalonCategory;
 use App\Models\SalonImage;
 use App\Models\SalonProfile;
 use App\Models\SalonService;
+use App\Models\SiteSetting;
 use App\Services\SalonContent;
 use App\Services\SiteSettingsService;
 use Illuminate\Database\Seeder;
@@ -18,10 +19,6 @@ class SavyNailsSeeder extends Seeder
 {
     public function run(): void
     {
-        if (! SalonProfile::whereKey(1)->exists()) {
-            $this->call(NailSalonSeeder::class);
-        }
-
         DB::transaction(function (): void {
             $report = collect(json_decode(file_get_contents(public_path('assets/optimized/report.json')), true, flags: JSON_THROW_ON_ERROR));
             $logo = $report->first(fn (array $entry) => str_replace('\\', '/', $entry['file']) === 'savy/savy-logo-transparent.png');
@@ -29,7 +26,31 @@ class SavyNailsSeeder extends Seeder
                 throw new \RuntimeException('Run npm run media:optimize before applying the Savy Nails client seed.');
             }
 
-            SalonImage::updateOrCreate(['key' => 'savy-logo-art'], [
+            $images = [
+                'savy-hero' => ['26867-e1713761727547.jpg', 'Nude manicure with delicate dried flowers', 'nails'],
+                'savy-story' => ['22224199.jpg', 'Nail care inspiration', 'nails'],
+                'savy-visit' => ['16933.jpg', 'A moment of nail and spa care', 'spa'],
+                'savy-pedicure' => ['banner-services.png', 'A relaxing spa treatment', 'spa'],
+                'savy-additions' => ['banner-gallery.png', 'Manicure with gold details', 'nails'],
+                'savy-waxing' => ['1.jpg', 'Beauty treatment inspiration', 'beauty'],
+            ];
+            foreach (range(1, 12) as $number) {
+                $images['savy-gallery-'.$number] = ['avatar-'.$number.'.jpg', 'Nail design inspiration '.$number, 'nails'];
+            }
+            foreach ($images as $key => [$source, $caption, $category]) {
+                $entry = $report->first(fn (array $row) => str_replace('\\', '/', $row['file']) === 'savy/'.$source);
+                if (empty($entry['variants'])) {
+                    throw new \RuntimeException('Missing optimized Savy image: '.$source);
+                }
+                SalonImage::firstOrCreate(['key' => $key], [
+                    'alt' => $caption, 'caption' => $caption, 'category' => $category,
+                    'variants' => array_map(fn (array $variant) => array_replace($variant, ['file' => str_replace('\\', '/', $variant['file'])]), $entry['variants']),
+                    'is_inspiration' => true, 'show_in_gallery' => str_starts_with($key, 'savy-gallery-'),
+                    'sort_order' => count($images), 'source_credit' => 'Editorial nail and spa inspiration',
+                ]);
+            }
+
+            SalonImage::firstOrCreate(['key' => 'savy-logo-art'], [
                 'alt' => 'Savy Nails & Spa white wordmark on a transparent background',
                 'caption' => 'Savy Nails & Spa',
                 'variants' => array_map(fn (array $variant) => array_replace($variant, ['file' => str_replace('\\', '/', $variant['file'])]), $logo['variants']),
@@ -41,126 +62,47 @@ class SavyNailsSeeder extends Seeder
             ]);
 
             $categories = [
-                ['slug' => 'manicure-nail-enhancements', 'name' => 'Manicure & Nail Enhancements', 'description' => 'Polished essentials and enhancements for every kind of finish.', 'image_id' => SalonImage::where('key', 'nails-menu')->value('id')],
-                ['slug' => 'pedicure-services', 'name' => 'Pedicure Services', 'description' => 'Relaxing pedicures with warm towels, massage and thoughtful care.', 'image_id' => SalonImage::where('key', 'luxury-ritual-nude')->value('id')],
-                ['slug' => 'additions', 'name' => 'Additions', 'description' => 'Small finishing details to personalize your service.', 'image_id' => SalonImage::where('key', 'luxury-look-gold')->value('id')],
-                ['slug' => 'waxing', 'name' => 'Waxing', 'description' => 'Clean, polished finishing touches from brows to full face and body.', 'image_id' => SalonImage::where('key', 'brows-lashes')->value('id')],
+                ['slug' => 'manicure-nail-enhancements', 'name' => 'Manicure & Nail Enhancements', 'description' => 'Polished essentials and enhancements for every kind of finish.', 'image_id' => SalonImage::where('key', 'savy-hero')->value('id')],
+                ['slug' => 'pedicure-services', 'name' => 'Pedicure Services', 'description' => 'Relaxing pedicures with warm towels, massage and thoughtful care.', 'image_id' => SalonImage::where('key', 'savy-pedicure')->value('id')],
+                ['slug' => 'additions', 'name' => 'Additions', 'description' => 'Small finishing details to personalize your service.', 'image_id' => SalonImage::where('key', 'savy-additions')->value('id')],
+                ['slug' => 'waxing', 'name' => 'Waxing', 'description' => 'Clean, polished finishing touches from brows to full face and body.', 'image_id' => SalonImage::where('key', 'savy-waxing')->value('id')],
             ];
 
-            SalonService::query()->delete();
-            SalonCategory::query()->delete();
-            foreach ($categories as $index => $category) {
-                SalonCategory::create($category + ['sort_order' => $index]);
+            if (! SalonService::exists()) {
+                foreach ($categories as $index => $category) {
+                    SalonCategory::firstOrCreate(['slug' => $category['slug']], $category + ['sort_order' => $index]);
+                }
+
+                $categoryIds = SalonCategory::query()->pluck('id', 'slug');
+                foreach ($this->services() as $index => $service) {
+                    SalonService::create([
+                        'category_id' => $categoryIds[$service['category']],
+                        'slug' => $service['slug'],
+                        'name' => $service['name'],
+                        'group' => $service['group'] ?? null,
+                        'description' => $service['description'] ?? null,
+                        'price' => $service['price'] ?? null,
+                        'price_from' => $service['price_from'] ?? false,
+                        'price_note' => $service['price_note'] ?? null,
+                        'sort_order' => $index,
+                        'active' => true,
+                    ]);
+                }
             }
 
-            $categoryIds = SalonCategory::query()->pluck('id', 'slug');
-            foreach ($this->services() as $index => $service) {
-                SalonService::create([
-                    'category_id' => $categoryIds[$service['category']],
-                    'slug' => $service['slug'],
-                    'name' => $service['name'],
-                    'group' => $service['group'] ?? null,
-                    'description' => $service['description'] ?? null,
-                    'price' => $service['price'] ?? null,
-                    'price_from' => $service['price_from'] ?? false,
-                    'price_note' => $service['price_note'] ?? null,
-                    'sort_order' => $index,
-                    'active' => true,
-                ]);
-            }
-
-            $profile = SalonProfile::whereKey(1)->lockForUpdate()->firstOrFail();
-            $data = array_replace_recursive($profile->data, [
-                'city' => 'Walla Walla, Washington',
-                'postal_address' => ['streetAddress' => '634 S 9th Ave', 'addressLocality' => 'Walla Walla', 'addressRegion' => 'WA', 'postalCode' => '99362', 'addressCountry' => 'US'],
-                'short_city' => 'Walla Walla, WA',
-                'timezone' => 'America/Los_Angeles',
-                'booking_url' => null,
-                'hours' => [
-                    ['days' => 'Monday - Saturday', 'time' => '09:00 AM - 07:00 PM'],
-                    ['days' => 'Sunday', 'time' => '10:00 AM - 05:00 PM'],
-                ],
-                'hours_note' => 'Please call or message us for holiday hours.',
-                'gallery_note' => 'Nail inspiration is illustrative. Contact the salon for the latest service details and availability.',
-                'booking_note' => 'To book, please call Savy Nails & Spa or message us through Facebook or Instagram.',
-                'hero_image' => 'luxury-hero',
-                'hero_mobile_image' => 'luxury-hero-mobile',
-                'hero_slides' => ['luxury-hero'],
-                'story_image' => 'luxury-story',
-                'about_image' => 'blush-manicure',
-                'about_brand_image' => 'savy-logo-art',
-                'contact_image' => 'contact-welcome',
-                'home_lookbook' => ['luxury-look-french', 'luxury-look-chrome', 'luxury-look-gold', 'luxury-look-milky'],
-                'gallery_filters' => ['all' => 'The Collection', 'nails' => 'Nail Inspiration'],
-                'copy' => [
-                    'global' => [
-                        'brand_monogram' => 'S', 'brand_title' => 'SAVY', 'brand_subtitle' => 'NAILS & SPA',
-                        'booking_label' => 'Contact to Book', 'booking_url' => '/contact-us',
-                        'policy_title' => 'Contact details',
-                        'policy_body' => 'For appointments, please call the salon or message Savy Nails & Spa on Facebook or Instagram.',
-                        'policy_note' => 'We do not take online bookings through this website.',
-                    ],
-                    'home' => [
-                        'menu_label' => 'View the Menu', 'menu_url' => '/services',
-                        'story_label' => 'About Savy', 'story_url' => '/about-us',
-                        'full_menu_label' => 'View Full Menu', 'full_menu_url' => '/services',
-                        'price_prefix' => 'From', 'ritual_label' => 'Ask About This Service', 'ritual_url' => '/contact-us',
-                        'contact_label' => 'Contact the Salon', 'contact_url' => '/contact-us',
-                    ],
-                    'about' => [
-                        'frame_title' => 'SAVY', 'frame_caption' => 'NAILS & SPA',
-                        'quote' => 'Polished with care.', 'quote_accent' => 'Made for your moment.',
-                        'services_label' => 'Explore the Menu', 'services_url' => '/services',
-                        'values_eyebrow' => 'The Savy way',
-                        'brand_heading' => 'Your moment.', 'brand_accent' => 'Your signature finish.',
-                        'visit_note' => 'For appointments, call or message us directly.',
-                        'contact_label' => 'Contact Savy', 'contact_url' => '/contact-us',
-                    ],
-                    'gallery' => [
-                        'social_heading' => 'More from Savy?', 'social_body' => 'Follow along on Facebook and Instagram.', 'social_label' => 'Follow Savy',
-                    ],
-                    'menu' => [
-                        'full_set_label' => 'Service', 'fill_label' => 'Fill', 'gel_label' => 'Gel Polish',
-                        'includes_label' => 'Includes:', 'inquire_label' => '$....', 'kids_note' => 'Please contact the salon for details.',
-                    ],
-                    'contact' => [
-                        'heading' => 'Let’s make your day', 'heading_accent' => 'a little more beautiful.',
-                        'visit_label' => 'Visit the Salon', 'directions_label' => 'Open in Google Maps',
-                        'phone_label' => 'Give Us a Call', 'hours_label' => 'Business Hours', 'social_label' => 'Connect With Us',
-                        'map_heading' => 'Find Savy', 'map_accent' => 'in Walla Walla.', 'map_label' => 'Open in Google Maps',
-                        'menu_empty' => 'Please call or message the salon for menu details.',
-                    ],
-                    'footer' => [
-                        'intro' => 'A polished moment, a little self-care, and your own kind of beautiful.',
-                        'hours_label' => 'Business Hours', 'call_label' => 'Give us a call', 'signature' => 'Nails · Spa · Waxing',
-                    ],
-                ],
-                'savy_revision' => '2026-11-v1',
-            ]);
+            $profile = SalonProfile::firstOrCreate(['id' => 1], ['data' => []]);
+            $defaults = $this->profileDefaults();
+            $data = array_replace_recursive($defaults, $profile->data);
             $profile->update(['data' => $data]);
 
             $settings = app(SiteSettingsService::class);
-            $settings->update(array_replace($settings->all(), [
-                'site_name' => 'Savy Nails & Spa', 'company_name' => 'Savy Nails & Spa', 'slogan' => 'Polished with care. Made for your moment.',
-                'primary_color' => '#c6a15b', 'secondary_color' => '#2b241c', 'accent_text_color' => '#8a642b',
-                'background_color' => '#fffdf9', 'surface_color' => '#f7f0e4', 'home_gold_color' => '#c6a15b', 'home_dark_color' => '#2b241c',
-                'heading_font' => 'serif', 'body_font' => 'sans', 'hotline' => '509-529-7289',
-                'address' => '634 S 9th Ave, Walla Walla, WA 99362', 'maps_url' => SavyMapLinkSeeder::MAP_URL, 'maps_embed_url' => SavyMapLinkSeeder::EMBED_URL,
-                'copyright' => 'All rights reserved.', 'legal' => 'Nails · Spa · Waxing',
-                'default_title' => 'Savy Nails & Spa | Nails, Spa & Waxing in Walla Walla, WA',
-                'default_description' => 'Visit Savy Nails & Spa in Walla Walla, WA for manicures, nail enhancements, spa pedicures and waxing. Call or message us to book.',
-                'social_links' => [
-                    ['label' => 'Google', 'url' => SavyMapLinkSeeder::MAP_URL],
-                    ['label' => 'Facebook', 'url' => 'https://www.facebook.com/profile.php?id=61557425844879'],
-                    ['label' => 'Instagram', 'url' => 'https://www.instagram.com/savynailsspa?utm_source=ig_web_button_share_sheet&rpxt=ZDNlZDc0MzIxNw=='],
-                ],
-                'contacts' => [['type' => 'phone', 'url' => 'tel:+15095297289', 'color' => '#8a642b', 'desktop' => true, 'mobile' => true, 'enabled' => true]],
-                'features' => ['contact' => false, 'multilingual' => false, 'animations' => true],
-                'logo_id' => null, 'mobile_logo_id' => null,
-            ]));
+            $brandSettings = $this->brandSettings();
+            $existing = SiteSetting::find(1)?->data ?? [];
+            $settingsDefaults = SiteSettingsService::defaults();
+            $settings->update(array_replace($settingsDefaults, $brandSettings, $existing));
 
-            foreach (Page::whereIn('slug', ['home', 'about-us', 'services', 'gallery', 'contact-us'])->get() as $page) {
-                $page->update($this->pageContent($page->slug));
+            foreach (['home', 'about-us', 'services', 'gallery', 'contact-us'] as $slug) {
+                Page::firstOrCreate(['slug' => $slug], $this->pageContent($slug) + ['is_home' => $slug === 'home']);
             }
             Page::where('slug', 'booking')->update(['status' => 'draft', 'exportable' => false]);
 
@@ -175,7 +117,100 @@ class SavyNailsSeeder extends Seeder
         $this->call(SavySocialImageSeeder::class);
     }
 
-    private function pageContent(string $slug): array
+    public function profileDefaults(): array
+    {
+        return [
+            'city' => 'Walla Walla, Washington',
+            'postal_address' => ['streetAddress' => '634 S 9th Ave', 'addressLocality' => 'Walla Walla', 'addressRegion' => 'WA', 'postalCode' => '99362', 'addressCountry' => 'US'],
+            'short_city' => 'Walla Walla, WA',
+            'timezone' => 'America/Los_Angeles',
+            'booking_url' => null,
+            'hours' => [
+                ['days' => 'Monday - Saturday', 'time' => '09:00 AM - 07:00 PM'],
+                ['days' => 'Sunday', 'time' => '10:00 AM - 05:00 PM'],
+            ],
+            'hours_note' => 'Please call or message us for holiday hours.',
+            'gallery_note' => 'Nail inspiration is illustrative. Contact the salon for the latest service details and availability.',
+            'booking_note' => 'To book, please call Savy Nails & Spa or message us through Facebook or Instagram.',
+            'hero_image' => 'savy-hero',
+            'hero_mobile_image' => 'savy-hero',
+            'hero_slides' => ['savy-hero'],
+            'story_image' => 'savy-story',
+            'about_image' => 'savy-logo-art',
+            'about_brand_image' => 'savy-logo-art',
+            'contact_image' => 'savy-visit',
+            'home_lookbook' => ['savy-gallery-1', 'savy-gallery-2', 'savy-gallery-3', 'savy-gallery-4'],
+            'gallery_filters' => ['all' => 'The Collection', 'nails' => 'Nail Inspiration'],
+            'copy' => [
+                'global' => [
+                    'brand_monogram' => 'S', 'brand_title' => 'SAVY', 'brand_subtitle' => 'NAILS & SPA',
+                    'booking_label' => 'Contact to Book', 'booking_url' => '/contact-us',
+                    'policy_title' => 'Contact details',
+                    'policy_body' => 'For appointments, please call the salon or message Savy Nails & Spa on Facebook or Instagram.',
+                    'policy_note' => 'We do not take online bookings through this website.',
+                ],
+                'home' => [
+                    'menu_label' => 'View the Menu', 'menu_url' => '/services',
+                    'story_label' => 'About Savy', 'story_url' => '/about-us',
+                    'full_menu_label' => 'View Full Menu', 'full_menu_url' => '/services',
+                    'price_prefix' => 'From', 'ritual_label' => 'Ask About This Service', 'ritual_url' => '/contact-us',
+                    'contact_label' => 'Contact the Salon', 'contact_url' => '/contact-us',
+                ],
+                'about' => [
+                    'frame_title' => 'SAVY', 'frame_caption' => 'NAILS & SPA',
+                    'quote' => 'Polished with care.', 'quote_accent' => 'Made for your moment.',
+                    'services_label' => 'Explore the Menu', 'services_url' => '/services',
+                    'values_eyebrow' => 'The Savy way',
+                    'brand_heading' => 'Your moment.', 'brand_accent' => 'Your signature finish.',
+                    'visit_note' => 'For appointments, call or message us directly.',
+                    'contact_label' => 'Contact Savy', 'contact_url' => '/contact-us',
+                ],
+                'gallery' => [
+                    'social_heading' => 'More from Savy?', 'social_body' => 'Follow along on Facebook and Instagram.', 'social_label' => 'Follow Savy',
+                ],
+                'menu' => [
+                    'full_set_label' => 'Service', 'fill_label' => 'Fill', 'gel_label' => 'Gel Polish',
+                    'includes_label' => 'Includes:', 'inquire_label' => '$....', 'kids_note' => 'Please contact the salon for details.',
+                ],
+                'contact' => [
+                    'heading' => 'Let’s make your day', 'heading_accent' => 'a little more beautiful.',
+                    'visit_label' => 'Visit the Salon', 'directions_label' => 'Open in Google Maps',
+                    'phone_label' => 'Give Us a Call', 'hours_label' => 'Business Hours', 'social_label' => 'Connect With Us',
+                    'map_heading' => 'Find Savy', 'map_accent' => 'in Walla Walla.', 'map_label' => 'Open in Google Maps',
+                    'menu_empty' => 'Please call or message the salon for menu details.',
+                ],
+                'footer' => [
+                    'intro' => 'A polished moment, a little self-care, and your own kind of beautiful.',
+                    'hours_label' => 'Business Hours', 'call_label' => 'Give us a call', 'signature' => 'Nails · Spa · Waxing',
+                ],
+            ],
+            'savy_revision' => '2026-11-v1',
+        ];
+    }
+
+    public function brandSettings(): array
+    {
+        return [
+            'site_name' => 'Savy Nails & Spa', 'company_name' => 'Savy Nails & Spa', 'slogan' => 'Polished with care. Made for your moment.',
+            'primary_color' => '#c6a15b', 'secondary_color' => '#2b241c', 'accent_text_color' => '#8a642b',
+            'background_color' => '#fffdf9', 'surface_color' => '#f7f0e4', 'home_gold_color' => '#c6a15b', 'home_dark_color' => '#2b241c',
+            'heading_font' => 'serif', 'body_font' => 'sans', 'hotline' => '509-529-7289',
+            'address' => '634 S 9th Ave, Walla Walla, WA 99362', 'maps_url' => SavyMapLinkSeeder::MAP_URL, 'maps_embed_url' => SavyMapLinkSeeder::EMBED_URL,
+            'copyright' => 'All rights reserved.', 'legal' => 'Nails · Spa · Waxing',
+            'default_title' => 'Savy Nails & Spa | Nails, Spa & Waxing in Walla Walla, WA',
+            'default_description' => 'Visit Savy Nails & Spa in Walla Walla, WA for manicures, nail enhancements, spa pedicures and waxing. Call or message us to book.',
+            'social_links' => [
+                ['label' => 'Google', 'url' => SavyMapLinkSeeder::MAP_URL],
+                ['label' => 'Facebook', 'url' => 'https://www.facebook.com/profile.php?id=61557425844879'],
+                ['label' => 'Instagram', 'url' => 'https://www.instagram.com/savynailsspa?utm_source=ig_web_button_share_sheet&rpxt=ZDNlZDc0MzIxNw=='],
+            ],
+            'contacts' => [['type' => 'phone', 'url' => 'tel:+15095297289', 'color' => '#8a642b', 'desktop' => true, 'mobile' => true, 'enabled' => true]],
+            'features' => ['contact' => false, 'multilingual' => false, 'animations' => true],
+            'logo_id' => null, 'mobile_logo_id' => null,
+        ];
+    }
+
+    public function pageContent(string $slug): array
     {
         $copy = [
             'home' => ['title' => 'Home', 'seo_title' => 'Savy Nails & Spa | Nails, Spa & Waxing in Walla Walla, WA', 'seo_description' => 'Visit Savy Nails & Spa in Walla Walla, WA for polished manicures, spa pedicures, nail enhancements and waxing.'],

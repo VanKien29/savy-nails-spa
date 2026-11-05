@@ -12,7 +12,7 @@ jobs:
       mysql:
         image: mysql:8.4
         env:
-          MYSQL_DATABASE: the_k_luxury_nail_bar
+          MYSQL_DATABASE: savy_nails_spa
           MYSQL_ROOT_PASSWORD: ci-only-password
         ports:
           - 3306:3306
@@ -42,7 +42,7 @@ jobs:
       - run: php scripts/create-test-database.php
       - run: npm ci && npm audit --audit-level=high && npm run media:optimize && npm run build
       - run: composer quality
-      - run: php artisan migrate --force && php artisan db:seed --class=NailSalonSeeder --force && php artisan storage:link
+      - run: php artisan migrate --force && php artisan db:seed --class=SavyNailsSeeder --force && php artisan storage:link
       - run: php artisan starter:check && php artisan starter:seo-audit && php artisan starter:export-demo
       - run: npx playwright install --with-deps chromium && npm run test:browser
         env:

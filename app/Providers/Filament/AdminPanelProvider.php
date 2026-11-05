@@ -47,7 +47,7 @@ class AdminPanelProvider extends PanelProvider
             ->profile()
             ->userMenuItems(['profile' => fn (Action $action) => $action->hidden()])
             ->viteTheme('resources/css/filament/admin/theme.css')
-            ->favicon(asset('assets/the-k/favicon.svg'))
+            ->favicon(asset('assets/savy/favicon.svg'))
             ->font('Be Vietnam Pro', provider: LocalFontProvider::class)
             ->darkMode(false)
             ->sidebarWidth('16rem')

@@ -1,8 +1,0 @@
-<footer class="ks-footer"><div class="ks-container">
-    <div class="ks-footer-grid"><div><x-salon.brand :settings="$settings" :media="$media" footer/><p>{{ $copy['footer']['intro'] }}</p><div class="ks-socials">@foreach($settings['social_links'] as $social)<a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="{{ $social['label'] }}"><x-salon.icon :name="strtolower($social['label'])" /></a>@endforeach</div></div>
-        <div><nav aria-label="Footer navigation">@foreach($navigation->where('location','footer') as $item)<a href="{{ $item->url }}">{{ $item->label }}</a>@endforeach</nav></div>
-        <div><a class="ks-address" href="{{ $settings['maps_url'] }}" target="_blank" rel="noopener noreferrer">{{ $settings['address'] }}</a><a class="ks-footer-phone" href="tel:{{ preg_replace('/[^0-9+]/','',$settings['hotline']) }}">{{ $settings['hotline'] }}</a></div>
-        <div><h2>{{ $copy['footer']['hours_label'] }}</h2>@forelse($salon['profile']['hours'] ?? [] as $hour)<p>{{ $hour['days'] }}<br>{{ $hour['time'] }}</p>@empty<p>{{ $salon['profile']['hours_note'] }}</p><a class="ks-footer-inline" href="tel:{{ preg_replace('/[^0-9+]/','',$settings['hotline']) }}">{{ $copy['footer']['call_label'] }} </a>@endforelse</div>
-    </div>
-    <div class="ks-footer-bottom"><small>© {{ date('Y') }} {{ $settings['company_name'] }}. {{ $settings['copyright'] }}</small><button type="button" data-open-dialog="appointment-policy">{{ $copy['global']['policy_label'] }}</button>@if(!$isDemo && ($settings['ga4_id'] || $settings['gtm_id'] || $settings['meta_pixel_id']))<button type="button" data-reset-consent>{{ $copy['global']['cookie_preferences'] }}</button>@endif<small>{{ $copy['footer']['signature'] }}</small></div>
-</div></footer>

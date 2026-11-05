@@ -1,4 +1,4 @@
-# THE K — cài đặt trên hosting PHP
+# SAVY — cài đặt trên hosting PHP
 
 Gói này đã có thư viện PHP production (vendor), CSS/JS đã build, ảnh đang quản lý trong CMS và database hiện tại. Không cần Node.js, npm hoặc cài lại Composer. Ảnh gốc phục vụ thiết kế trong resources/media, công cụ Windows và dữ liệu kiểm thử không nằm trong gói hosting. Các ảnh upload gốc mà CMS còn quản lý vẫn được giữ trong storage riêng.
 

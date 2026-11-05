@@ -10,6 +10,7 @@ use Filament\Forms\Components as F;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -115,7 +116,7 @@ class ServiceMenu extends Page
             F\TextInput::make('name')->label('Tên dịch vụ')->required()->maxLength(200)->columnSpanFull(),
             F\Select::make('category_id')->label('Danh mục')->options(fn () => SalonCategory::orderBy('sort_order')->pluck('name', 'id'))->required()->live(),
             F\TextInput::make('group')->label('Nhóm nhỏ trong danh mục')->maxLength(160)
-                ->datalist(fn (\Filament\Schemas\Components\Utilities\Get $get) => SalonService::where('category_id', $get('category_id'))->whereNotNull('group')->distinct()->pluck('group')->all())
+                ->datalist(fn (Get $get) => SalonService::where('category_id', $get('category_id'))->whereNotNull('group')->distinct()->pluck('group')->all())
                 ->placeholder('Ví dụ: Nail Enhancements')->helperText('Để trống nếu không cần chia nhóm.'),
             Section::make('Giá trên menu')->schema([
                 F\TextInput::make('price')->label('Giá thường / Full Set')->prefix('$')->numeric()->minValue(0)->maxValue(999999.99),

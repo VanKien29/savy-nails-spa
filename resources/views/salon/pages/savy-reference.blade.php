@@ -6,10 +6,10 @@
     $galleryFiles = $home ? [8, 2, 1, 4, 12, 7] : range(1, 12);
     $phone = preg_replace('/[^0-9+]/', '', $settings['hotline']);
     $bannerImage = match($slug) {
-        'about-us' => 'the-k/luxury-ritual.png',
-        'services' => 'the-k/luxury-hero.png',
-        'gallery' => 'the-k/luxury-look-gold.png',
-        default => 'the-k/luxury-ritual.png',
+        'about-us' => 'banner-about.png',
+        'services' => 'banner-services.png',
+        'gallery' => 'banner-gallery.png',
+        default => 'banner-about.png',
     };
 @endphp
 <!doctype html>
@@ -77,6 +77,16 @@
         </div><p class="av-center"><a class="av-button" href="/contact-us">Contact to Book</a></p></div></section>
     @elseif($slug === 'contact-us')
         <section class="av-contact"><div class="av-container av-contact-grid"><div class="av-contact-info" data-reveal><h2>Contact</h2><a href="tel:{{ $phone }}">{{ $settings['hotline'] }}</a><a href="{{ $settings['maps_url'] }}" target="_blank" rel="noopener noreferrer">{{ $settings['address'] }}</a><h2>Business Hours</h2>@foreach($salon['profile']['hours'] as $hour)<p>{{ $hour['days'] }}:<br>{{ $hour['time'] }}</p>@endforeach<h2>Social Media</h2><div class="av-socials">@foreach($settings['social_links'] as $social)<a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer">{{ $social['label'] }}</a>@endforeach</div></div><div class="av-contact-card" data-reveal><h2>Let’s plan your visit</h2><p>For appointments, call Savy Nails &amp; Spa or message us through our social pages.</p><a class="av-button" href="tel:{{ $phone }}">Call {{ $settings['hotline'] }}</a>@foreach($settings['social_links'] as $social)@if(strtolower($social['label']) !== 'google')<a class="av-button av-outline" href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer">Message on {{ $social['label'] }}</a>@endif @endforeach</div></div></section>
+    @else
+        @foreach($sections as $section)
+        <section class="av-container av-about-intro">
+            @if($section['heading'] ?? null)<h2>{{ $section['heading'] }}</h2>@endif
+            @if($section['body'] ?? null)<p>{!! nl2br(e($section['body'])) !!}</p>@endif
+            @if($image = $media->get($section['media_id'] ?? null))<x-media.picture :media="$image" sizes="(max-width: 767px) 100vw, 70vw"/>@endif
+            @foreach($section['items'] ?? [] as $item)<article>@if($item['title'] ?? null)<h3>{{ $item['title'] }}</h3>@endif @if($item['text'] ?? null)<p>{{ $item['text'] }}</p>@endif</article>@endforeach
+            @if(($section['button_label'] ?? null) && ($section['button_url'] ?? null))<a class="av-button" href="{{ $section['button_url'] }}">{{ $section['button_label'] }}</a>@endif
+        </section>
+        @endforeach
     @endif
 @endif
 </main>

@@ -9,6 +9,7 @@
                 <article class="av-service" data-service-row>
                     <div class="av-service-heading"><h4>{{ $service->name }}</h4><span class="av-dots"></span><strong>{{ $service->priceLabel() }}</strong></div>
                     @if($service->description)<p>{{ $service->description }}</p>@endif
+                    @if($service->includes)<ul>@foreach($service->includes as $step)<li>{{ $step }}</li>@endforeach</ul>@endif
                 </article>
                 @endforeach
             </div>

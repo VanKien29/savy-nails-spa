@@ -12,7 +12,7 @@ try {
         throw new RuntimeException('Create the test database only in a local/testing MySQL environment.');
     }
 
-    $database = 'the_k_luxury_nail_bar_testing';
+    $database = 'savy_nails_spa_testing';
     DB::connection('mysql')->statement('CREATE DATABASE IF NOT EXISTS `'.$database.'` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
     echo 'Ready MySQL test database: '.$database.PHP_EOL;
 } catch (Throwable) {
