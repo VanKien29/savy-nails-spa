@@ -41,7 +41,7 @@ class HeaderMenu extends Page
                 WebsiteContent::mediaPicker('settings.logo_id', 'Logo desktop'), WebsiteContent::mediaPicker('settings.mobile_logo_id', 'Logo mobile'), WebsiteContent::mediaPicker('settings.favicon_id', 'Favicon'),
             ])->collapsible();
         }
-        $fields[] = Section::make('Thương hiệu & hỗ trợ truy cập')->description('Chữ thương hiệu dùng khi chưa có logo.')->schema(WebsiteContent::copyFields('global', ['brand_monogram', 'brand_title', 'brand_subtitle', 'skip_content']))->columns(2)->collapsed();
+        $fields[] = Section::make('Hỗ trợ truy cập')->schema(WebsiteContent::copyFields('global', ['skip_content']))->columns(2)->collapsed();
         $fields[] = Section::make('Menu điều hướng')->description('Kéo thả các mục để đổi thứ tự. Tắt hiển thị để ẩn một mục trên cả desktop và mobile.')->schema([
             F\Repeater::make('links')->label('Danh sách menu')->schema([
                 F\TextInput::make('label')->label('Tên hiển thị')->required()->maxLength(80),
@@ -49,7 +49,7 @@ class HeaderMenu extends Page
                 F\Toggle::make('enabled')->label('Hiển thị')->default(true),
             ])->itemLabel(fn (array $state) => $state['label'] ?? 'Mục menu mới')->columns(2)->reorderable()->collapsible()->maxItems(24)->defaultItems(0)->addActionLabel('Thêm mục menu')->deleteAction(fn ($action) => $action->requiresConfirmation()),
         ]);
-        $fields[] = Section::make('Nút đặt lịch trên Header')->schema(WebsiteContent::copyFields('global', ['booking_label', 'booking_url']))->columns(2);
+        $fields[] = Section::make('Nút liên hệ trên Header')->description('Chấp nhận trang nội bộ như /contact-us hoặc đường dẫn HTTPS.')->schema(WebsiteContent::copyFields('global', ['booking_label', 'booking_url']))->columns(2);
 
         return $schema->components($fields)->statePath('data');
     }

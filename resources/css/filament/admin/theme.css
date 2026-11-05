@@ -38,3 +38,4 @@
 .fi-page-header-main-ctn{padding-top:0;padding-bottom:0}.fi-page-content{row-gap:24px}.fi-sidebar-header-logo-ctn{display:flex;justify-content:center}
 .sample-image-order-tools{display:flex;align-items:center;justify-content:space-between;padding:5px 9px 9px;gap:6px}.sample-image-order-tools button{width:25px;height:23px;border:1px solid #d1d5db;border-radius:5px;background:white;font-size:14px}.sample-image-order-tools button:disabled{opacity:.3}.sample-image-order-tools span{font-size:9px;color:#9ca3af}
 .sample-media-grid{grid-auto-rows:max-content;align-content:start;min-height:0;flex:1}.sample-media-grid>button{min-height:180px}
+.sample-selected-images img,.sample-media-grid img{background-color:#a6abb4;background-image:conic-gradient(#969ca6 25%,#b9bec6 0 50%,#969ca6 0 75%,#b9bec6 0);background-size:18px 18px}

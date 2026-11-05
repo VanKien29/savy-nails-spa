@@ -3,6 +3,8 @@
 namespace App\Observers;
 
 use App\Models\AuditLog;
+use App\Models\Media;
+use App\Services\SalonContent;
 use App\Services\SiteSettingsService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -23,6 +25,9 @@ class ContentObserver
     {
         Cache::forget('starter.navigation');
         app(SiteSettingsService::class)->forget();
+        if ($model instanceof Media) {
+            app(SalonContent::class)->forget();
+        }
         // Audit field names; only low-risk state transitions carry values. No content, contact data, password or token.
         $changes = ['fields' => array_keys($model->getChanges())];
         foreach (['status', 'template', 'enabled', 'is_admin'] as $field) {

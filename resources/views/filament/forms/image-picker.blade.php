@@ -16,9 +16,9 @@
         <div class="sample-selected-images">
             <template x-for="key in (multiple ? (value || []) : (value ? [value] : []))" :key="key">
                 <figure :draggable="multiple" x-on:dragstart="dragKey = key" x-on:dragover.prevent x-on:drop.prevent="dropOn(key)" x-on:dragend="dragKey = null">
-                    <img :src="images.find(image => image.key === key)?.url" :alt="images.find(image => image.key === key)?.caption || ''" draggable="false">
-                    @unless($compact ?? false)<figcaption x-text="images.find(image => image.key === key)?.caption"></figcaption>@endunless
-                    <button x-show="multiple" type="button" x-on:click="value = value.filter(v => v !== key)" aria-label="Gỡ ảnh">×</button>
+                    <img :src="images.find(image => String(image.key) === String(key))?.url" :alt="images.find(image => String(image.key) === String(key))?.caption || ''" draggable="false">
+                    @unless($compact ?? false)<figcaption x-text="images.find(image => String(image.key) === String(key))?.caption"></figcaption>@endunless
+                    <button type="button" x-on:click="value = multiple ? value.filter(v => v !== key) : null" aria-label="Gỡ ảnh">×</button>
                     <div x-show="multiple" class="sample-image-order-tools">
                         <button type="button" x-on:click="move(key, -1)" :disabled="!multiple || !Array.isArray(value) || value.indexOf(key) === 0" aria-label="Đưa ảnh về trước">←</button>
                         @unless($compact ?? false)<span>Kéo thả để sắp xếp</span>@endunless

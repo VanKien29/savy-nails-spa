@@ -1,6 +1,8 @@
 > **Current client:** Savy Nails & Spa — five English pages, white/gold design, 31 approved services and contact-only appointments. Use `SavyNailsSeeder` for a new database and `php artisan savy:cleanup --apply` for an existing Savy installation. See `SAVY_CLEANUP.md` for deployment and migration details.
 # Laravel Landing Starter
 
+Admin forms match the current Savy Client; see [CMS requirements and content map](CMS_REQUIREMENTS.md). Run `SavyCmsSeeder` after optimizing media to register the current images and add missing CMS defaults without resetting saved content or services.
+
 CMS SAVY: xem [yêu cầu hệ thống, tài khoản Admin, bảo mật và hướng dẫn vận hành](CMS_REQUIREMENTS.md). Truy cập `/admin` để quản lý nội dung.
 
 Base cho các website khách hàng độc lập (1–5 trang): Laravel 12, Filament 5, Blade, Tailwind 4, Alpine, Vite. CMS thực dùng database; không phải multi-tenant hay page builder kéo thả. Demo “Forma Studio” dùng cùng services và components với dự án thật.

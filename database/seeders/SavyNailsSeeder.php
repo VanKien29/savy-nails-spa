@@ -115,6 +115,7 @@ class SavyNailsSeeder extends Seeder
 
         app(SalonContent::class)->forget();
         $this->call(SavySocialImageSeeder::class);
+        $this->call(SavyCmsSeeder::class);
     }
 
     public function profileDefaults(): array

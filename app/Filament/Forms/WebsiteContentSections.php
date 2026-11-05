@@ -7,181 +7,162 @@ use App\Filament\Pages\ServiceMenu;
 use App\Filament\Pages\WebsiteContent;
 use App\Models\Page;
 use Filament\Forms\Components as F;
-use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
 
 class WebsiteContentSections
 {
     public static function tabs(string $area, ?Page $page): array
     {
-        return match ($area) {
-            'home' => self::home($page),
-            'about' => self::about(),
-            'services' => self::services(),
-            'gallery' => self::gallery(),
-            'contact' => self::contact(),
-            default => [],
+        $tabs = match ($area) {
+            'home' => self::home(), 'about' => self::about(), 'services' => self::services(),
+            'gallery' => self::gallery(), 'contact' => self::contact(), default => [],
         };
+        $tabs[] = self::tab('seo', 'SEO trang', 'Thông tin riêng của trang khi chia sẻ hoặc xuất hiện trên công cụ tìm kiếm.', [
+            F\TextInput::make('page.seo_title')->label('Tiêu đề SEO')->maxLength(160)->columnSpanFull(),
+            F\Textarea::make('page.seo_description')->label('Mô tả SEO')->maxLength(320)->rows(3)->columnSpanFull(),
+            WebsiteContent::mediaPicker('page.og_media_id', 'Ảnh chia sẻ của trang'),
+            F\Toggle::make('page.noindex')->label('Không lập chỉ mục trang này'),
+        ]);
+
+        return $tabs;
     }
 
-    private static function tab(string $id, string $label, string $description, array $fields): Tab
+    private static function tab(string $id, string $label, string $description, array $fields, bool $toggle = false): Tab
     {
+        if ($toggle) {
+            array_unshift($fields, F\Toggle::make('blocks.savy-'.$id.'.enabled')->label('Hiển thị section trên website')->columnSpanFull());
+        }
+
         return Tab::make($label)->key($id)->extraAttributes(['data-content-section' => $id])->schema([
             Section::make($label)->description($description)->schema($fields)->columns(2),
         ]);
     }
 
-    private static function buttons(string $group, array $keys): Fieldset
+    private static function heading(string $id, string $label = 'Tiêu đề'): F\TextInput
     {
-        return Fieldset::make($group === 'global' ? 'Nút đặt lịch (dùng chung với Header)' : 'Nút & liên kết')->key('buttons-'.implode('-', $keys))->schema(WebsiteContent::copyFields($group, $keys))->columns(2)->columnSpanFull();
+        return F\TextInput::make('blocks.savy-'.$id.'.heading')->label($label)->maxLength(240)->columnSpanFull();
     }
 
-    private static function links(string $id, array $links): F\Placeholder
+    private static function body(string $id, string $label = 'Nội dung'): F\Textarea
     {
-        return F\Placeholder::make('related_'.$id)->hiddenLabel()->content(view('filament.forms.content-section-links', ['links' => $links]))->columnSpanFull();
+        return F\Textarea::make('blocks.savy-'.$id.'.body')->label($label)->rows(4)->maxLength(4000)->columnSpanFull();
     }
 
-    private static function blockFields(string $id, bool $eyebrow = false, bool $heading = true): array
+    private static function image(string $key, string $label): F\ViewField
+    {
+        return WebsiteContent::imagePicker('profile.savy.images.'.$key, $label);
+    }
+
+    private static function buttons(string $id): array
     {
         return [
-            ...($eyebrow ? [F\TextInput::make('blocks.'.$id.'.eyebrow')->label('Tiêu đề nhỏ')->maxLength(120)] : []),
-            ...($heading ? [F\TextInput::make('blocks.'.$id.'.heading')->label('Tiêu đề')->maxLength(240)] : []),
-            F\Textarea::make('blocks.'.$id.'.body')->label('Nội dung')->rows(4)->maxLength(4000)->columnSpanFull(),
+            F\TextInput::make('blocks.savy-'.$id.'.button_label')->label('Chữ trên nút / liên kết')->maxLength(80),
+            F\TextInput::make('blocks.savy-'.$id.'.button_url')->label('Đường dẫn')->maxLength(500)
+                ->rules(['nullable', 'regex:~^(?:/(?!/)[^\s]*|#[a-zA-Z][\w-]*|https://[^\s]+)$~']),
         ];
     }
 
-    private static function items(string $id, bool $image = false): F\Repeater
+    private static function link(string $id, string $label, string $url): F\Placeholder
     {
-        return F\Repeater::make('blocks.'.$id.'.items')->label('Các mục trong section')->schema([
-            F\TextInput::make('title')->label('Tiêu đề')->maxLength(180),
-            F\Textarea::make('text')->label('Mô tả')->rows(3)->maxLength(2000),
-            ...($image ? [WebsiteContent::imagePicker('label', 'Ảnh dịch vụ')] : []),
-        ])->columns(2)->collapsible()->itemLabel(fn (array $state) => $state['title'] ?? 'Mục mới')->defaultItems(0)->maxItems(24)->columnSpanFull()->addActionLabel('Thêm mục')->deleteAction(fn ($action) => $action->requiresConfirmation());
+        return F\Placeholder::make('related_'.$id)->hiddenLabel()->content(view('filament.forms.content-section-links', ['links' => [$label => $url]]))->columnSpanFull();
     }
 
-    private static function home(?Page $page): array
+    private static function banner(string $area): Tab
     {
-        $tabs = [];
-        $descriptions = [
-            'hero' => 'Section đầu trang: tiêu đề lớn, ảnh slideshow và hai nút hành động.',
-            'intro' => 'Section giới thiệu có ảnh bên trái, câu chuyện và nút About Us bên phải.',
-            'collection' => 'Section các danh mục dịch vụ, giá từ và liên kết xem bảng giá.',
-            'ritual' => 'Section trải nghiệm nổi bật: từng mục gồm ảnh, tiêu đề, mô tả và nút.',
-            'lookbook' => 'Section ảnh cuộn ngang, chỉ hiển thị ảnh và nút chuyển ảnh theo thiết kế Client.',
-            'journey' => 'Section các bước trải nghiệm, đánh số theo thứ tự các mục.',
-            'finale' => 'Section lời mời cuối trang, ngay trước Footer.',
-        ];
-        foreach (collect($page?->sections ?? [])->reject(fn ($block) => ($block['id'] ?? '') === 'questions')->sortBy('ordering')->values() as $index => $block) {
-            $id = $block['id'];
-            $fields = self::blockFields($id, in_array($id, ['collection', 'lookbook', 'journey'], true));
-            if ($id === 'hero') {
-                $fields[] = F\TextInput::make('blocks.hero.items.0.title')->label('Dòng tiêu đề nhấn mạnh')->maxLength(180);
-                $fields[] = WebsiteContent::imagePicker('profile.hero_slides', 'Ảnh slideshow (kéo thả để sắp xếp)', true)->rules(['required', 'array', 'min:1', 'max:6']);
-                $fields[] = self::buttons('global', ['booking_label', 'booking_url']);
-                $fields[] = self::buttons('home', ['menu_label', 'menu_url']);
-            } elseif ($id === 'intro') {
-                $fields[] = WebsiteContent::imagePicker('profile.story_image', 'Ảnh câu chuyện');
-                $fields[] = self::buttons('home', ['story_label', 'story_url']);
-            } elseif ($id === 'collection') {
-                $fields[] = self::links('categories', ['Chỉnh menu dịch vụ, danh mục & giá' => ServiceMenu::getUrl()]);
-                $fields = [...$fields, ...WebsiteContent::copyFields('home', ['price_prefix']), self::buttons('home', ['full_menu_label', 'full_menu_url'])];
-            } elseif ($id === 'ritual') {
-                $fields[] = self::items($id, true);
-                $fields[] = self::buttons('home', ['ritual_label', 'ritual_url']);
-            } elseif ($id === 'lookbook') {
-                $fields[] = WebsiteContent::imagePicker('profile.home_lookbook', 'Ảnh trong section này', true);
-            } elseif ($id === 'journey') {
-                $fields[] = self::items($id);
-            } elseif ($id === 'finale') {
-                $fields[] = self::buttons('home', ['contact_label', 'contact_url']);
-            } else {
-                $fields[] = F\TextInput::make('blocks.'.$id.'.button_label')->label('Tên nút')->maxLength(80);
-                $fields[] = F\TextInput::make('blocks.'.$id.'.button_url')->label('Liên kết nút')->rules(['nullable', 'regex:~^(?:/(?!/)[^\s]*|#[a-zA-Z][\w-]*|https://[^\s]+)$~']);
-                $fields[] = WebsiteContent::mediaPicker('blocks.'.$id.'.media_id', 'Ảnh');
-            }
-            array_unshift($fields, F\Toggle::make('blocks.'.$id.'.enabled')->label('Hiển thị section trên website')->helperText('Tắt để ẩn section; nội dung vẫn được giữ lại.')->columnSpanFull());
-            $label = sprintf('%02d. %s', $index + 1, config('cms.home_sections.'.$id, $block['heading'] ?? 'Nội dung bổ sung'));
-            $tab = self::tab($id, $label, $descriptions[$id] ?? 'Nội dung bổ sung trên trang chủ.', $fields);
-            if (! ($block['enabled'] ?? false)) {
-                $tab->badge('Ẩn')->badgeColor('gray');
-            }
-            $tabs[] = $tab;
-        }
+        return self::tab('banner', '01. Ảnh bìa & tiêu đề', 'Banner đầu trang đúng theo giao diện Client hiện tại.', [
+            self::heading('banner'), self::image($area.'_banner', 'Ảnh nền banner'),
+        ]);
+    }
 
-        return $tabs;
+    private static function menu(string $label, bool $home = false): Tab
+    {
+        return self::tab('menu', $label, $home ? 'Trang chủ hiển thị danh mục dịch vụ đầu tiên theo thứ tự trong Menu dịch vụ.' : 'Tất cả danh mục và dịch vụ đang bật được hiển thị theo thứ tự trong Menu dịch vụ.', [
+            self::heading('menu'), self::image('menu', 'Ảnh nền bảng giá (dùng chung Home và Services)'),
+            self::link('services', 'Sửa danh mục, dịch vụ, giá và thứ tự', ServiceMenu::getUrl()),
+            ...WebsiteContent::copyFields('menu', ['inquire_label', 'fill_label', 'gel_label', 'includes_label']),
+            ...WebsiteContent::copyFields('contact', ['menu_empty']),
+            ...($home ? self::buttons('menu') : []),
+        ], $home);
+    }
+
+    private static function home(): array
+    {
+        return [
+            self::tab('hero', '01. Ảnh bìa & lời chào', 'Ảnh nền toàn màn hình, logo salon, vòng trang trí và dòng địa điểm.', [
+                self::heading('hero', 'Dòng địa điểm dưới logo'), self::image('hero', 'Ảnh nền đầu trang'),
+                self::image('hero_logo', 'Logo lớn trên ảnh bìa'), self::image('circle', 'Vòng trang trí quanh logo'),
+            ], true),
+            self::tab('intro', '02. About Us', 'Khối giới thiệu nền vàng, ảnh nền và địa chỉ dùng chung với Footer.', [
+                self::heading('intro'), F\TextInput::make('blocks.savy-intro.eyebrow')->label('Câu chào in đậm')->maxLength(120)->columnSpanFull(),
+                self::body('intro'), F\TextInput::make('blocks.savy-intro.items.0.text')->label('Câu dẫn trước địa chỉ')->maxLength(2000)->columnSpanFull(),
+                self::image('intro', 'Ảnh nền giới thiệu'), self::link('address', 'Sửa địa chỉ salon', FooterSettings::getUrl()),
+            ], true),
+            self::menu('03. Services', true),
+            self::tab('feature', '04. Your Savy Moment', 'Ảnh bên trái, lời giới thiệu bên phải và liên kết liên hệ.', [
+                self::heading('feature'), self::image('feature', 'Ảnh minh họa'), self::image('feature_background', 'Ảnh nền trang trí'),
+                self::body('feature', 'Câu nổi bật (xuống dòng để tách câu)'),
+                F\Textarea::make('blocks.savy-feature.items.0.text')->label('Đoạn giới thiệu')->maxLength(2000)->columnSpanFull(), ...self::buttons('feature'),
+            ], true),
+            self::tab('gallery', '05. Gallery', 'Ảnh cuộn ngang trên Home được chọn và sắp xếp riêng với trang Gallery.', [
+                self::heading('gallery'), WebsiteContent::imagePicker('profile.savy.home_gallery', 'Ảnh trên trang chủ', true, 24, true),
+                self::image('home_gallery_background', 'Ảnh nền Gallery'), ...self::buttons('gallery'),
+            ], true),
+            self::tab('faq', '06. FAQ', 'Sửa câu hỏi, thêm/xóa và kéo thả để đổi thứ tự. Câu trả lời có thể lấy trực tiếp thông tin dùng chung.', [
+                self::heading('faq'), F\Repeater::make('blocks.savy-faq.items')->label('Câu hỏi thường gặp')->schema([
+                    F\TextInput::make('title')->label('Câu hỏi')->required()->maxLength(180)->columnSpanFull(),
+                    F\Select::make('value')->label('Nguồn câu trả lời')->options(['custom' => 'Nhập nội dung riêng', 'address' => 'Địa chỉ salon', 'hours' => 'Giờ mở cửa', 'booking' => 'Số điện thoại & đặt lịch'])->default('custom')->required()->live(),
+                    F\Textarea::make('text')->label('Câu trả lời')->maxLength(2000)->rows(3)->visible(fn (Get $get) => $get('value') === 'custom')->columnSpanFull(),
+                ])->itemLabel(fn ($state) => $state['title'] ?? 'Câu hỏi mới')->defaultItems(0)->maxItems(24)->reorderable()->collapsible()->addActionLabel('Thêm câu hỏi')->columnSpanFull(),
+            ], true),
+        ];
     }
 
     private static function about(): array
     {
-        return [
-            self::tab('story', '01. Câu chuyện salon', 'Section đầu tiên: ảnh, hai đoạn giới thiệu, câu trích dẫn và nút xem dịch vụ.', [
-                ...self::blockFields('story'),
-                F\Textarea::make('blocks.promise.body')->label('Đoạn giới thiệu tiếp theo')->rows(3)->maxLength(4000)->columnSpanFull(),
-                WebsiteContent::imagePicker('profile.about_image', 'Ảnh câu chuyện salon'),
-                ...WebsiteContent::copyFields('about', ['frame_title', 'frame_caption', 'quote', 'quote_accent']),
-                self::buttons('about', ['services_label', 'services_url']),
-            ]),
-            self::tab('values', '02. Giá trị & cam kết', 'Section nền sáng: tiêu đề và các cam kết được đánh số.', [
-                ...WebsiteContent::copyFields('about', ['values_eyebrow']),
-                F\TextInput::make('blocks.promise.heading')->label('Tiêu đề')->maxLength(240),
-                self::items('promise'),
-            ]),
-            self::tab('brand', '03. Thương hiệu & lời mời', 'Section cuối trang: thương hiệu, lời giới thiệu và liên kết Contact Us.', [
-                WebsiteContent::imagePicker('profile.about_brand_image', 'Ảnh thương hiệu & lời mời'),
-                ...WebsiteContent::copyFields('about', ['brand_heading', 'brand_accent']),
-                ...self::blockFields('intro', heading: false),
-                ...WebsiteContent::copyFields('about', ['visit_note']),
-                self::links('about_contact', ['Sửa địa chỉ & số điện thoại dùng chung' => FooterSettings::getUrl()]),
-                self::buttons('about', ['contact_label', 'contact_url']),
-            ]),
-        ];
+        return [self::banner('about'), self::tab('intro', '02. Giới thiệu salon', 'Tiêu đề và đoạn giới thiệu ngay dưới banner.', [self::heading('intro'), self::body('intro')], true),
+            self::tab('strengths', '03. Our Strengths', 'Các thẻ ảnh, tiêu đề, mô tả và nút liên hệ phía cuối trang.', [
+                self::heading('strengths'), F\Repeater::make('blocks.savy-strengths.items')->label('Các điểm nổi bật')->schema([
+                    WebsiteContent::imagePicker('label', 'Ảnh minh họa'), F\TextInput::make('title')->label('Tiêu đề')->maxLength(180),
+                    F\Textarea::make('text')->label('Nội dung')->rows(3)->maxLength(2000)->columnSpanFull(),
+                ])->itemLabel(fn ($state) => $state['title'] ?? 'Mục mới')->reorderable()->collapsible()->defaultItems(0)->maxItems(24)->addActionLabel('Thêm mục')->columnSpanFull(),
+                ...self::buttons('strengths'),
+            ], true)];
     }
 
     private static function services(): array
     {
-        return [self::tab('menu', '01. Danh mục & bảng giá', 'Bảng giá là nội dung chính của trang Services. Danh mục và dịch vụ dùng chung với trang Home.', [
-            self::links('services', ['Chỉnh menu dịch vụ, danh mục & giá' => ServiceMenu::getUrl()]),
-            WebsiteContent::imagePicker('profile.menu_brow_images', 'Ảnh minh họa Brow Services', true, 3, true),
-            ...WebsiteContent::copyFields('menu'),
-            ...WebsiteContent::copyFields('contact', ['menu_empty']),
-        ])];
+        return [self::banner('services'), self::menu('02. Danh mục & bảng giá')];
     }
 
     private static function gallery(): array
     {
-        return [
-            self::tab('gallery-grid', '01. Thư viện ảnh', 'Chọn ảnh và kéo thả để sắp xếp thứ tự hiển thị.', [
-                WebsiteContent::imagePicker('gallery_images', 'Ảnh Gallery', true, 100, true)
-                    ->helperText('Chọn nhiều ảnh cùng lúc. Kéo thả để đổi thứ tự hoặc nhấn × để gỡ ảnh.'),
-            ]),
-            self::tab('instagram', '02. Lời mời Instagram', 'Section phía dưới lưới ảnh. Hiển thị khi đã có kênh Instagram trong cài đặt Footer.', [
-                ...WebsiteContent::copyFields('gallery', ['social_heading', 'social_body', 'social_label']),
-                self::links('instagram', ['Sửa đường dẫn Instagram' => FooterSettings::getUrl()]),
-            ]),
-        ];
+        return [self::banner('gallery'), self::tab('gallery', '02. Thư viện ảnh', 'Danh sách ảnh trên trang Gallery. Chọn nhiều ảnh, kéo thả hoặc dùng nút mũi tên để đổi thứ tự.', [
+            WebsiteContent::imagePicker('gallery_images', 'Ảnh Gallery', true, 100, true),
+        ])];
     }
 
     private static function contact(): array
     {
-        return [
-            self::tab('details', '01. Thông tin liên hệ', 'Cột trái ở đầu trang: địa chỉ, số điện thoại, giờ mở cửa và các kênh liên hệ. Các thông tin này được dùng chung với Footer.', [
-                ...WebsiteContent::copyFields('contact', ['heading', 'heading_accent', 'visit_label', 'directions_label', 'phone_label', 'hours_label', 'social_label']),
-                F\Textarea::make('settings.address')->label('Địa chỉ')->maxLength(500)->columnSpanFull(),
-                F\TextInput::make('settings.hotline')->label('Số điện thoại')->maxLength(24),
-                F\TextInput::make('settings.maps_url')->label('Đường dẫn Google Maps')->url()->maxLength(1000),
-                F\Repeater::make('profile.hours')->label('Giờ mở cửa')->schema([F\TextInput::make('days')->label('Ngày')->required()->maxLength(80), F\TextInput::make('time')->label('Giờ')->required()->maxLength(100)])->columns(2)->maxItems(14)->defaultItems(0)->columnSpanFull(),
-                F\Textarea::make('profile.hours_note')->label('Ghi chú khi chưa có lịch mở cửa')->maxLength(1000)->columnSpanFull(),
-                FooterSettings::socialLinksField('settings.social_links')->columnSpanFull(),
-            ]),
-            self::tab('photo', '02. Ảnh salon', 'Cột ảnh bên phải thay cho biểu mẫu liên hệ theo thiết kế Client.', [
-                WebsiteContent::imagePicker('profile.contact_image', 'Ảnh trang Contact Us')->required(),
-            ]),
-            self::tab('map', '03. Bản đồ & chỉ đường', 'Section phía dưới thông tin liên hệ: lời mời đến salon, nút chỉ đường và bản đồ nhúng.', [
-                ...WebsiteContent::copyFields('contact', ['map_heading', 'map_accent', 'map_label']),
-                F\Textarea::make('settings.maps_embed_url')->label('URL bản đồ nhúng')->rows(3)->maxLength(4000)->helperText('Dán URL src từ Google Maps → Share → Embed a map.')->columnSpanFull(),
-                self::links('map_address', ['Địa chỉ và đường dẫn chỉ đường dùng chung với Footer' => FooterSettings::getUrl()]),
-            ]),
-        ];
+        return [self::banner('contact'), self::tab('details', '02. Thông tin liên hệ', 'Cột thông tin bên trái. Số điện thoại, địa chỉ, giờ và mạng xã hội dùng chung với Footer và FAQ.', [
+            self::heading('details'),
+            F\TextInput::make('blocks.savy-details.items.0.title')->label('Tiêu đề giờ mở cửa')->maxLength(180),
+            F\TextInput::make('blocks.savy-details.items.1.title')->label('Tiêu đề mạng xã hội')->maxLength(180),
+            F\Textarea::make('settings.address')->label('Địa chỉ')->maxLength(500)->columnSpanFull(),
+            F\TextInput::make('settings.hotline')->label('Số điện thoại')->maxLength(24),
+            F\TextInput::make('settings.maps_url')->label('Đường dẫn Google Maps')->url()->maxLength(1000),
+            F\Repeater::make('profile.hours')->label('Giờ mở cửa')->schema([F\TextInput::make('days')->label('Ngày')->required()->maxLength(80), F\TextInput::make('time')->label('Giờ')->required()->maxLength(100)])->columns(2)->maxItems(14)->defaultItems(0)->columnSpanFull(),
+            F\Textarea::make('profile.hours_note')->label('Ghi chú khi chưa có giờ mở cửa')->maxLength(1000)->columnSpanFull(),
+            FooterSettings::socialLinksField('settings.social_links')->columnSpanFull(),
+        ]), self::tab('card', '03. Lời mời đặt lịch', 'Khung bên phải dùng nút gọi và mạng xã hội, đúng theo Client hiện tại.', [
+            self::heading('card'), self::body('card'),
+            F\TextInput::make('blocks.savy-card.items.0.title')->label('Tiền tố nút gọi điện')->maxLength(180),
+            F\TextInput::make('blocks.savy-card.items.1.title')->label('Tiền tố nút mạng xã hội')->maxLength(180),
+            self::image('contact_background', 'Ảnh nền khu vực liên hệ'),
+        ]), self::tab('map', '04. Bản đồ dùng chung', 'Bản đồ trong Footer xuất hiện trên cả năm trang.', [
+            F\Textarea::make('settings.maps_embed_url')->label('URL bản đồ nhúng')->rows(3)->maxLength(4000)->columnSpanFull(),
+            F\TextInput::make('profile.savy.footer.map_label')->label('Chữ liên kết mở bản đồ')->maxLength(180)->columnSpanFull(),
+        ])];
     }
 }

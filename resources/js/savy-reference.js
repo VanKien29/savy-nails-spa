@@ -2,7 +2,7 @@ const toggle = document.querySelector('.av-nav-toggle');
 const nav = document.querySelector('.av-nav');
 const header = document.querySelector('.av-header');
 const progress = document.querySelector('.av-scroll-progress span');
-const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches || document.body.dataset.animations === 'false';
 
 document.querySelectorAll('[data-auto-map]').forEach(frame => {
     const loadMap = () => {

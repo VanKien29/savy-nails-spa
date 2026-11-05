@@ -2,10 +2,12 @@
 
 namespace App\Filament\Pages;
 
-use App\Models\NavigationItem;
+use App\Models\Media;
+use App\Models\SalonImage;
 use App\Models\SalonProfile;
 use App\Services\CmsAccess;
 use App\Services\SalonContent;
+use App\Services\SavyContent;
 use App\Services\SiteSettingsService;
 use Filament\Forms\Components as F;
 use Filament\Notifications\Notification;
@@ -30,7 +32,9 @@ class FooterSettings extends Page
 
     public function mount(): void
     {
-        $this->form->fill(['settings' => app(SiteSettingsService::class)->all(), 'profile' => app(SalonContent::class)->all()['profile'], 'links' => NavigationItem::where('location', 'footer')->orderBy('sort_order')->get(['label', 'url', 'enabled'])->toArray()]);
+        $profile = app(SalonContent::class)->all()['profile'];
+        $profile['savy'] = app(SavyContent::class)->profile($profile);
+        $this->form->fill(['settings' => app(SiteSettingsService::class)->all(), 'profile' => $profile]);
     }
 
     public static function socialLinksField(string $name): F\Repeater
@@ -49,9 +53,12 @@ class FooterSettings extends Page
     {
         return $schema->components([
             Section::make('Nội dung chân trang')->description('Logo dùng chung với Header và được quản lý tại Header kéo thả.')->schema([
-                ...WebsiteContent::copyFields('footer'),
+                F\TextInput::make('profile.savy.footer.contact_label')->label('Tiêu đề thông tin liên hệ')->maxLength(180),
+                F\TextInput::make('profile.savy.footer.hours_label')->label('Tiêu đề giờ mở cửa')->maxLength(180),
+                F\TextInput::make('profile.savy.footer.map_label')->label('Chữ liên kết mở bản đồ')->maxLength(180)->columnSpanFull(),
                 F\TextInput::make('settings.company_name')->label('Tên doanh nghiệp')->required()->maxLength(160),
                 F\TextInput::make('settings.copyright')->label('Bản quyền')->maxLength(200),
+                WebsiteContent::imagePicker('profile.savy.images.footer_background', 'Ảnh nền Footer'),
             ])->columns(2),
             Section::make('Thông tin liên hệ & bản đồ')->schema([
                 F\TextInput::make('settings.hotline')->label('Số điện thoại')->maxLength(24),
@@ -64,8 +71,6 @@ class FooterSettings extends Page
                 F\Textarea::make('profile.hours_note')->label('Lưu ý lịch mở cửa')->maxLength(1000),
             ]),
             Section::make('Mạng xã hội')->schema([self::socialLinksField('settings.social_links')]),
-            Section::make('Chính sách chân trang')->schema(WebsiteContent::copyFields('global', ['policy_label', 'policy_title', 'policy_body', 'policy_note']))->columns(2)->collapsible(),
-            Section::make('Menu chân trang')->schema([F\Repeater::make('links')->label('Các liên kết')->schema([F\TextInput::make('label')->label('Tên liên kết')->required()->maxLength(80), F\TextInput::make('url')->label('Đường dẫn')->required()->maxLength(500), F\Toggle::make('enabled')->label('Hiển thị')->default(true)])->columns(2)->maxItems(24)->defaultItems(0)->deleteAction(fn ($action) => $action->requiresConfirmation())]),
         ])->statePath('data');
     }
 
@@ -79,15 +84,16 @@ class FooterSettings extends Page
             $data = $profile->data;
             $data['hours'] = $state['profile']['hours'] ?? [];
             $data['hours_note'] = $state['profile']['hours_note'] ?? '';
-            $data['copy']['footer'] = array_replace($data['copy']['footer'] ?? [], $state['profile']['copy']['footer'] ?? []);
-            $data['copy']['global'] = array_replace($data['copy']['global'] ?? [], $state['profile']['copy']['global'] ?? []);
+            $data['savy'] = app(SavyContent::class)->profile($data);
+            $data['savy']['footer'] = array_replace($data['savy']['footer'], $state['profile']['savy']['footer'] ?? []);
+            foreach ($state['profile']['savy']['images'] ?? [] as $name => $key) {
+                if (preg_match('/^uploaded-media-([0-9]+)$/', (string) $key, $match)) {
+                    $upload = Media::whereKey($match[1])->where('status', 'ready')->firstOrFail();
+                    SalonImage::firstOrCreate(['key' => $key], ['media_id' => $upload->id, 'variants' => [], 'caption' => $upload->name, 'alt' => mb_substr($upload->alt ?: $upload->name, 0, 255), 'category' => 'savy', 'sort_order' => 0]);
+                }
+                $data['savy']['images'][$name] = $key;
+            }
             $profile->update(['data' => $data]);
-            foreach (NavigationItem::where('location', 'footer')->get() as $item) {
-                $item->delete();
-            }
-            foreach ($state['links'] ?? [] as $order => $link) {
-                NavigationItem::create($link + ['location' => 'footer', 'sort_order' => $order]);
-            }
         });
         Notification::make()->title('Đã lưu Footer')->success()->send();
     }

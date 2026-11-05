@@ -10,6 +10,7 @@ use App\Models\SalonProfile;
 use App\Rules\ContentImage;
 use App\Services\CmsAccess;
 use App\Services\SalonContent;
+use App\Services\SavyContent;
 use App\Services\SiteSettingsService;
 use Filament\Forms\Components as F;
 use Filament\Notifications\Notification;
@@ -54,12 +55,14 @@ class WebsiteContent extends Page
 
     private function page(): ?ContentPage
     {
-        $template = match ($this->section) {
-            'home' => 'salon-home', 'about' => 'salon-about', 'services' => 'salon-services',
-            'gallery' => 'salon-gallery', 'contact' => 'salon-contact', default => null,
+        if ($this->section === 'home') {
+            return ContentPage::where('is_home', true)->first();
+        }
+        $slug = match ($this->section) {
+            'about' => 'about-us', 'contact' => 'contact-us', default => $this->section,
         };
 
-        return $template ? ContentPage::where('template', $template)->first() : null;
+        return ContentPage::where('slug', $slug)->first();
     }
 
     public function clientUrl(): string
@@ -71,17 +74,23 @@ class WebsiteContent extends Page
     {
         $page = $this->page();
         $profile = app(SalonContent::class)->all()['profile'];
-        $profile['about_brand_image'] ??= 'brand-logo';
-        $this->form->fill(['blocks' => collect($page?->sections ?? [])->keyBy('id')->all(), 'profile' => $profile,
+        $profile['savy'] = app(SavyContent::class)->profile($profile);
+        $this->form->fill(['blocks' => $page ? app(SavyContent::class)->blocks($page) : [], 'profile' => $profile,
+            'page' => $page?->only(['seo_title', 'seo_description', 'og_media_id', 'noindex']),
             'settings' => app(SiteSettingsService::class)->all(),
-            'gallery_images' => SalonImage::where('show_in_gallery', true)->orderBy('sort_order')->pluck('key')->all(),
+            'gallery_images' => $profile['savy']['gallery'],
         ]);
     }
 
     public static function imagePicker(string $name, string $label, bool $multiple = false, int $maxImages = 24, bool $compact = false): F\ViewField
     {
         return F\ViewField::make($name)->label($label)->view('filament.forms.image-picker', ['multiple' => $multiple, 'compact' => $compact])
-            ->rules($multiple ? ['nullable', 'array', 'max:'.$maxImages] : ['nullable', new ContentImage])->columnSpanFull();
+            ->rules($multiple ? ['nullable', 'array', 'max:'.$maxImages, fn () => function ($attribute, $value, $fail) {
+                $validator = Validator::make(['images' => $value ?? []], ['images.*' => ['required', 'distinct', new ContentImage]]);
+                if ($validator->fails()) {
+                    $fail($validator->errors()->first());
+                }
+            }] : ['nullable', new ContentImage])->columnSpanFull();
     }
 
     public static function mediaPicker(string $name, string $label): F\ViewField
@@ -99,9 +108,7 @@ class WebsiteContent extends Page
             $name = 'profile.copy.'.$group.'.'.$key;
             $field = strlen($default) > 95 || str_contains($key, 'body') || str_contains($key, 'note') || str_contains($key, 'consent')
                 ? F\Textarea::make($name)->rows(3)->columnSpanFull() : F\TextInput::make($name);
-            if ($group === 'global' && $key === 'booking_url') {
-                $field->rules(['url:https'])->helperText('Mọi nút Booking trên website dùng chung đường dẫn HTTPS này.');
-            } elseif (str_ends_with($key, '_url')) {
+            if (str_ends_with($key, '_url')) {
                 $field->rules(['regex:~^(?:/(?!/)[^\s]*|#[a-zA-Z][\w-]*|https://[^\s]+)$~']);
             }
             $fields[] = $field->label($label)->required()->maxLength(2000);
@@ -132,7 +139,7 @@ class WebsiteContent extends Page
             ])->validate();
         }
         DB::transaction(function () use ($state) {
-            $imageKeys = collect($state['profile'] ?? [])->only(['hero_image', 'hero_slides', 'story_image', 'about_image', 'about_brand_image', 'contact_image', 'home_lookbook', 'menu_brow_images'])->flatten()
+            $imageKeys = collect($state['profile'] ?? [])->flatten()
                 ->merge(collect($state['blocks'] ?? [])->pluck('items')->flatten(1)->pluck('label'))
                 ->merge($state['gallery_images'] ?? [])->filter()->unique();
             foreach ($imageKeys as $key) {
@@ -150,18 +157,13 @@ class WebsiteContent extends Page
                 foreach ($items as $order => $key) {
                     SalonImage::where('key', $key)->firstOrFail()->update(['show_in_gallery' => true, 'sort_order' => 200 + $order]);
                 }
+                $state['profile']['savy']['gallery'] = $items;
             }
             if ($page = $this->page()) {
                 $page = ContentPage::whereKey($page->id)->lockForUpdate()->firstOrFail();
-                $page->sections = collect($page->sections)->map(fn ($block) => array_replace_recursive($block, $state['blocks'][$block['id']] ?? []))->all();
-                // Repeaters replace complete lists, including deletions.
-                $page->sections = collect($page->sections)->map(function ($block) use ($state) {
-                    if (array_key_exists('items', $state['blocks'][$block['id']] ?? [])) {
-                        $block['items'] = $state['blocks'][$block['id']]['items'];
-                    }
-
-                    return $block;
-                })->all();
+                $blocks = app(SavyContent::class)->blocks($page);
+                $page->sections = collect($blocks)->map(fn ($block, $id) => array_replace($block, $state['blocks'][$id] ?? []))->values()->all();
+                $page->fill($state['page'] ?? []);
                 $page->save();
             }
             $profile = SalonProfile::whereKey(1)->lockForUpdate()->firstOrFail();
@@ -170,6 +172,12 @@ class WebsiteContent extends Page
                 if ($key === 'copy') {
                     foreach ($value as $group => $copy) {
                         $data['copy'][$group] = array_replace($data['copy'][$group] ?? [], $copy);
+                    }
+                } elseif ($key === 'savy') {
+                    $current = app(SavyContent::class)->profile($data);
+                    $data['savy'] = array_replace($current, $value);
+                    foreach (['images', 'footer'] as $group) {
+                        $data['savy'][$group] = array_replace($current[$group], $value[$group] ?? []);
                     }
                 } else {
                     $data[$key] = $value;

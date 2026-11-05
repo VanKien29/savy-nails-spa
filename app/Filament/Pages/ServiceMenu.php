@@ -119,7 +119,7 @@ class ServiceMenu extends Page
                 ->datalist(fn (Get $get) => SalonService::where('category_id', $get('category_id'))->whereNotNull('group')->distinct()->pluck('group')->all())
                 ->placeholder('Ví dụ: Nail Enhancements')->helperText('Để trống nếu không cần chia nhóm.'),
             Section::make('Giá trên menu')->schema([
-                F\TextInput::make('price')->label('Giá thường / Full Set')->prefix('$')->numeric()->minValue(0)->maxValue(999999.99),
+                F\TextInput::make('price')->label('Giá dịch vụ')->prefix('$')->numeric()->minValue(0)->maxValue(999999.99),
                 F\TextInput::make('fill_price')->label('Fill-in (nếu có)')->prefix('$')->numeric()->minValue(0)->maxValue(999999.99),
                 F\TextInput::make('gel_price')->label('Gel Polish (nếu có)')->prefix('$')->numeric()->minValue(0)->maxValue(999999.99),
                 F\Toggle::make('price_from')->label('Thêm dấu + sau giá')->default(false),
@@ -181,7 +181,7 @@ class ServiceMenu extends Page
             ->extraModalFooterActions(fn (SalonCategory $record) => SalonService::where('category_id', $record->id)->exists() ? [] : [$this->deleteCategoryAction()->arguments(['id' => $record->id])])
             ->action(function (SalonCategory $record, array $data): void {
                 abort_unless(static::canAccess(), 403);
-                $record->update(['name' => $data['name'], 'description' => $data['description'] ?? '']);
+                $record->update(['name' => $data['name']]);
                 $this->saved('Đã cập nhật danh mục');
             });
     }
@@ -190,7 +190,6 @@ class ServiceMenu extends Page
     {
         return [
             F\TextInput::make('name')->label('Tên danh mục')->required()->maxLength(160),
-            F\Textarea::make('description')->label('Mô tả ngắn trên trang Home')->rows(3)->maxLength(2000),
         ];
     }
 

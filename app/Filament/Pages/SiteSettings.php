@@ -32,22 +32,9 @@ class SiteSettings extends Page
 
     public function form(Schema $schema): Schema
     {
-        $colors = [];
-        foreach ([
-            'primary_color' => 'Màu nhấn', 'secondary_color' => 'Màu chữ chính',
-            'accent_text_color' => 'Màu chữ nhấn', 'background_color' => 'Màu nền trang',
-            'surface_color' => 'Màu nền phụ', 'home_gold_color' => 'Màu vàng trang chủ',
-            'home_dark_color' => 'Màu tối trang chủ',
-        ] as $name => $label) {
-            $colors[] = F\ColorPicker::make($name)->label($label)->required();
-        }
-
         return $schema->components([
-            Section::make('Giao diện website')->description('Logo và Booking chỉnh tại Header; liên hệ chỉnh tại Footer; thông tin tìm kiếm chỉnh tại SEO.')->schema([
+            Section::make('Giao diện website')->description('Logo và nút liên hệ chỉnh tại Header; liên hệ và giờ mở cửa chỉnh tại Footer; ảnh và câu chữ chỉnh tại Nội dung website.')->schema([
                 F\TextInput::make('site_name')->label('Tên website')->required()->maxLength(100)->columnSpanFull(),
-                ...$colors,
-                F\Select::make('heading_font')->label('Font tiêu đề')->options(['sans' => 'Be Vietnam Pro', 'serif' => 'Cormorant Garamond', 'system' => 'Font hệ thống'])->required(),
-                F\Select::make('body_font')->label('Font nội dung')->options(['sans' => 'Be Vietnam Pro', 'serif' => 'Cormorant Garamond', 'system' => 'Font hệ thống'])->required(),
                 F\Toggle::make('features.animations')->label('Hiệu ứng chuyển động'),
             ])->columns(2),
         ])->statePath('data');
