@@ -9,8 +9,14 @@
                 @foreach($category->services->groupBy('group') as $group => $services)
                 @if($group && $group !== $category->name)<h4 class="av-menu-group">{{ $group }}</h4>@endif
                 @foreach($services as $service)
+                @php
+                    $priceLabel = $service->priceLabel();
+                    if ($category->slug === 'waxing' && $service->price === null && preg_match('/^\$\.+$/D', $priceLabel)) {
+                        $priceLabel = '......';
+                    }
+                @endphp
                 <article class="av-service" data-service-row>
-                    <div class="av-service-heading"><h4>{{ $service->name }}</h4><span class="av-dots"></span><strong>{{ $service->priceLabel() }}</strong></div>
+                    <div class="av-service-heading"><h4>{{ $service->name }}</h4><span class="av-dots"></span><strong>{{ $priceLabel }}</strong></div>
                     @if($service->description)<p>{{ $service->description }}</p>@endif
                     @if($service->fill_price !== null)<p>{{ $copy['menu']['fill_label'] }}: {{ $service::moneyLabel($service->fill_price) }}</p>@endif
                     @if($service->gel_price !== null)<p>{{ $copy['menu']['gel_label'] }}: {{ $service::moneyLabel($service->gel_price) }}</p>@endif
